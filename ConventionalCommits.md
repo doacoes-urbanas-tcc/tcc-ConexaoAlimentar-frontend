@@ -10,9 +10,13 @@ Este projeto utiliza o padrão **Conventional Commits** para manter um históric
 **Exemplos:**
 
 feat: adiciona formulário de cadastro de usuários
+
 fix: corrige bug na validação de email
+
 docs(readme): atualiza instruções de instalação
+
 style: remove console.log e ajusta identação
+
 refactor: reorganiza funções do controller
 
 
