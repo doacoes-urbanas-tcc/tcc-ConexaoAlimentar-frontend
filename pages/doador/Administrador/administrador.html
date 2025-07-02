@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Controle - Administrador</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="bg-white py-8 px-6 shadow rounded-lg sm:px-10">
+            <img class="rounded-md w-[30px] mx-auto" style="width: 100px;" alt="" src="/assets/Conexão Alimentar Logo PNG (1).png" />
+            <span class="text-red-600 text-sm font-semibold cursor-pointer hover:underline" onclick="voltar()">Voltar</span>
+            <div class="text-center mt-2 mb-4">
+                <label class="block text-2xl font-bold text-gray-800">Painel de controle</label>
+            </div>
+            <button class="w-full bg-red-600 text-white rounded-full py-3 text-lg font-bold mb-6 cursor-default">ADMINISTRADOR</button>
+            <div class="w-full bg-gray-100 text-gray-500 rounded-full py-2 text-center mb-6 text-base select-none">
+                Selecione a opção que deseja
+            </div>
+            <div class="space-y-4">
+                <button onclick="cadastrosRecebidos()" class="w-full bg-red-200 hover:bg-red-300 text-black rounded-lg py-4 text-lg font-bold transition-colors">Cadastros recebidos</button>
+                <button onclick="relatorioUsuarios()" class="w-full bg-red-200 hover:bg-red-300 text-black rounded-lg py-4 text-lg font-bold transition-colors">Relatório usuários</button>
+                <button onclick="painelDoacoesAtivas()" class="w-full bg-red-200 hover:bg-red-300 text-black rounded-lg py-4 text-lg font-bold transition-colors">Painel doações ativas</button>
+                <button onclick="relatoriosDiversos()" class="w-full bg-red-200 hover:bg-red-300 text-black rounded-lg py-4 text-lg font-bold transition-colors">Relatórios diversos</button>
+                <button onclick="historicoDoacoes()" class="w-full bg-red-200 hover:bg-red-300 text-black rounded-lg py-4 text-lg font-bold transition-colors">
+                    Histórico de doações<br>estatística
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="../../../js/administrador.js"></script>
+</body>
+
+</html>
