@@ -11,7 +11,7 @@ function mostrarDescricao() {
         cnpj: "Estabelecimentos comerciais ou empresas que fazem doações como pessoa jurídica.",
         ong: "Organizações que recebem e distribuem as doações para quem precisa.",
         rural: "Produtores do campo que desejam doar excedentes da produção.",
-        voluntario: "Pessoas que ajudam em áreas como TI, marketing, eventos, etc.",
+        voluntario: "Pessoas que ajudam em áreas como Transporte e TI.",
         admin: "Equipe de gestão ou desenvolvimento do sistema com acesso administrativo."
     };
 
