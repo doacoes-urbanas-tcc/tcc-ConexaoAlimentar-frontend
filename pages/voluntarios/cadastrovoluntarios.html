@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cadastro voluntário (outros)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 w-full h-screen overflow-auto p-6">
+    <div class="bg-white rounded-2xl shadow max-w-4xl mx-auto p-6">
+        <span class="text-red-600 text-sm font-semibold cursor-pointer hover:underline mb-2 inline-block" onclick="window.history.back()">Voltar</span>
+        <h1 class="text-2xl font-bold text-center mb-4 mt-2">Cadastro voluntário (outros)</h1>
+        <form class="space-y-3">
+            <input type="text" placeholder="Nome" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" />
+            <input type="text" placeholder="CPF" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" />
+            <input type="text" placeholder="Endereço (rua)" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" />
+            <input type="text" placeholder="Endereço (nr)" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" />
+            <input type="text" placeholder="Endereço (complemento)" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" />
+            <input type="text" placeholder="Endereço (CEP)" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" />
+            <input type="text" placeholder="Endereço (Bairro)" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" />
+            <input type="text" placeholder="Endereço (Cidade | Estado)" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" />
+            <input type="text" placeholder="Telefones de contato" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" />
+            <input type="email" placeholder="Email para contato" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" />
+            <input type="text" placeholder="Atuação:" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" />
+            <div class="flex gap-3 mt-4">
+                <button type="button" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-full py-2 transition-colors">Editar dados</button>
+                <button type="submit" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-full py-2 transition-colors">Confirmar dados</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
