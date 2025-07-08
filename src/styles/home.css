@@ -15,7 +15,7 @@
 
 /* formatação titulo slogn ' a ponte entre quem pode e...*/
 #cta .title {
-    font-size: 4.000rem;
+    font-size: 2.000rem;
     color: var(--color-neutral-9);
 }
 
@@ -26,7 +26,7 @@
 
 /* formatação da descrição, abaixo da logo*/
 #cta .description {
-    font-size: 1.800rem;
+    font-size: 1.300rem;
 }
 
 /* posicionar a imagem para colocar a forma atras*/
