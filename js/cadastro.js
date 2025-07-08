@@ -80,7 +80,14 @@ const erros = document.getElementById('erros');
 
 const schema = yup.object().shape({
   nome: yup.string().required("O nome é obrigatório"),
-  cpf: yup.string().matches(/^\d{11}$/, 'CPF deve ter 11 números, só dígitos').required("O cpf é obrigatório!"),
+  telefone: yup.string().min(11, "O número de telefone precisa conter 11 dígitos").max(11).required("O número de telefone é obrigatório"),
+  email: yup.string().email.required("O email é obrigatório"),
+  password: yup.string().min(6, "A senha deve ter pelo menos 6 dígitos").required("A senha é obrigatória "),
+  confirmarSenha: yup.string().required("Confirmar a senha é obrigatório").oneOf([yup.ref("password")], "As senhas devem ser iguais"),
+  CEP: yup.string().min(8, "O CEP deve ter pelo menos 8 dígitos").max(8).required("O CEP é obrigatório"),
+  CPF: yup.string().matches(/^\d{11}$/).min(11, "O CPF deve ter pelo menos 11 dígitos").max(11).required("O CPF é obrigatório"),
+  cnpj: yup.string()
+  registroRural:
 });
 
 form.addEventListener('submit', async (e) => {
