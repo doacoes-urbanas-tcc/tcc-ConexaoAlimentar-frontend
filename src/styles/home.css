@@ -1,0 +1,76 @@
+#home {
+    display: flex;
+    min-height: calc(100vh - 140px);
+    position: relative;
+    }
+
+/* formatação slogan e pequena descrição */
+#cta {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    margin-top: 5%;
+}
+
+/* formatação titulo slogn ' a ponte entre quem pode e...*/
+#cta .title {
+    font-size: 4.000rem;
+    color: var(--color-neutral-9);
+}
+
+/* formatação slogn somente a parte 'quem precisa'...*/
+#cta .title span {
+    color: var(--color-primary-3);
+}
+
+/* formatação da descrição, abaixo da logo*/
+#cta .description {
+    font-size: 1.800rem;
+}
+
+/* posicionar a imagem para colocar a forma atras*/
+#banner {
+    display: flex;
+    align-items: start;
+    justify-content: end;
+    width: 70%;
+    z-index: 2;
+}
+
+/* ajustar a imagem*/
+#banner img {
+    height: 90%;
+    width: fit-content;
+}
+
+/* configurar forma atras da imagem 'de capa'*/
+.shape {
+    background-color: var(--color-primary-2);
+    width: 50%;
+    height: 88%;
+    position: absolute;
+    border-radius: 40% 30% 0% 20%;
+    top: 0;
+    right: 0;
+    z-index: 1;
+}
+
+@media screen and (max-width: 1170px) {
+    #home {
+        min-width: 100%;
+        padding-top: 0px;
+    }
+
+    #banner,
+    #banner img,
+    #home .shape {
+        display: none;
+    }
+
+    #cta {
+        width: 100%;
+        text-align: center;
+        align-items: center;
+    }
+}
