@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const cidadeEstadoInput = document.getElementById('cidade_estado');
 
     if (cepInput) {
-        cepInput.addEventListener('blur', async function () {
+        cepInput.addEventListener('input', async function () {
             const cep = cepInput.value.replace(/\D/g, '');
             if (cep.length !== 8) return;
 
