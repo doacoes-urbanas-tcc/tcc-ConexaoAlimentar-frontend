@@ -42,7 +42,7 @@
                             <div>
                                 <label for="telefone"
                                     class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
-                                <input id="telefone" name="telefone" type="tel" class="w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm 
+                                <input id="telefone" name="telefone" type="tel" placeholder="(99) 99999-9999" class="w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm 
                                               focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500
                                               text-sm">
                             </div>
@@ -79,7 +79,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label for="cep" class="block text-sm font-medium text-gray-700 mb-1">CEP</label>
-                                <input id="cep" name="cep" type="text" class="w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm 
+                                <input id="cep" name="cep" type="text" placeholder="99999-999" class="w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm 
                                               focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500
                                               text-sm">
                             </div>
@@ -130,7 +130,7 @@
                             <label for="tipoUsuario" class="block text-sm font-medium text-gray-700 mb-2">
                                 Selecione o tipo de usuário
                             </label>
-                            <select id="tipoUsuario" name="tipoUsuario" onchange="mostrarDescricao()" class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm 
+                            <select id="tipoUsuario" name="tipoUsuario" onchange="mostrarDescricaoECampos()" class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm 
                                            focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 
                                            text-sm">
                                 <option value="pf">Doador - Pessoa Física</option>
@@ -141,34 +141,33 @@
                                 <option value="admin">Administrador</option>
                             </select>
 
-                            <div id="descricaoContainer" class="hidden w-full flex justify-center mt-4">
+                            <div id="descricaoContainer" class="w-full flex justify-center mt-4">
                                 <p id="descricaoUsuario" class="py-2 px-4 rounded-md shadow-sm text-sm font-medium 
                                    text-white bg-red-500 hover:bg-red-700 focus:outline-none 
                                    focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-200">
+                                   Pessoa comum que deseja doar alimentos ou produtos como indivíduo.
                                 </p>
                             </div>
                         </div>
                         <h3 class="text-sm font-semibold text-gray-700 border-b pb-2">Dados específicos do Usuário
                             escolhido:</h3>
 
-                        <div id="campoDoadorFisico"> <!--campo doador fisico -->
-                            <label class="block text-sm font-medium text-gray-700 mb-1">CPF</label>
-                            <input id="cpf" name="cpf" type="text"
+                        <div id="campoCPF" class="hidden">
+                            <label for="cpf" class="block text-sm font-medium text-gray-700 mb-1">CPF</label>
+                            <input id="cpf" placeholder="999.999.999-99" name="cpf" type="text"
                                 class="w-full border border-gray-300 px-3 py-2 
                             rounded-lg shadow-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 text-sm">
                         </div>
-                        <div id="campoDoadorEmpresa"> <!--campo doador empresa -->
-                            <label class="block text-sm font-medium text-gray-700 mb-1">CNPJ</label>
-                            <input id="cnpj" name="cnpj" type="text"
+
+                        <div id="campoCNPJ" class="hidden">
+                            <label for="cnpj" class="block text-sm font-medium text-gray-700 mb-1">CNPJ</label>
+                            <input id="cnpj" placeholder="99.999.999/9999-99" name="cnpj" type="text"
                                 class="w-full border border-gray-300 px-3 py-2 
                             rounded-lg shadow-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 text-sm">
                         </div>
-                        <div id="campoONG"> <!--campo doador ONG -->
-                            <label class="block text-sm font-medium text-gray-700 mb-1">CNPJ</label>
-                            <input id="cnpj" name="cnpj" type="text"
-                                class="w-full border border-gray-300 px-3 py-2 
-                            rounded-lg shadow-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 text-sm">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
+
+                        <div id="campoDescricaoONG" class="hidden">
+                            <label for="descricaoONG" class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
                             <label class="block text-xs font-medium text-gray-700 mb-1">(Conte aqui a missão, os
                                 principais projetos,
                                 seu público atendido e o impacto da sua ONG.)</label>
@@ -176,18 +175,17 @@
                                 class="w-full border border-gray-300 px-3 py-2 rounded-lg
                             shadow-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 text-sm mb-1"></textarea>
                         </div>
-                        <div id="campoProdutorRural"> <!--campo produtor rural -->
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Número de Registro Rural</label>
+
+                        <div id="campoRegistroRural" class="hidden">
+                            <label for="numeroRegistroRural" class="block text-sm font-medium text-gray-700 mb-1">Número de Registro Rural</label>
                             <input id="numeroRegistroRural" name="numeroRegistroRural" type="text"
                                 class="w-full border border-gray-300 px-3 py-2 
                             rounded-lg shadow-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 text-sm">
                         </div>
-                        <div id="campoVoluntario"> <!--campo voluntario -->
-                            <label class="block text-sm font-medium text-gray-700 mb-1">CPF</label>
-                            <input id="cpf" name="cpf" type="text"
-                                class="w-full border border-gray-300 px-3 py-2 
-                            rounded-lg shadow-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 text-sm">
-                            <select id="tipoUsuario" name="tipoUsuario" onchange="mostrarDescricao()" class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm 
+
+                        <div id="campoTipoVoluntario" class="hidden">
+                            <label for="tipoVoluntario" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Voluntário</label>
+                            <select id="tipoVoluntario" name="tipoVoluntario" class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm 
                             focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm">
                                 <option value="Transportador">Transporte</option>
                                 <option value="TI">TI</option>
@@ -211,6 +209,8 @@
         </div>
     </div>
 
+    
+    <script src="https://unpkg.com/vanilla-masker/build/vanilla-masker.min.js"></script>
     <script src="../js/cadastro.js"></script>
 </body>
 
