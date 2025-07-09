@@ -54,3 +54,4 @@ Adiciona middleware de autenticação no backend.
 ---
 
 Seguindo esse padrão, todo o time mantém consistência e facilita a leitura e manutenção do projeto.
+Para mais informações, consulte o repositório [padroes-de-commits](https://github.com/iuricode/padroes-de-commits.git).
