@@ -18,7 +18,7 @@
 }
 
 #testimonials .section-subtitle {
-    font-size:1.100rem;
+    font-size: 1.500rem;
 }
 
 #testimonials_content {
@@ -107,7 +107,7 @@
     }
 
     #testimonials_content {
-        width: 100%;
+        width: 90%;
     }
 
     .feedback{

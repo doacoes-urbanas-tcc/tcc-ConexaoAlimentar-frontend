@@ -4,7 +4,9 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    min-height: 100vh;
+    padding: 4rem 8% ; /* antes desta alteração estava: min-height: 100vh;*/
+    margin: 0; /* nao tinha esta opção */
+    
 }
 
 #quemsomos .section-title {
@@ -14,7 +16,7 @@
 
 #quemsomos .section-subtitle {
     font-size:1.300rem;
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
 .dish-image {
@@ -79,7 +81,12 @@
     }
 
     .dish {
-        width: calc(100% - 12px);
+        width: 100%; /* antes era calc(100% - 12px) */
+    }
+
+    /* nao tinha esta configuração */
+    #quemsomos {
+        padding: 2rem 8%;
     }
 
 @media screen and (max-width: 600px) {

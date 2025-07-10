@@ -2,7 +2,7 @@
 
 header {
     width: 100%;
-    padding: 28px 8%;
+    padding: 5px 5%; /*dimiui de 28px 8% para 5px e 5% a largura da faixa*/
     position: sticky;
     top: 0;
     background-color: var(--color-primary-1);
@@ -10,7 +10,7 @@ header {
 }
 
 #navbar {
-    width: 100;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -19,17 +19,17 @@ header {
 #nav_logo {
     font-size: 24px;
     color: var(--color-primary-3);
-    width: 140px;
+    width: 100px; /* reduçao tamanho da logo de 140 para 100px */
 }
 
-
+/* itens da lista de cabeçalho */
 #nav_list{
     display: flex;
     list-style: none;
-    gap: 48px;
+    gap: 48px; /* espaço entre os itens */
 }
 
-/* item da lista no cabeçalho */
+/* link dos item da lista no cabeçalho */
 .nav-item a {
     text-decoration: none;
     color: var(--color-neutral-1);
@@ -98,4 +98,3 @@ e aparecer as opões na tela (quando a largura maxima for de 1170 px o display '
 
 
 
-/* https://youtu.be/8V3mw1w6h0U?si=5tQCy_iqzBmkS8gZ | Minuto em que parei: */

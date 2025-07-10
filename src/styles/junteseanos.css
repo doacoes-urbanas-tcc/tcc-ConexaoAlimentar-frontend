@@ -5,6 +5,7 @@
     text-align: center;
     justify-content: center;
     min-height: 100vh;
+    padding: 4rem 8%
 }
 
 #junteseanos .section-title {
@@ -13,12 +14,12 @@
 }
 
 #junteseanos .section-subtitle {
-    font-size:1.300rem ;
-    margin-top: 32px
+    font-size:1.300rem;
+    margin-top: 15px;
 }
 
 #junteseanos .abaixoopcoes {
     font-size:1.150rem ;
-    margin-top: 32px
+    margin-top: 32px;
 }
 

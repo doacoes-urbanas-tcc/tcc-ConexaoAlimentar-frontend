@@ -33,13 +33,14 @@
 html {
     scroll-behavior: smooth; /* para deixar a rolagem da pagina mais suave */
 }
+
 body {
     background-color: var(--color-primary-1) /* fundo da tela' - no modelo era a cor: #fff9ea */
 }
 
-section {
+/*section { /* removido o padding geral — controle em cada seção 
     padding: 28px 8%;
-}
+} */
 
 /* estilização botão 'peça aqui' */
 .btn-default {
@@ -88,4 +89,20 @@ section {
 header .linkvemcomagenteheader {
     text-decoration: none;
     color: inherit;
+}
+
+/* esta configuração nao tinha anteriormente*/
+@media screen and (max-width: 600px) {
+    .section-title {
+        font-size: 1.5rem;
+    }
+
+    .section-subtitle {
+        font-size: 1rem;
+    }
+
+    .btn-default {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
 }

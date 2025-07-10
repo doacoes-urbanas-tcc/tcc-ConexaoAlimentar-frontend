@@ -5,6 +5,7 @@
     text-align: center;
     justify-content: center;
     min-height: 100vh;
+    padding: 4rem 8%
 }
 
 #comofunciona .section-title {
@@ -12,8 +13,14 @@
     font-size: 2.000rem;
 }
 
-.comofuncionavejaabaixo {
-    font-size:1.200rem ;
+#comofunciona .section-subtitle {
+    text-align: center;
+    font-size: 1.300rem;
+    margin-top: 15px;
+}
+
+#comofunciona .comofuncionavejaabaixo {
+    font-size: 1.200rem ;
     margin-top: 32px
 }
 
@@ -39,11 +46,5 @@
     }
 }
 
-#comofunciona .section-subtitle {
-    text-align: center;
-    font-size:1.300rem ;
-    margin-top: 32px
-
-}
 
 }
