@@ -28,3 +28,9 @@ function historicoDoacoes() {
     alert('Abrir Histórico de Doações e Estatística');
     // window.location.href = 'historico-doacoes.html';
 }
+
+// Função para alternar o menu mobile
+document.getElementById('menu-toggle').onclick = function () {
+    const menu = document.getElementById('mobile-menu');
+    menu.classList.toggle('hidden');
+}
