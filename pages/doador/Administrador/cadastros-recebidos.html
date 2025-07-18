@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastros Recebidos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <div class="mt-8 mx-auto w-full max-w-3xl px-2 sm:px-4 md:px-8">
+        <div class="bg-white py-8 px-4 md:px-12 shadow rounded-lg">
+            <span class="text-red-600 text-sm font-semibold cursor-pointer hover:underline" onclick="window.location.href='administrador.html'">Voltar</span>
+            <div class="text-center mt-2 mb-4">
+                <label class="block text-2xl font-bold text-gray-800">Cadastros recebidos</label>
+            </div>
+            <button class="w-full bg-red-600 text-white rounded-full py-3 text-lg font-bold mb-6 cursor-default">ADMINISTRADOR</button>
+            <div class="overflow-x-auto">
+                <ul class="space-y-2">
+                    <li class="flex font-semibold text-xs text-gray-700 px-2 py-1">
+                        <span class="flex-1">Tipo</span>
+                        <span class="flex-1">Estado</span>
+                        <span class="flex-1">Atuação</span>
+                        <span class="flex-1">Aprov/Rejei</span>
+                    </li>
+                    <li class="flex bg-gray-100 rounded-lg px-2 py-2">
+                        <span class="flex-1"></span>
+                        <span class="flex-1"></span>
+                        <span class="flex-1"></span>
+                        <span class="flex-1"></span>
+                    </li>
+                    <li class="flex bg-gray-100 rounded-lg px-2 py-2">
+                        <span class="flex-1"></span>
+                        <span class="flex-1"></span>
+                        <span class="flex-1"></span>
+                        <span class="flex-1"></span>
+                    </li>
+                    <!-- Repita conforme necessário -->
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
