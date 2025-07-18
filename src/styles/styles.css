@@ -1,0 +1,108 @@
+/* estilização geral */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('header.css');
+@import url('home.css');
+@import url('quemsomos.css');
+@import url('comofunciona.css');
+@import url('junteseanos.css');
+@import url('testimonials.css');
+@import url('footer.css');
+
+
+
+:root {
+    --color-primary-1:#F8E5E4; /* fundo da tela' - no modelo era a cor: #fff9ea */
+    --color-primary-2: #f0ccca   ; /* figura de fundo da cesta de alimentos' - no modelo era a cor: #ffe8b4 */
+    --color-primary-3: #f62216  ; /* cor mais forte nos titulos do 'quem precis' quem somos e depoimento - no modelo era a cor: #e9a209*/
+    --color-primary-4: #f56961  ; /* cor dos botoes' - no modelo era a cor: #ffcb45*/
+    --color-primary-5: #f4a29f; /* tom de quando passa o cursor nos botoes' - no modelo era a cor: #f8d477*/
+    --color-primary-6: #e9a209; /* amarelho das extrelas*/
+
+    --color-neutral-0: #fff;  /* cor branca do fundo dos quadros do 'quem somos' e dos 'depoimentos' */
+    --color-neutral-9: #1d1d1d;
+}
+
+* {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth; /* para deixar a rolagem da pagina mais suave */
+}
+
+body {
+    background-color: var(--color-primary-1) /* fundo da tela' - no modelo era a cor: #fff9ea */
+}
+
+/*section { /* removido o padding geral — controle em cada seção 
+    padding: 28px 8%;
+} */
+
+/* estilização botão 'peça aqui' */
+.btn-default {
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-primary-4);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-weight: 600;
+    box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color .3s ease;
+}
+
+/* quando passar o cursor no 'peça aqui' ele troca a cor de fundo*/
+.btn-default:hover {
+    background-color: var(--color-primary-5);
+}
+
+.social-media-buttons {
+    display: flex;
+    gap: 18px;
+}
+
+.social-media-buttons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 40px;
+    background-color: var(--color-neutral-1);
+    font-size: 1.25rem;
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--color-neutral-9);
+    box-shadow: 0px 0px 12px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow .3s ease;
+}
+
+.social-media-buttons a:hover{
+    box-shadow: 0px 0px 12px 8px rgba(0, 0, 0, 0.1);
+}
+
+header .linkvemcomagenteheader {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* esta configuração nao tinha anteriormente*/
+@media screen and (max-width: 600px) {
+    .section-title {
+        font-size: 1.5rem;
+    }
+
+    .section-subtitle {
+        font-size: 1rem;
+    }
+
+    .btn-default {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+}

@@ -1,0 +1,100 @@
+/* estilização somente dos itens dentro de header no index.html */
+
+header {
+    width: 100%;
+    padding: 5px 5%; /*dimiui de 28px 8% para 5px e 5% a largura da faixa*/
+    position: sticky;
+    top: 0;
+    background-color: var(--color-primary-1);
+    z-index: 3;
+}
+
+#navbar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#nav_logo {
+    font-size: 24px;
+    color: var(--color-primary-3);
+    width: 100px; /* reduçao tamanho da logo de 140 para 100px */
+}
+
+/* itens da lista de cabeçalho */
+#nav_list{
+    display: flex;
+    list-style: none;
+    gap: 48px; /* espaço entre os itens */
+}
+
+/* link dos item da lista no cabeçalho */
+.nav-item a {
+    text-decoration: none;
+    color: var(--color-neutral-1);
+    font-weight: 600;
+}
+
+/* para os itens da lista no cabeçalho (início, cardário e avaliações) ficarem  em negrito e sublinhado qdo passar o mouse*/
+.nav-item.active a {
+    color: var(--color-neutral-9);
+    border-bottom:3px solid var(--color-primary-3)
+}
+
+/* esconder os itens do cabeçalho que são para visualização em mobile  */
+#mobile_btn {
+    display: none;
+}
+
+#mobile_menu {
+    display: none;
+}
+
+/* para quando a tela diminuir aparecer sumir com os botao peça aqui e cabeçalho 
+e aparecer as opões na tela (quando a largura maxima for de 1170 px o display 'block' aparece  */
+@media screen and (max-width: 1170px) {
+    #nav_list,
+    #navbar .btn-default {
+        display: none;
+    }
+
+    /* além disso formatar para aparecer o botao de opções para mobile, vamos estilizar-lo */
+    #mobile_btn {
+        display: block;
+        border: none;
+        background-color: transparent;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+
+    /* configurando o menu todo para formato mobile quando acionado o botao   */
+    #mobile_menu.active {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* configurando os itens do menu para formato mobile tambem quando clica no botao  de lista */
+    #mobile_nav_list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin: 12px 0px;
+    }
+
+     /* configurando os itens do menu centralizando os nomes, tirando a 'bolinha na frente dos nomes (inicio, cardapio e avaliações) */
+    #mobile_nav_list .nav-item {
+        list-style: none;
+        text-align: center;
+
+    }
+}
+
+
+
+
+
+
+
+
