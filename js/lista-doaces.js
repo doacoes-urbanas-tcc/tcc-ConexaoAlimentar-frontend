@@ -38,6 +38,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             <p><strong>Status:</strong> ${doacao.status.replace("_", " ")}</p>
             <p><strong>Data de Cadastro:</strong> ${formatarDataHora(doacao.dataCadastro)}</p>
             <p><strong>Expira em:</strong> ${formatarDataHora(doacao.dataExpiracao)}</p>
+            <p><strong>Expira em:</strong> ${formatarDataHora(doacao.dataExpiracao)}</p>
+          </div>
+            <button class="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition" onclick="confirmarReserva(${doacao.id})">Reservar</button>
           </div>
         </div>
       `;
@@ -56,4 +59,28 @@ function formatarData(data) {
 
 function formatarDataHora(dataHora) {
   return new Date(dataHora).toLocaleString("pt-BR");
+}
+
+async function confirmarReserva(idDoacao) {
+  const token = localStorage.getItem("token");
+
+  try {
+    const response = await fetch("http://localhost:8080/reservas", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify({ doacaoId: idDoacao })
+    });
+
+    if (response.ok) {
+      window.location.href = `/qrcode.html?id=${idDoacao}`;
+    } else {
+      const erro = await response.text();
+      alert("Erro ao reservar: " + erro);
+    }
+  } catch (err) {
+    alert("Erro de conexão ao tentar reservar.");
+  }
 }
