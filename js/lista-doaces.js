@@ -19,34 +19,40 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    doacoesFiltradas.forEach(doacao => {
-      const item = document.createElement("div");
-      item.className = "bg-white rounded-lg shadow p-4 flex flex-col md:flex-row gap-4";
+   doacoesFiltradas.forEach(doacao => {
+  const item = document.createElement("div");
+  item.className = "bg-white rounded-lg shadow p-4 flex flex-col md:flex-row gap-4";
 
-      item.innerHTML = `
-        <img src="${doacao.urlImagem}" alt="${doacao.nomeAlimento}" class="w-full md:w-48 h-48 object-cover rounded-lg">
+  item.innerHTML = `
+    <img src="${doacao.urlImagem}" alt="${doacao.nomeAlimento}" class="w-full md:w-48 h-48 object-cover rounded-lg">
 
-        <div class="flex-1">
-          <h2 class="text-xl font-semibold text-red-600">${doacao.nomeAlimento}</h2>
-          <p class="text-gray-700 mb-1">${doacao.descricao}</p>
+    <div class="flex-1">
+      <h2 class="text-xl font-semibold text-red-600">${doacao.nomeAlimento}</h2>
+      <p class="text-gray-700 mb-1">${doacao.descricao}</p>
 
-          <div class="text-sm text-gray-600 space-y-1 mt-2">
-            <p><strong>Categoria:</strong> ${doacao.categoria}</p>
-            <p><strong>Quantidade:</strong> ${doacao.quantidade} ${doacao.unidadeMedida.toLowerCase()}</p>
-            <p><strong>Validade:</strong> ${formatarData(doacao.dataValidade)}</p>
-            <p><strong>Doador:</strong> ${doacao.doadorNome}</p>
-            <p><strong>Status:</strong> ${doacao.status.replace("_", " ")}</p>
-            <p><strong>Data de Cadastro:</strong> ${formatarDataHora(doacao.dataCadastro)}</p>
-            <p><strong>Expira em:</strong> ${formatarDataHora(doacao.dataExpiracao)}</p>
-            <p><strong>Expira em:</strong> ${formatarDataHora(doacao.dataExpiracao)}</p>
-          </div>
-            <button class="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition" onclick="confirmarReserva(${doacao.id})">Reservar</button>
-          </div>
-        </div>
-      `;
+      <div class="text-sm text-gray-600 space-y-1 mt-2">
+        <p><strong>Categoria:</strong> ${doacao.categoria}</p>
+        <p><strong>Quantidade:</strong> ${doacao.quantidade} ${doacao.unidadeMedida.toLowerCase()}</p>
+        <p><strong>Validade:</strong> ${formatarData(doacao.dataValidade)}</p>
+        <p><strong>Doador:</strong> ${doacao.doadorNome}</p>
+        <p><strong>Status:</strong> ${doacao.status.replace("_", " ")}</p>
+        <p><strong>Data de Cadastro:</strong> ${formatarDataHora(doacao.dataCadastro)}</p>
+        <p><strong>Expira em:</strong> ${formatarDataHora(doacao.dataExpiracao)}</p>
+      </div>
 
-      lista.appendChild(item);
-    });
+      <button class="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition reservar-btn" data-id="${doacao.id}">
+        Reservar
+      </button>
+    </div>
+  `;
+
+  const btnReservar = item.querySelector(".reservar-btn");
+  btnReservar.addEventListener("click", () => {
+    window.location.href = `/pages/reserva/confirmar-reserva.html?id=${doacao.id}`;
+  });
+
+  lista.appendChild(item);
+  });
   } catch (err) {
     console.error("Erro ao carregar doações:", err);
     lista.innerHTML = "<p class='text-red-600'>Erro ao carregar doações.</p>";
