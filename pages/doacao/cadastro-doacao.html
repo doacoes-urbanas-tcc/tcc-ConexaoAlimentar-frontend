@@ -1,29 +1,60 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Cadastro de Doação</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cadastro de Doação</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
-<body class="bg-gray-100 ">
-    <nav class=" p-5 bg-red-500 shadow md: flex md:items-center md: justify-between text-white">
-        <div class="flex items-center ">
-            <span class="font-bold text-lg cursor-pointer">
-                <img  class="h-10 inline" src="/assets/conexão (1).png" />
-                Conexão Alimentar
-            </span>
-        </div>
-        <ul class="md:flex md: items-center">
-            <li class="mx-4">
-                <a href="#" class="text-xl hover: text-white">Início</a>
-            </li>
-            <li class="mx-4">
-                <a href="/pages/doacao/cadastro-doacao.html" class="text-xl hover: text-white">Cadastrar Doação</a>
-            </li>
-            <li class="mx-4">
-                <a href="/pages/doacao/lista-doacoes.html" class="text-xl hover: text-white">Minhas Doações</a>
-            </li>
-        </ul>
-        <button class="bg-white text-red-500 px-4 py-1 rounded-full font-semibold hover:bg-red-100 transition-colors">Sair</button>
-    </nav>
+<body class="bg-gray-100">
+  <nav class="p-5 bg-red-500 shadow md:flex md:items-center md:justify-between text-white relative">
+    <div class="flex justify-between items-center">
+      <span class="font-bold text-lg cursor-pointer">
+        <img class="h-10 inline" src="/assets/conexão (1).png" />
+        Conexão Alimentar
+      </span>
+      <span class="text-3xl cursor-pointer mx-2 md:hidden block">
+        <ion-icon name="menu-outline" onclick="Menu(this)"></ion-icon>
+      </span>
+    </div>
+
+    <ul id="menu" class="md:flex md:items-center md:space-x-6 z-[-1] md:z-auto md:static absolute bg-red-500 w-full left-0 md:w-auto md:py-0 py-4 md:pl-0 pl-7 md:opacity-100 opacity-0 top-[-400px] transition-all ease-in duration-500 flex-col md:flex-row">
+      <li class="my-2 md:my-0">
+        <a href="#" class="text-xl hover:text-white block">Início</a>
+      </li>
+      <li class="my-2 md:my-0">
+        <a href="/pages/doacao/cadastro-doacao.html" class="text-xl hover:text-white block">Cadastrar Doação</a>
+      </li>
+      <li class="my-2 md:my-0">
+        <a href="/pages/doacao/lista-doacoes.html" class="text-xl hover:text-white block">Minhas Doações</a>
+      </li>
+      
+      <li class="my-2 md:my-0 md:ml-4">
+        <button class="bg-white text-red-500 px-4 py-1 rounded-full font-semibold hover:bg-red-100 transition-colors w-fit">
+          Sair
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <script>
+    function Menu(e) {
+      let menu = document.getElementById("menu");
+
+      if (e.name === 'menu-outline') {
+        e.name = 'close-outline';
+        menu.classList.remove('top-[-400px]');
+        menu.classList.add('top-[80px]');
+        menu.classList.add('opacity-100');
+      } else {
+        e.name = 'menu-outline';
+        menu.classList.remove('top-[80px]');
+        menu.classList.add('top-[-400px]');
+        menu.classList.remove('opacity-100');
+      }
+    }
+  </script>
+</body>
+</html>
