@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     qrContainer.innerHTML = `<img src="${imageUrl}" alt="QR Code" class="h-64 mx-auto">`;
 
     iniciarContagemRegressiva(7200); 
-  } catch (err) {
+   } catch (err) {
     qrContainer.innerHTML = `<p class="text-red-600">${err.message}</p>`;
   }
 
