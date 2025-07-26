@@ -1,11 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
+  const previewContainer = document.getElementById("previewContainer");  
+
   document.getElementById("urlImagem").addEventListener("change", function () {
-    let preview = this.parentNode.querySelector("img");
-    if (preview) preview.remove(); 
-    preview = document.createElement("img");
-    preview.src = URL.createObjectURL(this.files[0]);
+    const file = this.files[0];
+    previewContainer.innerHTML = ""; 
+
+    if (file) {
+    const preview = document.createElement("img");
+    preview.src = URL.createObjectURL(file);
     preview.className = "mt-2 max-h-40 rounded";
-    this.parentNode.appendChild(preview);
+    previewContainer.appendChild(preview); 
+  }
   });
 
   const today = new Date().toISOString().split("T")[0];
@@ -64,11 +69,11 @@ document.addEventListener("DOMContentLoaded", function () {
       const text = await response.text();
 
       if (response.ok) {
-        alert("✅ " + text);
-        form.reset();
-      } else {
-        alert("❌ Erro: " + text);
-      }
+      alert("✅ Doação cadastrada com sucesso!");
+      window.location.href = "/pages/doacao/minhas-doacoes.html";
+    } else {
+      alert("❌ Erro ao cadastrar doação: " + text);
+    }
     } catch (error) {
       console.error("Erro na requisição:", error);
       alert("Erro ao cadastrar a doação.");

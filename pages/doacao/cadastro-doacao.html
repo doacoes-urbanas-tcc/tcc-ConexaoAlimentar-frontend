@@ -30,7 +30,7 @@
         <a href="/pages/doacao/cadastro-doacao.html" class="text-xl block hover:text-white">Cadastrar Doação</a>
     </li>
       <li>
-        <a href="/pages/doacao/lista-doacoes.html" class="text-xl block hover:text-white">Minhas Doações</a>
+        <a href="/pages/doacao/minhas-doacoes.html" class="text-xl block hover:text-white">Minhas Doações</a>
     </li>
       <li class="mt-2 md:mt-0">
         <button class="bg-white text-red-500 px-4 py-1 rounded-full font-semibold hover:bg-red-100 transition-colors">Sair</button>
@@ -38,6 +38,13 @@
     </ul>
   </div>
 </nav>
+
+  <script>
+  document.querySelector("button").addEventListener("click", function () {
+    localStorage.removeItem("token");
+    window.location.href = "/pages/cadastrologin/login.html"; 
+  });
+</script>
 
   <script>
     function Menu(e) {
@@ -106,8 +113,8 @@
       </div>
       <div>
         <label for="urlImagem" class="block font-medium mb-1">Imagem do Alimento</label>
-        <input type="file" id="urlImagem" name="urlImagem" accept="image/*"
-          class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" />
+        <input type="file" id="urlImagem" name="urlImagem" accept="image/*"class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" />
+        <div id="previewContainer" class="mt-2"></div>
       </div>
       <div class="md:col-span-2">
         <button type="submit"
@@ -116,12 +123,6 @@
     </form>
   </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var today = new Date().toISOString().split('T')[0];
-      document.getElementById('dataValidade').setAttribute('min', today);
-    });
-  </script>
   <footer class="bg-red-500 text-white mt-16 py-6">
     <div class="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
       <span class="font-semibold">&copy; 2025 Conexão Alimentar</span>
