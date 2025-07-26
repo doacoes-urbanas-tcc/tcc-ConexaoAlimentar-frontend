@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         <p><strong>Categoria:</strong> ${doacao.categoria}</p>
         <p><strong>Validade:</strong> ${dataFormatada}</p>
         <p class="text-sm text-gray-600 mt-2">${doacao.descricao || "Sem descrição."}</p>
+        <a href="/pages/doacao/confirmar-exclusao.html?id=${doacao.id}" class="inline-block mt-3 text-sm text-red-600 font-semibold hover:underline">Excluir</a>
       `;
 
       lista.appendChild(card);
