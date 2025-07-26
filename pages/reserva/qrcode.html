@@ -8,7 +8,8 @@
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
   <nav class="bg-red-500 shadow text-white">
     <div class="container mx-auto px-4 py-5 flex justify-between items-center flex-wrap">
       <div class="flex items-center gap-2">
@@ -18,16 +19,38 @@
       <div class="md:hidden text-3xl">
         <ion-icon name="menu-outline" onclick="Menu(this)"></ion-icon>
       </div>
-      <ul id="menu" class="hidden w-full md:flex md:items-center md:space-x-6 md:w-auto mt-4 md:mt-0">
+      <ul id="menu" class="hidden flex-col w-full md:flex md:flex-row md:items-center md:space-x-6 md:w-auto mt-4 md:mt-0 space-y-4 md:space-y-0">
         <li><a href="#" class="text-xl block hover:text-white">Início</a></li>
         <li><a href="/pages/doacao/lista-doacoes.html" class="text-xl block hover:text-white">Lista de Doações</a></li>
         <li><a href="/pages/reserva/minhas-reservas.html" class="text-xl block hover:text-white">Minhas Reservas</a></li>
-        <li class="mt-2 md:mt-0">
-          <button class="bg-white text-red-500 px-4 py-1 rounded-full font-semibold hover:bg-red-100 transition-colors">Sair</button>
+        <li>
+          <button onclick="logout()" class="bg-white text-red-500 px-4 py-1 rounded-full font-semibold hover:bg-red-100 transition-colors">Sair</button>
         </li>
       </ul>
     </div>
   </nav>
+
+  <div class="container mx-auto mt-10 bg-white p-8 rounded-lg shadow max-w-xl flex-grow text-center">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">QR Code da Reserva</h2>
+    <div id="qr-container" class="mb-6 text-center">Carregando QR Code...</div>
+    <div class="mb-4 text-gray-700">
+      Expira em: <span id="tempo-expiracao" class="font-semibold">--:--</span>
+    </div>
+    <div class="w-full bg-gray-300 rounded-full h-3">
+      <div id="progress-bar" class="bg-red-500 h-3 rounded-full" style="width: 100%"></div>
+    </div>
+  </div>
+
+  <footer class="text-gray-800 mt-16 py-6">
+    <div class="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
+      <span class="font-semibold">&copy; 2025 Conexão Alimentar</span>
+      <div class="flex space-x-4 mt-2 md:mt-0">
+        <a href="#" class="hover:underline">Sobre</a>
+        <a href="#" class="hover:underline">Contato</a>
+        <a href="#" class="hover:underline">Privacidade</a>
+      </div>
+    </div>
+  </footer>
 
   <script>
     function Menu(e) {
@@ -42,38 +65,12 @@
         menu.classList.add("hidden");
       }
     }
-    
- 
-      document.querySelector("button").addEventListener("click", function () {
+
+    function logout() {
       localStorage.removeItem("token");
-      window.location.href = "/pages/cadastrologin/login.html"; 
-  });
+      window.location.href = "/pages/cadastrologin/login.html";
+    }
   </script>
-
-
-  <div class="container mx-auto mt-10 bg-white p-8 rounded-lg shadow max-w-2xl text-center">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">QR Code da Reserva</h2>
-    <div id="qr-container" class="flex justify-center items-center h-80">
-      <p class="text-gray-600">Carregando QR Code...</p>
-    </div>
-    <p class="mt-4 text-sm text-gray-600">Este QR Code expira em <span id="tempo-expiracao" class="font-semibold">...</span></p>
-
-    <div class="w-full bg-gray-200 rounded-full h-3 mt-4 overflow-hidden">
-      <div id="progress-bar" class="bg-red-500 h-3 transition-all"></div>
-    </div>
-  </div>
-
-  <footer class="bg-red-500 text-white mt-16 py-6">
-    <div class="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
-      <span class="font-semibold">&copy; 2025 Conexão Alimentar</span>
-      <div class="flex space-x-4 mt-2 md:mt-0">
-        <a href="#" class="hover:underline">Sobre</a>
-        <a href="#" class="hover:underline">Contato</a>
-        <a href="#" class="hover:underline">Privacidade</a>
-      </div>
-    </div>
-  </footer>
-
-  <script src="/js/reserva-qrcode.js"></script>
+  <script src="/js/qrcode.js"></script>
 </body>
 </html>
