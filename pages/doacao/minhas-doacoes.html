@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Minhas Doações</title>
+  <script defer src="minhas-doacoes.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+
+  <nav class="bg-red-500 shadow text-white">
+    <div class="container mx-auto px-4 py-5 flex justify-between items-center flex-wrap">
+      <div class="flex items-center gap-2">
+        <img class="h-10" src="/assets/conexão (1).png" alt="Logo" />
+        <span class="font-bold text-lg">Conexão Alimentar</span>
+      </div>
+
+      <div class="md:hidden text-3xl">
+        <ion-icon name="menu-outline" onclick="Menu(this)"></ion-icon>
+      </div>
+
+      <ul id="menu" class="hidden w-full md:flex md:items-center md:space-x-6 md:w-auto mt-4 md:mt-0">
+        <li><a href="#" class="text-xl block hover:text-white">Início</a></li>
+        <li><a href="/pages/doacao/cadastro-doacao.html" class="text-xl block hover:text-white">Cadastrar Doação</a></li>
+        <li><a href="/pages/doacao/lista-doacoes.html" class="text-xl block hover:text-white">Minhas Doações</a></li>
+        <li class="mt-2 md:mt-0">
+          <button onclick="logout()" class="bg-white text-red-500 px-4 py-1 rounded-full font-semibold hover:bg-red-100 transition-colors">Sair</button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container mx-auto px-4 py-6 flex-grow">
+    <h1 class="text-2xl font-bold mb-6 text-gray-800">Minhas Doações</h1>
+    <div id="listaDoacoes" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    </div>
+  </main>
+
+  <script>
+    function logout() {
+      localStorage.removeItem("token");
+      window.location.href = "/pages/cadastrologin/login.html";
+    }
+
+    function Menu(e) {
+      const menu = document.getElementById("menu");
+      menu.classList.toggle("hidden");
+    }
+  </script>
+</body>
+</html>
