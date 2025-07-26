@@ -8,21 +8,49 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
 
-  <nav class="bg-red-500 text-white px-6 py-4">
-    <div class="container mx-auto flex justify-between items-center">
-      <div class="text-xl font-bold">Conexão Alimentar</div>
-      <a href="/" class="hover:underline">Início</a>
+  <nav class="bg-red-500 shadow text-white">
+  <div class="container mx-auto px-4 py-5 flex justify-between items-center flex-wrap">
+    
+    <div class="flex items-center gap-2">
+      <img class="h-10" src="/assets/conexão (1).png" alt="Logo" />
+      <span class="font-bold text-lg">Conexão Alimentar</span>
     </div>
-  </nav>
+
+    <div class="md:hidden text-3xl">
+      <ion-icon name="menu-outline" onclick="Menu(this)"></ion-icon>
+    </div>
+    <ul id="menu" class="hidden flex-col w-full md:flex md:flex-row md:items-center md:space-x-6 md:w-auto mt-4 md:mt-0 space-y-4 md:space-y-0">
+    <li>
+        <a href="#" class="text-xl block hover:text-white">Início</a>
+    </li>
+    <li>
+        <a href="/pages/doacao/lista-doacoes.html" class="text-xl block hover:text-white">Lista de Doações</a>
+    </li>
+      <li>
+        <a href="/pages/reservas/minhas-reservas.html" class="text-xl block hover:text-white">Minhas Reservas</a>
+    </li>
+      <li class="mt-2 md:mt-0">
+        <button class="bg-white text-red-500 px-4 py-1 rounded-full font-semibold hover:bg-red-100 transition-colors">Sair</button>
+      </li>
+    </ul>
+  </div>
+</nav>
+<script>
+  document.querySelector("button").addEventListener("click", function () {
+    localStorage.removeItem("token");
+    window.location.href = "/pages/cadastrologin/login.html"; 
+  });
+</script>
+
 
   <div class="container mx-auto mt-8 flex-grow">
-    <h1 class="text-3xl font-bold text-red-500 mb-6">Doações Disponíveis</h1>
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">Doações Disponíveis </h1>
 
     <div id="lista-doacoes" class="space-y-6">
     </div>
   </div>
 
-  <footer class="bg-red-500 text-white py-6">
+  <footer class="text-gray-800 py-6">
     <div class="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
       <span class="font-semibold">&copy; 2025 Conexão Alimentar</span>
       <div class="flex space-x-4 mt-2 md:mt-0">
