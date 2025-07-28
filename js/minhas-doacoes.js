@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       const dataFormatada = new Date(doacao.dataValidade).toLocaleDateString("pt-BR");
 
       card.innerHTML = `
-        <img src="${doacao.urlImagem}" alt="${doacao.nomeAlimento}" class="w-full h-40 object-cover rounded mb-2">
+        <img src="${doacao.urlImagem}" alt="${doacao.nomeAlimento}" class="w-full h-40 object-contain rounded mb-2 bg-gray-100">
         <h3 class="text-lg font-semibold">${doacao.nomeAlimento}</h3>
         <p><strong>Quantidade:</strong> ${doacao.quantidade} ${doacao.unidadeMedida}</p>
         <p><strong>Categoria:</strong> ${doacao.categoria}</p>
