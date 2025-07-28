@@ -33,12 +33,13 @@ document.addEventListener("DOMContentLoaded", async function () {
       const dataFormatada = new Date(doacao.dataValidade).toLocaleDateString("pt-BR");
 
       card.innerHTML = `
-        <img src="${imagem}" alt="${doacao.nomeAlimento}" class="w-full h-40 object-cover rounded mb-2">
+        <img src="${doacao.urlImagem}" alt="${doacao.nomeAlimento}" class="w-full h-40 object-cover rounded mb-2">
         <h3 class="text-lg font-semibold">${doacao.nomeAlimento}</h3>
         <p><strong>Quantidade:</strong> ${doacao.quantidade} ${doacao.unidadeMedida}</p>
         <p><strong>Categoria:</strong> ${doacao.categoria}</p>
         <p><strong>Validade:</strong> ${dataFormatada}</p>
         <p class="text-sm text-gray-600 mt-2">${doacao.descricao || "Sem descrição."}</p>
+        <p class="text-sm text-gray-600 mt-2">${doacao.status}</p>
         <a href="/pages/doacao/confirmar-exclusao.html?id=${doacao.id}" class="inline-block mt-3 text-sm text-red-600 font-semibold hover:underline">Excluir</a>
       `;
 
