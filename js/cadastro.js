@@ -28,26 +28,25 @@ function mostrarDescricaoECampos() {
         container.classList.remove("hidden");
         
         // mostrando campo de cada usuario
-        switch(valorSelecionado) {
+         switch (valorSelecionado) {
             case 'pf':
                 document.getElementById('campoCPF').classList.remove('hidden');
+                document.getElementById('campoDocumentoComprovante').classList.remove('hidden');
                 break;
             case 'cnpj':
                 document.getElementById('campoCNPJ').classList.remove('hidden');
+                document.getElementById('nomeFantasia').classList.remove('hidden');
+                document.getElementById('tipoComercio').classList.remove('hidden');
                 break;
             case 'ong':
                 document.getElementById('campoCNPJ').classList.remove('hidden');
-                document.getElementById('campoDescricaoONG').classList.remove('hidden');
-                break;
+                document.getElementById('campoDescricaoONG').classList.remove('hidden');                break;
             case 'rural':
-                document.getElementById('campoRegistroRural').classList.remove('hidden');
-                break;
+                document.getElementById('campoRegistroRural').classList.remove('hidden');                break;
             case 'voluntario':
                 document.getElementById('campoCPF').classList.remove('hidden');
                 document.getElementById('campoTipoVoluntario').classList.remove('hidden');
-                break;
-            case 'admin':
-                document.getElementById('campoCPF').classList.remove('hidden');
+                document.getElementById('campoDocumentoComprovante').classList.remove('hidden');
                 break;
         }
     } else {
