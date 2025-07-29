@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const doacoes = await response.json();
 
-    const doacoesFiltradas = doacoes.filter(d => d.status === "AGUARDANDO_RETIRADA");
+    const doacoesFiltradas = doacoes.filter(d => d.status === "PENDENTE");
 
     if (doacoesFiltradas.length === 0) {
       lista.innerHTML = "<p class='text-gray-600'>Nenhuma doação aguardando retirada no momento.</p>";

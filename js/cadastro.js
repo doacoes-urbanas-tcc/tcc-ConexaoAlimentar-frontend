@@ -1,17 +1,24 @@
-//inserindo função que mostra a descrição do tipo de
-//usuario a partir da escolha do select e gerencia os campos específicos
+'use strict';
 
+// Variáveis globais para geolocalização
+let latitude = "";
+let longitude = "";
+
+// Função para mostrar descrição e campos conforme tipo de usuário
 function mostrarDescricaoECampos() {
     const select = document.getElementById('tipoUsuario');
     const descricao = document.getElementById('descricaoUsuario');
     const container = document.getElementById('descricaoContainer');
 
-    // ocultando campos específicos
+    // Ocultar todos os campos específicos
     document.getElementById('campoCPF').classList.add('hidden');
     document.getElementById('campoCNPJ').classList.add('hidden');
     document.getElementById('campoDescricaoONG').classList.add('hidden');
     document.getElementById('campoRegistroRural').classList.add('hidden');
     document.getElementById('campoTipoVoluntario').classList.add('hidden');
+    document.getElementById('campoDocumentoComprovante').classList.add('hidden');
+    document.getElementById('nomeFantasia').classList.add('hidden');
+    document.getElementById('tipoComercio').classList.add('hidden');
 
     const descricoes = {
         pf: "Pessoa comum que deseja doar alimentos ou produtos como indivíduo.",
@@ -26,9 +33,9 @@ function mostrarDescricaoECampos() {
     if (descricoes[valorSelecionado]) {
         descricao.textContent = descricoes[valorSelecionado];
         container.classList.remove("hidden");
-        
-        // mostrando campo de cada usuario
-         switch (valorSelecionado) {
+
+        // Exibir campos conforme o tipo
+        switch (valorSelecionado) {
             case 'pf':
                 document.getElementById('campoCPF').classList.remove('hidden');
                 document.getElementById('campoDocumentoComprovante').classList.remove('hidden');
@@ -40,9 +47,11 @@ function mostrarDescricaoECampos() {
                 break;
             case 'ong':
                 document.getElementById('campoCNPJ').classList.remove('hidden');
-                document.getElementById('campoDescricaoONG').classList.remove('hidden');                break;
+                document.getElementById('campoDescricaoONG').classList.remove('hidden');
+                break;
             case 'rural':
-                document.getElementById('campoRegistroRural').classList.remove('hidden');                break;
+                document.getElementById('campoRegistroRural').classList.remove('hidden');
+                break;
             case 'voluntario':
                 document.getElementById('campoCPF').classList.remove('hidden');
                 document.getElementById('campoTipoVoluntario').classList.remove('hidden');
@@ -55,39 +64,30 @@ function mostrarDescricaoECampos() {
     }
 }
 
-
-document.addEventListener('DOMContentLoaded', function() {
-    mostrarDescricaoECampos();
-});
-
-//inserindo api CEP
-'use strict';
-
-const limparFormulario = (endereco) => {
+// Função para limpar formulário de endereço
+function limparFormulario() {
     document.getElementById('endereco').value = '';
     document.getElementById('bairro').value = '';
     document.getElementById('cidade').value = '';
     document.getElementById('estado').value = '';
 }
 
-
+// CEP via API
 const preencherFormulario = (endereco) => {
     document.getElementById('endereco').value = endereco.logradouro;
     document.getElementById('bairro').value = endereco.bairro;
     document.getElementById('cidade').value = endereco.localidade;
     document.getElementById('estado').value = endereco.uf;
-}
-
+};
 
 const eNumero = (numero) => /^[0-9]+$/.test(numero);
-
-const cepValido = (cep) => cep.length == 8 && eNumero(cep);
+const cepValido = (cep) => cep.length === 8 && eNumero(cep);
 
 const pesquisarCep = async () => {
     limparFormulario();
-
     const cep = document.getElementById('cep').value.replace("-", "");
     const url = `https://viacep.com.br/ws/${cep}/json/`;
+
     if (cepValido(cep)) {
         const dados = await fetch(url);
         const endereco = await dados.json();
@@ -99,88 +99,144 @@ const pesquisarCep = async () => {
     } else {
         document.getElementById('endereco').value = 'CEP incorreto!';
     }
+};
 
-}
+// Evento global ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    mostrarDescricaoECampos();
 
-document.getElementById('cep')
-    .addEventListener('focusout', pesquisarCep);
-
-//final da api CEP
-
-// mascara de input
-document.addEventListener('DOMContentLoaded', function() {
-    // mascara para telefone
-    const telefoneInput = document.getElementById('telefone');
-    telefoneInput.addEventListener('input', function(e) {
+    // Máscaras de input
+    document.getElementById('telefone').addEventListener('input', function (e) {
         let value = e.target.value.replace(/\D/g, '');
         value = value.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
         e.target.value = value;
     });
 
-    // mascara para CEP
-    const cepInput = document.getElementById('cep');
-    cepInput.addEventListener('input', function(e) {
+    document.getElementById('cep').addEventListener('input', function (e) {
         let value = e.target.value.replace(/\D/g, '');
         value = value.replace(/^(\d{5})(\d{3})$/, '$1-$2');
         e.target.value = value;
     });
 
-    // mascara para CPF
-    const cpfInput = document.getElementById('cpf');
-    cpfInput.addEventListener('input', function(e) {
+    document.getElementById('cpf').addEventListener('input', function (e) {
         let value = e.target.value.replace(/\D/g, '');
         value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
         e.target.value = value;
     });
 
-    // mascara pra pj
-    const cnpjInput = document.getElementById('cnpj');
-    cnpjInput.addEventListener('input', function(e) {
+    document.getElementById('cnpj').addEventListener('input', function (e) {
         let value = e.target.value.replace(/\D/g, '');
         value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
         e.target.value = value;
     });
+
+    document.getElementById('cep').addEventListener('focusout', pesquisarCep);
+
+    // Geolocalização
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            latitude = position.coords.latitude;
+            longitude = position.coords.longitude;
+            document.getElementById('latitude').value = latitude;
+            document.getElementById('longitude').value = longitude;
+        }, () => {
+            console.warn("Permissão de localização negada.");
+        });
+    }
 });
 
-//fazendo validação dos dados com a lib schema yup e regex
+// Envio do formulário com validação
 const form = document.getElementById('form');
 const erros = document.getElementById('erros');
 
-const schema = yup.object().shape({
-    nome: yup.string()
-        .required("O nome é obrigatório"),
-    telefone: yup.string()
-        .min(11, "O número de telefone precisa conter 11 dígitos").
-        max(11)
-        .required("O número de telefone é obrigatório"),
-    email: yup.string().email.
-        required("O email é obrigatório"),
-    password: yup.string()
-        .min(6, "A senha deve ter pelo menos 6 dígitos")
-        .required("A senha é obrigatória "),
-    confirmPassword: yup.string()
-        .required("Confirmar a senha é obrigatório")
-        .oneOf([yup.ref("password")], "As senhas devem ser iguais"),
-    cep: yup.string().min(8, "O CEP deve ter pelo menos 8 dígitos")
-        .max(8).required("O CEP é obrigatório")
-        .matches(/^\d{5}-\d{3}$/, 'CEP inválido'),
-    cpf: yup.string().matches(/^\d{11}$/),
-    cnpj: yup.string().matches(/^\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}$/, 'CNPJ inválido'),
-    numeroRegistroRural: yup.string().min(13).max(13),
-});
-
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const tipoUsuario = document.getElementById("tipoUsuario").value;
 
     const dados = {
         nome: document.getElementById('nome').value,
-        cpf: document.getElementById('cpf').value.replace(/\D/g, ''),
+        email: document.getElementById('email').value,
+        senha: document.getElementById('password').value,
+        telefone: document.getElementById('telefone').value,
+        cep: document.getElementById('cep').value,
+        endereco: document.getElementById('endereco').value,
+        bairro: document.getElementById('bairro').value,
+        cidade: document.getElementById('cidade').value,
+        estado: document.getElementById('estado').value,
+        latitude,
+        longitude
     };
 
+    if (tipoUsuario === "pf" || tipoUsuario === "voluntario" || tipoUsuario === "admin") {
+        dados.cpf = document.getElementById('cpf').value.replace(/\D/g, '');
+        dados.documentoComprovante = document.getElementById('documentoComprovante').value;
+    }
+
+
+    if (tipoUsuario === "voluntario") {
+        dados.tipoVoluntario = document.getElementById('tipoVoluntario').value;
+        dados.documentoComprovante = document.getElementById('documentoComprovante').value;
+        dados.tipoVoluntario = document.getElementById('tipoVoluntario').value;
+    }
+
+    if (tipoUsuario === "rural") {
+        dados.numeroRegistroRural = document.getElementById('numeroRegistroRural').value;
+    }
+
+    if (tipoUsuario === "ong") {
+        dados.cnpj = document.getElementById('cnpj').value;
+        dados.descricao = document.getElementById('descricaoONG').value;
+    }
+
+    if (tipoUsuario === "cnpj") {
+        dados.nomeFantasia = document.getElementById('nomeFantasia').value;
+        dados.tipoComercio = document.getElementById('tipoComercio').value;
+    }
+
     try {
-        await schema.validate(dados, { abortEarly: false });
-        erros.innerHTML = "Tudo certo!";
+        await yup.object().shape({
+            nome: yup.string().required("O nome é obrigatório"),
+            email: yup.string().email("Email inválido").required("O email é obrigatório"),
+            senha: yup.string().min(6).required("A senha é obrigatória"),
+            telefone: yup.string().required("O telefone é obrigatório"),
+            cep: yup.string().required("O CEP é obrigatório"),
+            endereco: yup.string().required("O endereço é obrigatório"),
+            cidade: yup.string().required("A cidade é obrigatória"),
+            estado: yup.string().required("O estado é obrigatório"),
+        }).validate(dados, { abortEarly: false });
+
+        const tipoMapeado = {
+            pf: "pessoa-fisica",
+            cnpj: "comercio",
+            ong: "ong",
+            rural: "produtor-rural",
+            voluntario: "voluntario",
+            admin: "admin"
+        };
+
+        const endpoint = `http://localhost:8080/${tipoMapeado[tipoUsuario]}/cadastrar`;
+
+        const response = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dados)
+        });
+
+        if (response.ok) {
+            alert("Cadastro realizado com sucesso!");
+            window.location.href = "/pages/cadastrologin/login.html";
+        } else {
+            const res = await response.json();
+            console.error("Erro no cadastro:", res);
+            alert("Erro ao cadastrar: " + (res.message || "Verifique os dados."));
+        }
+
     } catch (err) {
-        erros.innerHTML = err.errors.map(msg => `<p>${msg}</p>`).join('');
+        if (err.name === 'ValidationError') {
+            erros.innerHTML = err.errors.map(e => `<p class="text-red-600 text-sm">${e}</p>`).join('');
+        } else {
+            console.error("Erro inesperado:", err);
+            alert("Erro inesperado no envio do formulário.");
+        }
     }
 });
