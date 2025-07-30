@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Conexão Alimentar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+  <div class="bg-white shadow-md rounded px-10 py-10 w-full max-w-md">
+    <h2 class="text-2xl font-bold mb-6 text-red-600 text-center">Entrar na Plataforma</h2>
+
+    <form id="form-login" class="space-y-4">
+      <div>
+        <label class="block text-gray-700 font-medium">E-mail</label>
+        <input type="email" id="email" required class="w-full mt-1 px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-red-500" />
+      </div>
+      <div>
+        <label class="block text-gray-700 font-medium">Senha</label>
+        <input type="password" id="senha" required class="w-full mt-1 px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-red-500" />
+      </div>
+
+      <div id="erro" class="text-red-600 text-sm hidden">Erro no login. Verifique seu e-mail e senha.</div>
+
+      <button type="submit" class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded font-semibold">
+        Entrar
+      </button>
+    </form>
+  </div>
+
+  <script src="/js/login.js"></script>
+</body>
+</html>

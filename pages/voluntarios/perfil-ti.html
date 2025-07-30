@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cadastro Perfil TI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body class="bg-red-500 min-h-screen">
+  <div class="max-w-6xl mx-auto mt-10 bg-white p-8 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold mb-6 text-gray-800 col-span-2">Cadastro de Perfil TI</h2>
+    <form id="formTI" class="grid grid-cols-1 md:grid-cols-2 gap-6" enctype="multipart/form-data">
+
+      <div>
+        <label for="setorTi" class="block font-medium mb-1">Área de Atuação *</label>
+        <select id="setorTi" name="setorTi" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400">
+          <option value="">Selecione</option>
+          <option value="DESENVOLVIMENTO_BACKEND">Desenvolvimento Back-end</option>
+          <option value="DESENVOLVIMENTO_FORNTND">Desenvolvimento Front-end</option>
+          <option value="BANCO_DE_DADOS">Banco de Dados</option>
+          <option value="SUPORTE_TECNICO">Suporte Técnico</option>
+          <option value="SEGURANCA_DA_INFORMACAO">Segurança da Informação</option>
+          <option value="DEVOPS_E_INFRAESTRUTURA">DevOps e Infraestrutura</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="certificacoesFile" class="block font-medium mb-1">Certificações (arquivo) *</label>
+        <input type="file" id="certificacoesFile" name="certificacoesFile" required accept=".pdf,.jpg,.png" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" />
+      </div>
+
+      <div>
+        <label for="linkedin" class="block font-medium mb-1">LinkedIn</label>
+        <input type="url" id="linkedin" name="linkedin" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" />
+      </div>
+
+      <div>
+        <label for="github" class="block font-medium mb-1">GitHub</label>
+        <input type="url" id="github" name="github" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" />
+      </div>
+
+      <div>
+        <label for="disponibilidadeHoras" class="block font-medium mb-1">Horas disponíveis por semana *</label>
+        <input type="number" id="disponibilidadeHoras" name="disponibilidadeHoras" required min="1" step="0.5" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" />
+      </div>
+
+      <div class="md:col-span-2">
+        <label for="experiencia" class="block font-medium mb-1">Experiência *</label>
+        <textarea id="experiencia" name="experiencia" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" rows="3"></textarea>
+      </div>
+
+      <div class="md:col-span-2">
+        <label class="block font-medium mb-1">Stacks de Conhecimento</label>
+        <div id="stacks" class="flex flex-wrap gap-2 mb-2"></div>
+        <input type="hidden" name="stackConhecimento" id="stackConhecimento" />
+        <p class="text-sm text-gray-500">Clique para selecionar as tecnologias que você domina.</p>
+      </div>
+
+      <div class="md:col-span-2">
+        <button type="submit" class="w-full bg-red-500 text-white font-semibold py-2 rounded hover:bg-red-600 transition-colors">Cadastrar Perfil</button>
+      </div>
+    </form>
+  </div>
+
+
+   <script src="/js/perfil-ti.js"></script>
+</body>
+</html>
