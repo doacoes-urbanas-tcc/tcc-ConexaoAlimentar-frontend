@@ -282,19 +282,23 @@ form.addEventListener('submit', async (e) => {
     const endpoint = `http://localhost:8080/${tipoMapeado[tipoUsuario]}/cadastrar`;
 
     try {
-        const response = await fetch(endpoint, {
-            method: "POST",
-            body: formData
-        });
+       const response = await fetch(endpoint, {
+  method: "POST",
+  body: formData
+});
 
-        if (response.ok) {
-            alert("Cadastro realizado com sucesso!");
-            window.location.href = "/pages/cadastrologin/login.html";
-        } else {
-            const res = await response.json();
-            console.error("Erro no cadastro:", res);
-            alert("Erro ao cadastrar: " + (res.message || "Verifique os dados."));
-        }
+if (response.ok) {
+const resBody = await response.json();
+localStorage.setItem("usuarioId", resBody.id);
+
+if (dados.setorAtuacao === "TI") {
+  window.location.href = "/pages/voluntarios/perfil-ti.html";
+} else if (dados.setorAtuacao === "TRANSPORTE") {
+  window.location.href = "/pages/voluntarios/cadastrotransportador.html";
+} else {
+  window.location.href = "/pages/cadastrologin/login.html";
+}
+}
 
     } catch (err) {
         console.error("Erro inesperado:", err);
