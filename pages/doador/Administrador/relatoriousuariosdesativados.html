@@ -19,9 +19,12 @@
         
         <!-- Botão para carregar os usuários desativados -->
         <div class="text-right mb-4">
-            <button onclick="carregarUsuariosDesativados()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-semibold">
-                Carregar Usuários Desativados
-            </button>
+            <select id="status-filter" class="bg-gray-200 text-gray-700 rounded-lg px-4 py-2">
+                    <option value="all">Todos</option>
+                    <option value="pendente">Pendentes</option>
+                    <option value="aprovado">Aprovados</option>
+                    <option value="rejeitado">Rejeitados</option>
+                </select>
         </div>
 
         <!-- Tabela -->

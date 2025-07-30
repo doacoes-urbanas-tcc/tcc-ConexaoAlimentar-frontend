@@ -66,7 +66,7 @@ async function aprovarCadastro(id) {
 // Função para reprovar um cadastro
 async function reprovarCadastro(id) {
     try {
-        const response = await fetch(`http://localhost:8080/cadastros/reprovar/${id}`, {
+        const response = await fetch(`http://localhost:8080/admin/usuarios/reprovar/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -85,29 +85,3 @@ async function reprovarCadastro(id) {
         alert('Erro ao reprovar cadastro.');
     }
 }
-
-// Função para deletar um cadastro
-async function deletarCadastro(id) {
-    try {
-        const response = await fetch(`http://localhost:8080/cadastros/deletar/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error('Erro ao deletar o cadastro!');
-        }
-
-        const result = await response.json();
-        alert(result.message || 'Cadastro deletado com sucesso!');
-        carregarCadastrosPendentes();  // Atualizar a lista após a exclusão
-    } catch (error) {
-        console.error('Erro ao deletar cadastro:', error);
-        alert('Erro ao deletar cadastro.');
-    }
-}
-
-// Carregar os cadastros assim que a página for carregada
-window.onload = carregarCadastrosPendentes;

@@ -54,8 +54,8 @@ function renderUsuariosDesativados(usuarios) {
 async function deletarUsuario(id) {
     if (confirm('Tem certeza que deseja deletar este usuário?')) {
         try {
-            const response = await fetch(`http://localhost:8080/usuarios/${id}`, {
-                method: 'DELETE'
+            const response = await fetch(`http://localhost:8080/admin/usuarios/reprovar/${id}`, {
+                method: 'PATCH',
             });
             if (response.ok) {
                 buscarUsuariosDeletados();

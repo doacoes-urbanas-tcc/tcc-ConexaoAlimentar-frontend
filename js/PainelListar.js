@@ -1,10 +1,17 @@
 // Função para carregar o check list
 async function carregarCheckList() {
+ 
+    const tipoUsuario = document.getElementById('tipoUsuario').value;
+    const endpoint = `http://localhost:8080/admin/usuarios/pendentes/${tipoUsuario}`;
+
     try {
-        // Fazendo uma requisição GET para a API que retorna os itens do check list
-        const response = await fetch('/api/usuarios/ativos');
-        
-        // Verifica se a resposta foi bem-sucedida
+        const response = await fetch(endpoint,{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
         if (!response.ok) {
             throw new Error('Erro ao carregar o check list!');
         }
@@ -12,7 +19,7 @@ async function carregarCheckList() {
         const data = await response.json();
 
         // Acessando o elemento da lista de itens
-        const listaItens = document.getElementById('lista-itens');
+        const listaItens = document.getElementById('lista itens');
         
         // Limpar a lista antes de adicionar os novos itens
         listaItens.innerHTML = '';
@@ -38,4 +45,6 @@ async function carregarCheckList() {
         console.error('Erro ao carregar check list:', error);
         alert('Erro ao carregar o check list.');
     }
+    
+
 }
