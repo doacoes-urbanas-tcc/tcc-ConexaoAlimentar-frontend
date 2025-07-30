@@ -1,8 +1,8 @@
-// Função para buscar os cadastros pendentes
+// Função para carregar os cadastros pendentes
 async function carregarCadastrosPendentes() {
     try {
         // Requisição para obter os cadastros pendentes
-        const response = await fetch('/api/usuarios/ativos');
+        const response = await fetch('http://localhost:8080/admin/usuarios/');
         
         // Verifica se a resposta é ok
         if (!response.ok) {
@@ -28,6 +28,7 @@ async function carregarCadastrosPendentes() {
                     <div class="flex space-x-2">
                         <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700" onclick="aprovarCadastro(${item.id})">Aprovar</button>
                         <button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700" onclick="reprovarCadastro(${item.id})">Reprovar</button>
+                        <button class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700" onclick="deletarCadastro(${item.id})">Deletar</button>
                     </div>
                 </div>
             `;
@@ -42,12 +43,10 @@ async function carregarCadastrosPendentes() {
 // Função para aprovar um cadastro
 async function aprovarCadastro(id) {
     try {
-        const response = await fetch(`http://localhost:8080/api//aprovar/${id}`, {
+        const response = await fetch(`http://localhost:8080/admin/usuarios/aprovar/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                // Adicionar autenticação se necessário
-                // 'Authorization': `Bearer ${token}`
             },
         });
 
@@ -67,12 +66,10 @@ async function aprovarCadastro(id) {
 // Função para reprovar um cadastro
 async function reprovarCadastro(id) {
     try {
-        const response = await fetch(`http://localhost:8080/api//reprovar/${id}`, {
+        const response = await fetch(`http://localhost:8080/cadastros/reprovar/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                // Adicionar autenticação se necessário
-                // 'Authorization': `Bearer ${token}`
             },
         });
 
@@ -86,6 +83,29 @@ async function reprovarCadastro(id) {
     } catch (error) {
         console.error('Erro ao reprovar cadastro:', error);
         alert('Erro ao reprovar cadastro.');
+    }
+}
+
+// Função para deletar um cadastro
+async function deletarCadastro(id) {
+    try {
+        const response = await fetch(`http://localhost:8080/cadastros/deletar/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao deletar o cadastro!');
+        }
+
+        const result = await response.json();
+        alert(result.message || 'Cadastro deletado com sucesso!');
+        carregarCadastrosPendentes();  // Atualizar a lista após a exclusão
+    } catch (error) {
+        console.error('Erro ao deletar cadastro:', error);
+        alert('Erro ao deletar cadastro.');
     }
 }
 
