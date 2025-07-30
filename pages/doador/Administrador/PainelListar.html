@@ -21,19 +21,23 @@
 
             <!-- Botão para carregar checklist -->
             <div class="text-right mb-4">
-                <button onclick="carregarCheckList()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-semibold">
-                    Carregar Check List
-                </button>
+                <select id="tipoUsuario" class="bg-gray-200 text-gray-700 rounded-lg px-4 py-2">
+                    <option value="PESSOA_FISICA">Pessoa fisica</option>
+                    <option value="COMERCIO">Comercio</option>
+                    <option value="PRODUTOR_RURAL">Produtor rural</option>
+                    <option value="ONG">Ong</option>
+                    <option value="VOLUNTARIO">Voluntario</option>
+                </select>
             </div>
 
             <div class="overflow-x-auto">
                 <ul class="space-y-2" id="lista-itens">
                     <li class="flex font-semibold text-xs text-gray-700 px-2 py-1">
-                        <span class="flex-1">Item</span>
-                        <span class="flex-1">Endereço</span>
-                        <span class="flex-1">Horário</span>
-                        <span class="flex-1">Status</span>
-                        <span class="flex-1">Retirada<br>Própria ou terceiros</span>
+                        <span class="flex-1">Nome</span>
+                        <span class="flex-1">Email</span>
+                        <span class="flex-1">Telefone</span>
+                        <span class="flex-1">Tipo de usuario</span>
+                        <span class="flex-1">Açao</span>
                     </li>
                     <!-- Dados vão aqui -->
                 </ul>

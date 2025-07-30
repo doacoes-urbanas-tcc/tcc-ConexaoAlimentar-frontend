@@ -11,6 +11,7 @@
 <body 
     class="min-h-screen bg-gray-100 bg-cover bg-center" 
     style="background-image: url('/assets/kaique\ fundo\ 2.0.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+    
     <!-- Navbar -->
     <nav class="bg-white shadow px-4 py-3 flex items-center justify-between">
         <div class="flex items-center space-x-4">
@@ -27,20 +28,23 @@
             </button>
         </div>
         <div id="navbar-links" class="hidden sm:flex space-x-2">
-            <a href="Cadastro1.html" class="bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold transition-colors text-sm">Cadastros</a>
+            <a href="Cadastro1.html" class="bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold transition-colors text-sm text-center">
+                Cadastrar  Reprovar
+            </a>
             <a href="relatoriousuariosdesativados.html" class="bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold transition-colors text-sm">Relatório usuários desativados</a>
-            <a href="PainelListar.html" class="bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold transition-colors text-sm">Painel Checklist</a>
-            <a href="relatoriosdiversosPDF.html" class="bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold transition-colors text-sm">Relatórios diversos</a>
-            <!-- Remova ou adicione outros links conforme necessário -->
+            <a href="PainelListar.html" class="bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold transition-colors text-sm">Painel checklist usuarios</a>
+            <a href="relatoriosdiversosPDF.html" class="bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold transition-colors text-sm">Gerar relatorio em PDF</a>
         </div>
     </nav>
 
+    <!-- Menu mobile -->
     <div id="mobile-menu" class="sm:hidden hidden px-4 pb-4">
-        <a href="Cadastro1.html" class="block bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold mb-2 transition-colors text-sm">Cadastros</a>
-        <a href="relatoriousuariosdesativados.html" class="block bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold mb-2 transition-colors text-sm">Relatório usuários desativados</a>
-        <a href="PainelListar.html" class="bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold transition-colors text-sm">Painel Checklist</a>
-        <a href="relatoriosdiversosPDF.html" class="block bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold mb-2 transition-colors text-sm">Relatórios diversos</a>
-        <!-- Remova ou adicione outros links conforme necessário -->
+        <a href="Cadastro1.html" class="block bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold mb-2 transition-colors text-sm text-center">
+            Cadastrar  Reprovar
+        </a>
+        <a href="relatoriousuariosdesativados.html" class="block bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold mb-2 transition-colors text-sm">Painel usuários desativados</a>
+        <a href="PainelListar.html" class="bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold transition-colors text-sm">Checklist usuarios ativos</a>
+        <a href="relatoriosdiversosPDF.html" class="block bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold mb-2 transition-colors text-sm">Gerar relatorio em PDF</a>
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-4xl flex flex-col sm:flex-row items-center justify-between gap-8">
@@ -53,6 +57,7 @@
                 </div>
             </div>
         </div>
+
         <!-- Coluna Direita: Imagem -->
         <div class="w-full sm:w-1/2 flex justify-center items-center">
             <img 
@@ -63,6 +68,7 @@
             />
         </div>
     </div>
+
     <script src="../../../js/administrador.js"></script>
 </body>
 
