@@ -1,7 +1,7 @@
 // Função para buscar usuários desativados
 async function buscarUsuariosDeletados() {
     try {
-        const response = await fetch('http://localhost:8080/usuarios/inativos');
+        const response = await fetch('/reprovar/{id}');
         const usuarios = await response.json();
         preencherTabela(usuarios);
     } catch (error) {

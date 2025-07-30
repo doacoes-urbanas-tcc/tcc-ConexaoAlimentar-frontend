@@ -1,51 +1,93 @@
-// Exemplo de dados simulados (substitua por chamada à sua API)
-const cadastrosPendentes = [
-    { id: 1, tipo: 'ONG', nome: 'ONG Esperança', email: 'ong@exemplo.com', estado: 'SP', atuacao: 'Alimentos' },
-    { id: 2, tipo: 'Comércio', nome: 'Mercado Bom Preço', email: 'mercado@exemplo.com', estado: 'RJ', atuacao: 'Varejo' },
-    // ...mais cadastros
-];
+// Função para buscar os cadastros pendentes
+async function carregarCadastrosPendentes() {
+    try {
+        // Requisição para obter os cadastros pendentes
+        const response = await fetch('/api/usuarios/ativos');
+        
+        // Verifica se a resposta é ok
+        if (!response.ok) {
+            throw new Error('Erro ao carregar os cadastros!');
+        }
 
-function renderCadastros() {
-    const tbody = document.getElementById('cadastros-tbody');
-    tbody.innerHTML = '';
-    cadastrosPendentes.forEach(cadastro => {
-        const tr = document.createElement('tr');
-        tr.className = 'bg-white border-b';
-        tr.innerHTML = `
-            <td class="px-4 py-2">${cadastro.tipo}</td>
-            <td class="px-4 py-2">${cadastro.nome}</td>
-            <td class="px-4 py-2">${cadastro.email}</td>
-            <td class="px-4 py-2">${cadastro.estado}</td>
-            <td class="px-4 py-2">${cadastro.atuacao}</td>
-            <td class="px-4 py-2 flex gap-2">
-                <button onclick="aprovar(${cadastro.id})" class="bg-green-500 text-white px-2 py-1 rounded">Aprovar</button>
-                <button onclick="reprovar(${cadastro.id})" class="bg-red-500 text-white px-2 py-1 rounded">Rejeitar</button>
-            </td>
-        `;
-        tbody.appendChild(tr);
-    });
-}
-// Função do botão "Voltar"
-function voltar() {
-    alert("Você está prestes a voltar para a página anterior.");
-    const confirmVoltar = confirm("Você tem certeza que deseja voltar?");
-    if (confirmVoltar) {
-        window.location.href = 'administrador.html';
-    };
-}
+        const data = await response.json();
 
-function aprovar(id) {
-    // Chame sua API para aprovar
-    alert('Aprovado: ' + id);
-}
+        // Preencher a lista de cadastros
+        const lista = document.getElementById('cadastros-list');
+        lista.innerHTML = '';  // Limpar a lista antes de preencher
 
-function reprovar(id) {
-    // Chame sua API para reprovar
-    alert('Rejeitado: ' + id);
+        // Iterar sobre os cadastros recebidos e criar os itens da lista
+        data.forEach(item => {
+            const listItem = document.createElement('li');
+            listItem.className = 'bg-gray-50 p-4 rounded-lg shadow-md';
+            listItem.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <div class="flex flex-col">
+                        <span class="font-bold text-lg text-gray-800">${item.nome}</span>
+                        <span class="text-sm text-gray-500">${item.tipoCadastro}</span>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700" onclick="aprovarCadastro(${item.id})">Aprovar</button>
+                        <button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700" onclick="reprovarCadastro(${item.id})">Reprovar</button>
+                    </div>
+                </div>
+            `;
+            lista.appendChild(listItem);
+        });
+    } catch (error) {
+        console.error('Erro ao carregar cadastros:', error);
+        alert('Erro ao carregar os cadastros.');
+    }
 }
 
-window.renderCadastros = renderCadastros;
-window.aprovar = aprovar;
-window.reprovar = reprovar;
+// Função para aprovar um cadastro
+async function aprovarCadastro(id) {
+    try {
+        const response = await fetch(`http://localhost:8080/api//aprovar/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                // Adicionar autenticação se necessário
+                // 'Authorization': `Bearer ${token}`
+            },
+        });
 
-document.addEventListener('DOMContentLoaded', renderCadastros);
+        if (!response.ok) {
+            throw new Error('Erro ao aprovar o cadastro!');
+        }
+
+        const result = await response.json();
+        alert(result.message || 'Cadastro aprovado com sucesso!');
+        carregarCadastrosPendentes();  // Atualizar a lista
+    } catch (error) {
+        console.error('Erro ao aprovar cadastro:', error);
+        alert('Erro ao aprovar cadastro.');
+    }
+}
+
+// Função para reprovar um cadastro
+async function reprovarCadastro(id) {
+    try {
+        const response = await fetch(`http://localhost:8080/api//reprovar/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                // Adicionar autenticação se necessário
+                // 'Authorization': `Bearer ${token}`
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao reprovar o cadastro!');
+        }
+
+        const result = await response.json();
+        alert(result.message || 'Cadastro reprovado com sucesso!');
+        carregarCadastrosPendentes();  // Atualizar a lista
+    } catch (error) {
+        console.error('Erro ao reprovar cadastro:', error);
+        alert('Erro ao reprovar cadastro.');
+    }
+}
+
+// Carregar os cadastros assim que a página for carregada
+window.onload = carregarCadastrosPendentes;

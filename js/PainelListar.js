@@ -1,36 +1,41 @@
-// checklist.js
-
+// Função para carregar o check list
 async function carregarCheckList() {
-    const lista = document.getElementById('lista-itens');
-
     try {
-        // Altere a URL conforme necessário
-        const response = await fetch('http://localhost:8080/api/usuarios/ativos');
+        // Fazendo uma requisição GET para a API que retorna os itens do check list
+        const response = await fetch('/api/usuarios/ativos');
+        
+        // Verifica se a resposta foi bem-sucedida
+        if (!response.ok) {
+            throw new Error('Erro ao carregar o check list!');
+        }
 
-        if (!response.ok) throw new Error('Erro ao buscar dados');
+        const data = await response.json();
 
-        const dados = await response.json();
+        // Acessando o elemento da lista de itens
+        const listaItens = document.getElementById('lista-itens');
+        
+        // Limpar a lista antes de adicionar os novos itens
+        listaItens.innerHTML = '';
 
-        // Remove entradas anteriores (exceto o cabeçalho)
-        lista.querySelectorAll('li:not(:first-child)').forEach(el => el.remove());
+        // Iterando sobre os dados retornados da API para preencher a lista
+        data.forEach(item => {
+            const listItem = document.createElement('li');
+            listItem.className = 'flex text-sm text-gray-700 px-2 py-2 border-b';
 
-        dados.forEach((item, index) => {
-            const li = document.createElement('li');
-            li.className = "flex bg-gray-100 rounded-lg px-2 py-2 text-sm text-gray-800";
-
-            li.innerHTML = `
-                <span class="flex-1">${item.nome || 'N/A'}</span>
-                <span class="flex-1">${item.endereco || 'N/A'}</span>
-                <span class="flex-1">${item.horario || '08:00 - 17:00'}</span>
-                <span class="flex-1">${item.ativo ? 'Ativo' : 'Pendente'}</span>
-                <span class="flex-1">${item.retirada || 'Próprio'}</span>
+            // Estrutura de cada item com os campos: Item, Endereço, Horário, Status e Retirada
+            listItem.innerHTML = `
+                <span class="flex-1">${item.nomeItem}</span>
+                <span class="flex-1">${item.endereco}</span>
+                <span class="flex-1">${item.horario}</span>
+                <span class="flex-1">${item.status}</span>
+                <span class="flex-1">${item.retirada}</span>
             `;
-
-            lista.appendChild(li);
+            // Adicionando o item à lista
+            listaItens.appendChild(listItem);
         });
 
     } catch (error) {
-        console.error('Erro:', error);
-        alert('Não foi possível carregar o check list.');
+        console.error('Erro ao carregar check list:', error);
+        alert('Erro ao carregar o check list.');
     }
 }
