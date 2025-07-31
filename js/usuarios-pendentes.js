@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const filtro = document.getElementById("filtroTipo");
   const tabela = document.getElementById("tabelaUsuarios");
   const token = localStorage.getItem("token");
+  let idUsuarioParaReprovar = null;
 
   filtro.addEventListener("change", () => carregarUsuarios(filtro.value));
 
@@ -30,9 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
       : `/admin/usuarios/pendentes/${tipo}`;
 
     fetch(`http://localhost:8080${endpoint}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { 
+        Authorization: `Bearer ${token}` },
     })
       .then((res) => {
         if (!res.ok) throw new Error("Erro ao carregar usuários");
@@ -65,33 +65,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const btnVer = document.createElement("button");
       btnVer.textContent = "Visualizar";
       btnVer.className = "bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full text-sm";
-
       btnVer.onclick = () => {
-      window.location.href = `/pages/administrador/perfil-usuario.html?id=${usuario.id}&tipo=${usuario.tipoUsuario}`;
-     };
-
-      const tipoUsuario = usuario.tipoUsuario;
-      let tipoUrl;
-
-      switch (tipoUsuario) {
-        case "COMERCIO":
-          tipoUrl = "COMERCIO";
-          break;
-        case "ONG":
-          tipoUrl = "ONG";
-          break;
-        case "PESSOA_FISICA":
-          tipoUrl = "PESSOA_FISICA";
-          break;
-        case "PRODUTOR_RURAL":
-          tipoUrl = "PRODUTOR_RURAL";
-          break;
-        case "VOLUNTARIO":
-          tipoUrl = "VOLUNTARIO";
-          break;
-        default:
-          tipoUrl = "desconhecido";
-      }
+        window.location.href = `/pages/administrador/perfil-usuario.html?id=${usuario.id}&tipo=${usuario.tipoUsuario}`;
+      };
 
       const btnAprovar = document.createElement("button");
       btnAprovar.textContent = "Aprovar";
@@ -101,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const btnReprovar = document.createElement("button");
       btnReprovar.textContent = "Reprovar";
       btnReprovar.className = "bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-full text-sm";
-      btnReprovar.onclick = () => reprovarUsuario(usuario.id, tr);
+      btnReprovar.onclick = () => abrirModalReprovacao(usuario.id);
 
       tdAcoes.append(btnVer, btnAprovar, btnReprovar);
       tr.append(tdNome, tdTipo, tdEmail, tdAcoes);
@@ -112,9 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function aprovarUsuario(id) {
     fetch(`http://localhost:8080/admin/usuarios/aprovar/${id}`, {
       method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
         if (res.ok) carregarUsuarios(filtro.value);
@@ -122,29 +96,52 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  function reprovarUsuario(id, linhaTabela) {
-    fetch(`http://localhost:8080/admin/usuarios/reprovar/${id}`, {
+  function abrirModalReprovacao(id) {
+    idUsuarioParaReprovar = id;
+    document.getElementById("inputJustificativa").value = "";
+    document.getElementById("modalJustificativa").classList.remove("hidden");
+  }
+
+  function fecharModal() {
+    document.getElementById("modalJustificativa").classList.add("hidden");
+    idUsuarioParaReprovar = null;
+  }
+
+  document.getElementById("btnConfirmarReprovar").addEventListener("click", () => {
+    const justificativa = document.getElementById("inputJustificativa").value;
+
+    if (!justificativa.trim()) {
+      alert("Por favor, informe a justificativa.");
+      return;
+    }
+
+    fetch(`http://localhost:8080/admin/usuarios/reprovar/${idUsuarioParaReprovar}`, {
       method: "PATCH",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
+      body: JSON.stringify({ motivo: justificativa })
     })
-      .then((res) => {
+      .then(res => {
         if (res.ok) {
           alert("Usuário reprovado com sucesso!");
-          linhaTabela.remove();
+          window.location.href = "/pages/administrador/usuarios-reprovados.html";
         } else {
-          res.text().then((texto) => {
-            console.error("Erro ao reprovar:", texto);
-            alert("Erro ao reprovar usuário");
+          return res.text().then(msg => {
+            console.error("Erro:", msg);
+            alert("Erro ao reprovar usuário.");
           });
         }
       })
-      .catch((err) => {
+      .catch(err => {
         console.error("Erro de rede:", err);
         alert("Erro ao se comunicar com o servidor.");
-      });
-  }
+      })
+      .finally(() => fecharModal());
+  });
+
+  document.getElementById("btnCancelarReprovar").addEventListener("click", fecharModal);
 
   carregarUsuarios("todos");
 });
