@@ -1,3 +1,22 @@
+const tiposMap = {
+  "comercios": "COMERCIO",
+  "ongs": "ONG",
+  "pessoas-fisicas": "PESSOA_FISICA",
+  "produtores-rurais": "PRODUTOR_RURAL",
+  "voluntarios": "VOLUNTARIO"
+};
+
+function formatarTipo(tipo) {
+  const formatado = {
+    COMERCIO: "Comércio",
+    ONG: "ONG",
+    PESSOA_FISICA: "Pessoa Física",
+    PRODUTOR_RURAL: "Produtor Rural",
+    VOLUNTARIO: "Voluntário"
+  };
+  return formatado[tipo] || tipo || "Não informado";
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const filtro = document.getElementById("filtroTipo");
   const tabela = document.getElementById("tabelaUsuarios");
@@ -33,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
       tdNome.className = "px-4 py-2";
 
       const tdTipo = document.createElement("td");
-      tdTipo.textContent = tipoSelecionado === "todos" ? usuario.tipo || "-" : tipoSelecionado;
+      tdTipo.textContent = tipoSelecionado === "todos" ? usuario.tipoUsuario || "-" : tipoSelecionado;
       tdTipo.className = "px-4 py-2";
 
       const tdEmail = document.createElement("td");

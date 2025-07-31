@@ -39,7 +39,7 @@ document.getElementById("form-login").addEventListener("submit", async function 
         window.location.href = "/pages/voluntario/home.html";
         break;
       case "ADMIN":
-        window.location.href = "/pages/doador/Administrador/PainelListar.html";
+        window.location.href = "/pages/doador/Administrador/administrador.html";
         break
       default:
         window.location.href = "/pages/home.html"; 
