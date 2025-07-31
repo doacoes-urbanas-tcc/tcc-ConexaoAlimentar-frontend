@@ -77,7 +77,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const btnReprovar = document.createElement("button");
       btnReprovar.textContent = "Reprovar";
       btnReprovar.className = "bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-full text-sm";
-      btnReprovar.onclick = () => reprovarUsuario(usuario.id);
+      btnReprovar.onclick = () => {
+      reprovarUsuario(usuario.id, tr); 
+      };
 
       tdAcoes.append(btnVer, btnAprovar, btnReprovar);
       tr.append(tdNome, tdTipo, tdEmail, tdAcoes);
@@ -98,18 +100,31 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  function reprovarUsuario(id) {
-    fetch(`http://localhost:8080/admin/usuarios/reprovar/${id}`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+  function reprovarUsuario(id, linhaTabela) {
+  fetch(`http://localhost:8080/admin/usuarios/reprovar/${id}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((res) => {
+      if (res.ok) {
+        alert("Usuário reprovado com sucesso!");
+        linhaTabela.remove(); 
+      } else {
+        res.text().then(texto => {
+          console.error("Erro ao reprovar:", texto);
+          alert("Erro ao reprovar usuário");
+        });
+      }
     })
-      .then((res) => {
-        if (res.ok) carregarUsuarios(filtro.value);
-        else alert("Erro ao reprovar usuário");
-      });
+    .catch((err) => {
+      console.error("Erro de rede:", err);
+      alert("Erro ao se comunicar com o servidor.");
+    });
   }
+
+
 
   carregarUsuarios("todos");
 });
