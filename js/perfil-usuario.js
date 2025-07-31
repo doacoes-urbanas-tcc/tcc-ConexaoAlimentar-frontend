@@ -68,8 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
       case "PESSOA_FISICA":
         info.appendChild(criarCampo("CPF", dados.cpf));
         if (dados.documentoComprovante) {
-          info.appendChild(criarCampo("Comprovante", `<a class="text-blue-600 underline" href="${dados.documentoComprovante}" target="_blank">Ver documento</a>`));
-        }
+        info.appendChild(criarCampo("Documento Comprovante", `<a class="text-blue-600 underline" href="${dados.documentoComprovante}" target="_blank">Ver documento</a>`));        }
         break;
       case "PRODUTOR_RURAL":
         info.appendChild(criarCampo("Registro Rural", dados.numeroRegistroRural));
