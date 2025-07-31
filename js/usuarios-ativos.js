@@ -1,22 +1,3 @@
-const tiposMap = {
-  "comercios": "COMERCIO",
-  "ongs": "ONG",
-  "pessoas-fisicas": "PESSOA_FISICA",
-  "produtores-rurais": "PRODUTOR_RURAL",
-  "voluntarios": "VOLUNTARIO"
-};
-
-function formatarTipo(tipo) {
-  const formatado = {
-    COMERCIO: "Comércio",
-    ONG: "ONG",
-    PESSOA_FISICA: "Pessoa Física",
-    PRODUTOR_RURAL: "Produtor Rural",
-    VOLUNTARIO: "Voluntário"
-  };
-  return formatado[tipo] || tipo || "Não informado";
-}
-
 const filtroTipo = document.getElementById("filtroTipoAtivo");
 const tabela = document.getElementById("tabelaAtivos");
 
@@ -61,7 +42,7 @@ async function carregarUsuariosAtivos() {
         <td class="px-4 py-3">${formatarTipo(usuario.tipoUsuario)}</td>
         <td class="px-4 py-3">${usuario.email}</td>
         <td class="px-4 py-3">
-          <button onclick="verPerfil(${usuario.id})" class="text-red-600 hover:underline font-semibold">
+          <button onclick="verPerfil(${usuario.id}, '${usuario.tipoUsuario}')" class="text-red-600 hover:underline font-semibold">
             Ver Perfil
           </button>
         </td>
@@ -76,15 +57,15 @@ async function carregarUsuariosAtivos() {
 
 function formatarTipo(tipo) {
   switch (tipo) {
-    case "COMERCIO": return "Comércio";
+    case "COMERCIO": return "COMERCIO";
     case "ONG": return "ONG";
-    case "PESSOA_FISICA": return "Pessoa Física";
-    case "PRODUTOR_RURAL": return "Produtor Rural";
-    case "VOLUNTARIO": return "Voluntário";
+    case "PESSOA_FISICA": return "PESSOA_FISICA";
+    case "PRODUTOR_RURAL": return "PRODUTOR_RURAL";
+    case "VOLUNTARIO": return "VOLUNTARIO";
     default: return tipo;
   }
 }
 
-function verPerfil(id) {
-  window.location.href = `/pages/doador/Administrador/perfil-usuario.html?id=${id}`;
+function verPerfil(id, tipo) {
+  window.location.href = `/pages/administrador/perfil-usuario.html?id=${id}&tipo=${tipo}`;
 }

@@ -38,11 +38,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!res.ok) throw new Error("Erro ao carregar usuários");
         return res.json();
       })
-      .then((dados) => preencherTabela(dados, tipo))
+      .then((dados) => preencherTabela(dados))
       .catch((err) => console.error(err));
   }
 
-  function preencherTabela(usuarios, tipoSelecionado) {
+  function preencherTabela(usuarios) {
     tabela.innerHTML = "";
     usuarios.forEach((usuario) => {
       const tr = document.createElement("tr");
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
       tdNome.className = "px-4 py-2";
 
       const tdTipo = document.createElement("td");
-      tdTipo.textContent = tipoSelecionado === "todos" ? usuario.tipoUsuario || "-" : tipoSelecionado;
+      tdTipo.textContent = formatarTipo(usuario.tipoUsuario);
       tdTipo.className = "px-4 py-2";
 
       const tdEmail = document.createElement("td");
@@ -65,9 +65,33 @@ document.addEventListener("DOMContentLoaded", () => {
       const btnVer = document.createElement("button");
       btnVer.textContent = "Visualizar";
       btnVer.className = "bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full text-sm";
+
       btnVer.onclick = () => {
-        window.location.href = `/admin/usuarios/perfil.html?id=${usuario.id}&tipo=${tipoSelecionado}`;
-      };
+      window.location.href = `/pages/administrador/perfil-usuario.html?id=${usuario.id}&tipo=${usuario.tipoUsuario}`;
+     };
+
+      const tipoUsuario = usuario.tipoUsuario;
+      let tipoUrl;
+
+      switch (tipoUsuario) {
+        case "COMERCIO":
+          tipoUrl = "COMERCIO";
+          break;
+        case "ONG":
+          tipoUrl = "ONG";
+          break;
+        case "PESSOA_FISICA":
+          tipoUrl = "PESSOA_FISICA";
+          break;
+        case "PRODUTOR_RURAL":
+          tipoUrl = "PRODUTOR_RURAL";
+          break;
+        case "VOLUNTARIO":
+          tipoUrl = "VOLUNTARIO";
+          break;
+        default:
+          tipoUrl = "desconhecido";
+      }
 
       const btnAprovar = document.createElement("button");
       btnAprovar.textContent = "Aprovar";
@@ -77,9 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const btnReprovar = document.createElement("button");
       btnReprovar.textContent = "Reprovar";
       btnReprovar.className = "bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-full text-sm";
-      btnReprovar.onclick = () => {
-      reprovarUsuario(usuario.id, tr); 
-      };
+      btnReprovar.onclick = () => reprovarUsuario(usuario.id, tr);
 
       tdAcoes.append(btnVer, btnAprovar, btnReprovar);
       tr.append(tdNome, tdTipo, tdEmail, tdAcoes);
@@ -101,30 +123,28 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function reprovarUsuario(id, linhaTabela) {
-  fetch(`http://localhost:8080/admin/usuarios/reprovar/${id}`, {
-    method: "PATCH",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-    .then((res) => {
-      if (res.ok) {
-        alert("Usuário reprovado com sucesso!");
-        linhaTabela.remove(); 
-      } else {
-        res.text().then(texto => {
-          console.error("Erro ao reprovar:", texto);
-          alert("Erro ao reprovar usuário");
-        });
-      }
+    fetch(`http://localhost:8080/admin/usuarios/reprovar/${id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
-    .catch((err) => {
-      console.error("Erro de rede:", err);
-      alert("Erro ao se comunicar com o servidor.");
-    });
+      .then((res) => {
+        if (res.ok) {
+          alert("Usuário reprovado com sucesso!");
+          linhaTabela.remove();
+        } else {
+          res.text().then((texto) => {
+            console.error("Erro ao reprovar:", texto);
+            alert("Erro ao reprovar usuário");
+          });
+        }
+      })
+      .catch((err) => {
+        console.error("Erro de rede:", err);
+        alert("Erro ao se comunicar com o servidor.");
+      });
   }
-
-
 
   carregarUsuarios("todos");
 });
