@@ -5,7 +5,7 @@
 
     const stacksPorSetor = {
       DESENVOLVIMENTO_BACKEND: ["Java", "Spring Boot", "Node.js", "Express", "Python", "Django"],
-      DESENVOLVIMENTO_FORNTND: ["HTML", "CSS", "JavaScript", "React", "Vue.js", "Angular"],
+      DESENVOLVIMENTO_FRONTEND: ["HTML", "CSS", "JavaScript", "React", "Vue.js", "Angular"],
       BANCO_DE_DADOS: ["PostgreSQL", "MySQL", "MongoDB", "Redis", "SQL Server"],
       SUPORTE_TECNICO: ["Windows", "Linux", "Help Desk", "Office 365", "GLPI"],
       SEGURANCA_DA_INFORMACAO: ["OWASP", "Kali Linux", "Wireshark", "ISO 27001", "LGPD"],
@@ -79,15 +79,21 @@
 
     if (!response.ok) throw new Error("Erro ao cadastrar perfil");
 
-    alert("Perfil cadastrado com sucesso!");
+    alert("Perfil cadastrado com sucesso! Redirecionando para a tela de login...");
+
     form.reset();
     selectedStacks.clear();
     stackInput.value = "";
 
-    tags.forEach(tag => {
-      tag.classList.remove('bg-red-500', 'text-white');
-      tag.classList.add('bg-white', 'text-red-600', 'border-red-500');
-    });
+    const tagButtons = document.querySelectorAll("#stacks button");
+    tagButtons.forEach(tag => {
+    tag.classList.remove('bg-red-500', 'text-white');
+    tag.classList.add('bg-white', 'text-red-600', 'border-red-500');
+});
+setTimeout(() => {
+  window.location.href = "/pages/cadastrologin/login.html";
+}, 1000);
+
 
   } catch (err) {
     alert("Erro ao enviar formulário");

@@ -21,10 +21,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!response.ok) throw new Error("QR Code não encontrado.");
 
-    const imageUrl = await response.text();
+    const data = await response.json();
+    const imageUrl = data.url; 
+    const segundosRestantes = data.segundosRestantes;
+
     qrContainer.innerHTML = `<img src="${imageUrl}" alt="QR Code" class="h-64 mx-auto">`;
 
-    iniciarContagemRegressiva(7200); 
+    iniciarContagemRegressiva(segundosRestantes);
   } catch (err) {
     qrContainer.innerHTML = `<p class="text-red-600">${err.message}</p>`;
   }

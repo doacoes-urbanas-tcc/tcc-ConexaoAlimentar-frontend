@@ -281,30 +281,28 @@ form.addEventListener('submit', async (e) => {
 
     const endpoint = `http://localhost:8080/${tipoMapeado[tipoUsuario]}/cadastrar`;
 
-    try {
-       const response = await fetch(endpoint, {
-  method: "POST",
-  body: formData
+    const response = await fetch(endpoint, {
+    method: "POST",
+    body: formData
 });
 
 if (response.ok) {
-const resBody = await response.json();
-localStorage.setItem("usuarioId", resBody.id);
+    const resBody = await response.json();
+    localStorage.setItem("usuarioId", resBody.id);
 
-if (dados.setorAtuacao === "TI") {
-  window.location.href = "/pages/voluntarios/perfil-ti.html";
-} else if (dados.setorAtuacao === "TRANSPORTE") {
-  window.location.href = "/pages/voluntarios/cadastrotransportador.html";
-} else {
-  window.location.href = "/pages/cadastrologin/login.html";
-}
-}
-
-    } catch (err) {
-        console.error("Erro inesperado:", err);
-        alert("Erro inesperado no envio do formulário.");
+    if (dados.setorAtuacao === "TI") {
+        window.location.href = "/pages/voluntario/perfil-ti.html";
+    } else if (dados.setorAtuacao === "TRANSPORTE") {
+        window.location.href = "/pages/voluntario/cadastrotransportador.html";
+    } else {
+        window.location.href = "/pages/cadastrologin/login.html";
     }
-  } catch (err) {
+} else {
+    const errorText = await response.text();
+    console.error("Erro ao cadastrar:", errorText);
+    alert("Erro ao cadastrar usuário.");
+}
+} catch (err) {
     console.error("Erro inesperado:", err);
     alert("Erro inesperado no envio do formulário.");
   }

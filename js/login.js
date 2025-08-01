@@ -38,6 +38,9 @@ document.getElementById("form-login").addEventListener("submit", async function 
       case "PESSOA_FISICA":
         window.location.href = "/pages/voluntario/home.html";
         break;
+      case "ADMIN":
+        window.location.href = "/pages/administrador/administrador.html";
+        break
       default:
         window.location.href = "/pages/home.html"; 
     }

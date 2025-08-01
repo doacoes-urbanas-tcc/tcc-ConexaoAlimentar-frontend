@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visualizar Perfil</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen py-10 px-4">
+  <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
+    <span class="text-red-600 text-sm font-semibold cursor-pointer hover:underline" onclick="window.location.href='usuarios-pendentes.html'">&larr; Voltar</span>
+
+    <div class="text-center mt-2 mb-4">
+      <h1 class="text-2xl font-bold text-gray-800">Perfil do Usuário</h1>
+    </div>
+
+    <div id="fotoPerfil" class="flex justify-center mb-6">
+    </div>
+
+    <div id="infoPerfil" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    </div>
+
+   <div id="botoesAdmin" class="hidden flex gap-4 mt-6">
+     <button id="btnAprovar" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Aprovar</button>
+     <button id="btnReprovar" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Reprovar</button>
+</div>
+
+  </div>
+
+  <script src="/js/perfil-usuario.js"></script>
+</body>
+
+</html>
