@@ -112,9 +112,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isAdmin) {
       document.getElementById("botoesAdmin").classList.remove("hidden");
 
+      
       document.getElementById("btnAprovar").onclick = () => atualizarStatus("aprovar");
       document.getElementById("btnReprovar").onclick = () => atualizarStatus("reprovar");
     }
+    const divAvaliacoes = document.getElementById("verAvaliacoes");
+    const btnAvaliacoes = document.getElementById("btnAvaliacoes");
+
+    btnAvaliacoes.href = `../avaliacao/avaliacoes-usuario.html?id=${dados.id || id}`;
+    divAvaliacoes.classList.remove("hidden");
   }
 
   function atualizarStatus(acao) {

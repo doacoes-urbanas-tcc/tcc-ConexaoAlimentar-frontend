@@ -1,9 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const lista = document.getElementById("lista-avaliacoes");
-
   const urlParams = new URLSearchParams(window.location.search);
   const avaliadoId = urlParams.get("id");
-
   const token = localStorage.getItem("token"); 
 
   if (!avaliadoId) {
@@ -32,10 +30,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const estrelas = "★".repeat(avaliacao.nota) + "☆".repeat(5 - avaliacao.nota);
 
+      const data = new Date(avaliacao.dataCriacao);
+      const dataFormatada = data.toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+      });
+
       item.innerHTML = `
+        <div class="flex items-center gap-4 mb-4">
+          <img src="${avaliacao.fotoAvaliador || '/assets/default-avatar.png'}" alt="Foto Avaliador" class="w-12 h-12 rounded-full object-cover border" />
+          <div>
+            <p class="font-semibold text-gray-800">${avaliacao.nomeAvaliador || 'Usuário'}</p>
+            <p class="text-sm text-gray-500">${dataFormatada}</p>
+          </div>
+        </div>
         <div class="flex justify-between items-center mb-2">
           <div class="text-yellow-400 font-bold text-lg">${estrelas}</div>
-          <span class="text-sm text-gray-500">${new Date(avaliacao.dataAvaliacao).toLocaleDateString()}</span>
         </div>
         <p class="text-gray-800">${avaliacao.comentario}</p>
       `;
