@@ -32,23 +32,31 @@ document.addEventListener("DOMContentLoaded", async () => {
       card.className = "bg-white rounded-lg shadow p-4 flex flex-col md:flex-row gap-4";
 
       const status = reserva.status.replace("_", " ");
-      const podeVerQRCode = reserva.status === "AGUARDANDO_RETIRADA";
+      console.log("Status da reserva:", reserva.status);
+      const podeVerQRCode = reserva.status === "RESERVADA";
 
       card.innerHTML = `
-        <img src="${reserva.urlImagem}" alt="${reserva.nomeAlimento}" class="w-full md:w-48 h-48 object-cover rounded-lg">
-        <div class="flex-1">
-          <h3 class="text-xl font-semibold text-red-600">${reserva.nomeAlimento}</h3>
-          <p class="text-gray-700 mb-2">${reserva.descricao || "Sem descrição."}</p>
-          <div class="text-sm text-gray-600 space-y-1 mb-3">
-            <p><strong>Categoria:</strong> ${reserva.categoria}</p>
-            <p><strong>Quantidade:</strong> ${reserva.quantidade} ${reserva.unidadeMedida.toLowerCase()}</p>
-            <p><strong>Validade:</strong> ${formatarData(reserva.dataValidade)}</p>
-            <p><strong>Doador:</strong> ${reserva.doadorNome}</p>
-            <p><strong>Status:</strong> ${status}</p>
-          </div>
-          ${podeVerQRCode ? `<a href="/qrcode.html?id=${reserva.id}" class="inline-block mt-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">Ver QR Code</a>` : ""}
-        </div>
-      `;
+      <img src="${reserva.urlImagem}" alt="${reserva.nomeAlimento}" class="w-full md:w-48 h-48 object-cover rounded-lg">
+      <div class="flex-1">
+      <h3 class="text-xl font-semibold text-red-600">${reserva.nomeAlimento}</h3>
+      <p class="text-gray-700 mb-2">${reserva.descricao || "Sem descrição."}</p>
+      <div class="text-sm text-gray-600 space-y-1 mb-3">
+      <p><strong>Categoria:</strong> ${reserva.categoria}</p>
+      <p><strong>Quantidade:</strong> ${reserva.quantidade} ${reserva.unidadeMedida.toLowerCase()}</p>
+      <p><strong>Validade:</strong> ${formatarData(reserva.dataValidade)}</p>
+      <p><strong>Doador:</strong> ${reserva.doadorNome}</p>
+      <p><strong>Status:</strong> ${status}</p>
+    </div>
+    <div class="flex flex-wrap gap-2 mt-2">
+    ${podeVerQRCode 
+    ? `<a href="/pages/reserva/qrcode.html?id=${reserva.id}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">Ver QR Code</a>` 
+    : ""}
+    <a href="/pages/administrador/perfil-usuario.html?id=${reserva.idReceptor}&tipo=${reserva.tipoReceptor}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
+          Ver Perfil da empresa
+        </a>
+    </div>
+`;
+
 
       lista.appendChild(card);
     });

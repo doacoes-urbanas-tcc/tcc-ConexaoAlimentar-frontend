@@ -3,15 +3,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const id = urlParams.get("id");
   const tipo = urlParams.get("tipo")?.toUpperCase();
   const token = localStorage.getItem("token");
+  const tipoUsuarioLogado = localStorage.getItem("tipoUsuario");
+
+  const isAdmin = tipoUsuarioLogado === "ADMIN";
 
   if (!id || !tipo) {
     alert("Dados inválidos na URL");
     return;
   }
-
-  console.log("ID:", id);
-  console.log("TIPO:", tipo);
-  console.log("URL chamada:", `http://localhost:8080/admin/usuarios/perfil?id=${id}&tipo=${tipo}`);
 
   fetch(`http://localhost:8080/admin/usuarios/perfil?id=${id}&tipo=${tipo}`, {
     headers: {
@@ -22,13 +21,13 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!res.ok) throw new Error("Erro ao carregar perfil");
       return res.json();
     })
-    .then(dados => preencherPerfil(dados, tipo))
+    .then(dados => preencherPerfil(dados, tipo, isAdmin))
     .catch(err => {
       console.error("Erro:", err);
       alert("Erro ao carregar dados do perfil.");
     });
 
-  function preencherPerfil(dados, tipo) {
+  function preencherPerfil(dados, tipo, isAdmin) {
     const info = document.getElementById("infoPerfil");
     const foto = document.getElementById("fotoPerfil");
 
@@ -68,7 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
       case "PESSOA_FISICA":
         info.appendChild(criarCampo("CPF", dados.cpf));
         if (dados.documentoComprovante) {
-        info.appendChild(criarCampo("Documento Comprovante", `<a class="text-blue-600 underline" href="${dados.documentoComprovante}" target="_blank">Ver documento</a>`));        }
+          info.appendChild(criarCampo("Documento Comprovante", `<a class="text-blue-600 underline" href="${dados.documentoComprovante}" target="_blank">Ver documento</a>`));
+        }
         break;
       case "PRODUTOR_RURAL":
         info.appendChild(criarCampo("Registro Rural", dados.numeroRegistroRural));
@@ -76,21 +76,21 @@ document.addEventListener("DOMContentLoaded", () => {
       case "VOLUNTARIO":
         info.appendChild(criarCampo("CPF", dados.cpf));
         info.appendChild(criarCampo("Setor de Atuação", dados.setorAtuacao));
-        info.appendChild(criarCampo("Documento Comprovante", `<a class="text-blue-600 underline" href="${dados.documentoComprovante}" target="_blank">Ver documento</a>`));
+
         if (dados.setorAtuacao === "TI") {
           info.appendChild(criarCampo("Stack", dados.stackConhecimento));
           if (dados.certificacoes) {
-          info.appendChild(criarCampo("Certificações",`<a class="text-blue-600 underline" href="${dados.certificacoes}" target="_blank">Ver certificações</a>`));
+            info.appendChild(criarCampo("Certificações", `<a class="text-blue-600 underline" href="${dados.certificacoes}" target="_blank">Ver certificações</a>`));
           }
           info.appendChild(criarCampo("Experiência", dados.experiencia));
-         
           if (dados.linkedin) {
-          info.appendChild(criarCampo("LinkedIn",`<a class="text-blue-600 underline" href="${dados.linkedin}" target="_blank">${dados.linkedin}</a>`));
+            info.appendChild(criarCampo("LinkedIn", `<a class="text-blue-600 underline" href="${dados.linkedin}" target="_blank">${dados.linkedin}</a>`));
           }
           if (dados.github) {
-          info.appendChild(criarCampo("GitHub",`<a class="text-blue-600 underline" href="${dados.github}" target="_blank">${dados.github}</a>`));
+            info.appendChild(criarCampo("GitHub", `<a class="text-blue-600 underline" href="${dados.github}" target="_blank">${dados.github}</a>`));
           }
         }
+
         if (dados.setorAtuacao === "TRANSPORTE") {
           info.appendChild(criarCampo("Placa do Veículo", dados.placaVeiculo));
           info.appendChild(criarCampo("Modelo do Veículo", dados.modeloVeiculo));
@@ -102,24 +102,35 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
     }
 
-    document.getElementById("btnAprovar").onclick = () => atualizarStatus("aprovar");
-    document.getElementById("btnReprovar").onclick = () => atualizarStatus("reprovar");
-
-    function atualizarStatus(acao) {
-      fetch(`http://localhost:8080/admin/usuarios/${acao}/${id}`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-        .then(res => {
-          if (res.ok) {
-            alert(`Usuário ${acao === "aprovar" ? "aprovado" : "reprovado"} com sucesso.`);
-            window.location.href = "usuarios-pendentes.html";
-          } else {
-            alert("Erro ao atualizar status.");
-          }
-        });
+    if (isAdmin) {
+      info.appendChild(criarCampo("Ativo", dados.ativo ? "Sim" : "Não"));
+      if (dados.justificativaReprovacao) {
+        info.appendChild(criarCampo("Justificativa de Reprovação", dados.justificativaReprovacao));
+      }
     }
+
+    if (isAdmin) {
+      document.getElementById("botoesAdmin").classList.remove("hidden");
+
+      document.getElementById("btnAprovar").onclick = () => atualizarStatus("aprovar");
+      document.getElementById("btnReprovar").onclick = () => atualizarStatus("reprovar");
+    }
+  }
+
+  function atualizarStatus(acao) {
+    fetch(`http://localhost:8080/admin/usuarios/${acao}/${id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(res => {
+        if (res.ok) {
+          alert(`Usuário ${acao === "aprovar" ? "aprovado" : "reprovado"} com sucesso.`);
+          window.location.href = "usuarios-pendentes.html";
+        } else {
+          alert("Erro ao atualizar status.");
+        }
+      });
   }
 });
