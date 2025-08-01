@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const tempoExpiracao = document.getElementById("tempo-expiracao");
   const progressBar = document.getElementById("progress-bar");
 
+  let data = null; 
+
   if (!token || !id) {
     qrContainer.innerHTML = `<p class="text-red-600">Acesso inválido.</p>`;
     return;
@@ -21,7 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!response.ok) throw new Error("QR Code não encontrado.");
 
-    const data = await response.json();
+    data = await response.json(); 
     const imageUrl = data.url; 
     const segundosRestantes = data.segundosRestantes;
 
@@ -33,6 +35,40 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function iniciarContagemRegressiva(segundos) {
+    const idReserva = data.reservaId;
+    const statusAtual = data.statusReserva;
+    console.log("Status inicial:", statusAtual);
+
+    if (statusAtual === "RETIRADA") {
+      console.log("Status RETIRADA no carregamento, redirecionando...");
+      redirecionarParaAvaliacao(idReserva);
+      
+    } else {
+      const intervaloStatus = setInterval(async () => {
+        console.log("Checando status da reserva...");
+        try {
+          const responseStatus = await fetch(`http://localhost:8080/qr-code/url/${id}`, {
+            method: "GET",
+            headers: {
+              "Authorization": "Bearer " + token
+            }
+          });
+
+          if (responseStatus.ok) {
+            const novaData = await responseStatus.json();
+            console.log("Status atual:", novaData.statusReserva);
+            if (novaData.statusReserva === "RETIRADA") {
+              clearInterval(intervaloStatus);
+               console.log("Status mudou para RETIRADA, redirecionando...");
+              redirecionarParaAvaliacao(novaData.reservaId);
+            }
+          }
+        } catch (e) {
+          console.error("Erro ao verificar status da reserva:", e);
+        }
+      }, 5000); 
+    }
+
     const total = segundos;
 
     const intervalo = setInterval(() => {
@@ -53,5 +89,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       segundos--;
     }, 1000);
+  }
+
+  function redirecionarParaAvaliacao(reservaId) {
+    alert("A doação foi retirada! Você será direcionado para avaliar o doador.");
+    window.location.href = `../avaliacao/avaliacao.html?idReserva=${reservaId}`;
   }
 });

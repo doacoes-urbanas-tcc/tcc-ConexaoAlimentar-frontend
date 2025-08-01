@@ -5,30 +5,30 @@ document.addEventListener("DOMContentLoaded", () => {
   const qrScanner = new Html5Qrcode("preview");
 
   function validarQrCode(idDoacao) {
-    const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
-    fetch(`http://localhost:8080/doacoes/validar-qr/${idDoacao}`, {
-      method: "POST",
-      headers: {
-        "Authorization": "Bearer " + token
-      }
-    })
-    .then(response => {
-      if (!response.ok) {
-        return response.text().then(texto => { throw new Error(texto); });
-      }
-      return response.text();
-    })
-    .then(msg => {
-      mensagem.textContent = msg;
-      mensagem.classList.replace("text-gray-700", "text-green-600");
-      qrScanner.stop();
-    })
-    .catch(error => {
-      mensagem.textContent = error.message;
-      mensagem.classList.replace("text-gray-700", "text-red-600");
-    });
-  }
+  fetch(`http://localhost:8080/doacoes/validar-qr/${idDoacao}`, {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer " + token
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      return response.text().then(texto => { throw new Error(texto); });
+    }
+    return response.json(); 
+  })
+  .then(data => {
+    const idReserva = data.idReserva;
+    window.location.href = `../avaliacao/avaliacao.html?idReserva=${idReserva}`;
+  })
+  .catch(error => {
+    mensagem.textContent = error.message;
+    mensagem.classList.replace("text-gray-700", "text-red-600");
+  });
+}
+
 
   Html5Qrcode.getCameras().then(cameras => {
     if (cameras && cameras.length) {
@@ -50,4 +50,31 @@ document.addEventListener("DOMContentLoaded", () => {
   }).catch(err => {
     mensagem.textContent = "Erro ao acessar a câmera: " + err;
   });
-});
+});async function validarQRCodeTeste(doacaoId) {
+  const token = localStorage.getItem("token");
+
+  try {
+    const response = await fetch(`http://localhost:8080/doacoes/validar-qr/${doacaoId}`, {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + token
+      }
+    });
+
+    if (response.ok) {
+      const data = await response.json(); 
+      const idReserva = data.idReserva;   
+
+      alert("QR Code validado com sucesso! Doação concluída.");
+      window.location.href = `../avaliacao/avaliacao.html?idReserva=${idReserva}`;
+ 
+    } else {
+      const erro = await response.text();
+      alert("Erro ao validar QR Code: " + erro);
+    }
+  } catch (err) {
+    console.error("Erro na requisição de validação:", err);
+    alert("Erro ao validar QR Code.");
+  }
+}
+
