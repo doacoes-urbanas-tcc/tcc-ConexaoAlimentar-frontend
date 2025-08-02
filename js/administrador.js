@@ -1,36 +1,45 @@
-function voltar() {
-    // Exemplo: voltar para a página anterior
-    window.history.back();
+async function carregarResumoDashboard() {
+    const token = localStorage.getItem("token");
+    const resp = await fetch("http://localhost:8080/admin/dashboard/resumo", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (resp.ok) {
+      const resumo = await resp.json();
+      document.getElementById("qtd-ativos").textContent = resumo.usuariosAtivos;
+      document.getElementById("qtd-pendentes").textContent = resumo.usuariosPendentes;
+      document.getElementById("qtd-doacoes").textContent = resumo.doacoesAtivas;
+      document.getElementById("qtd-tasks").textContent = resumo.tasksAbertas;
+    }
 }
 
-function cadastrosRecebidos() {
-    // Redirecione ou abra a tela de cadastros recebidos
-    alert('Abrir Cadastros Recebidos');
-    // window.location.href = 'cadastros-recebidos.html';
-}
+    async function carregarUltimosPendentes() {
+      const token = localStorage.getItem("token");
+      const resp = await fetch("http://localhost:8080/admin/dashboard/usuarios/pendentes", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (resp.ok) {
+        const lista = await resp.json();
+        const tbody = document.getElementById("tabela-usuarios");
+        tbody.innerHTML = "";
+        lista.forEach(usuario => {
+            console.log(usuario); 
+          const tr = document.createElement("tr");
+          tr.classList.add("hover:bg-gray-50");
+          tr.innerHTML = `
+            <td class="px-4 py-2">${usuario.nome}</td>
+            <td class="px-4 py-2">${usuario.email}</td>
+            <td class="px-4 py-2">${usuario.tipoUsuario}</td>
+            <td class="px-4 py-2">${usuario.status}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+    }
 
-function relatorioUsuarios() {
-    alert('Abrir Relatório Usuários');
-    // window.location.href = 'relatorio-usuarios.html';
-}
+    function logout() {
+      localStorage.removeItem("token");
+      window.location.href = "/pages/cadastrologin/login.html";
+    }
 
-function painelDoacoesAtivas() {
-    alert('Abrir Painel Doações Ativas');
-    // window.location.href = 'painel-doacoes-ativas.html';
-}
-
-function relatoriosDiversos() {
-    alert('Abrir Relatórios Diversos');
-    // window.location.href = 'relatorios-diversos.html';
-}
-
-function historicoDoacoes() {
-    alert('Abrir Histórico de Doações e Estatística');
-    // window.location.href = 'historico-doacoes.html';
-}
-
-// Função para alternar o menu mobile
-document.getElementById('menu-toggle').onclick = function () {
-    const menu = document.getElementById('mobile-menu');
-    menu.classList.toggle('hidden');
-}
+    carregarResumoDashboard();
+    carregarUltimosPendentes();

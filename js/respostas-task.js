@@ -76,7 +76,7 @@ async function fecharTask() {
   });
 
   alert("Task fechada com sucesso!");
-  window.location.href = "/pages/admin/listar-tasks.html";
+  window.location.href = "/pages/administrador/listar-tasks.html";
 }
 
 function verPerfil(id) {

@@ -1,16 +1,13 @@
 'use strict';
 
-// Variáveis globais para geolocalização
 let latitude = "";
 let longitude = "";
 
-// Função para mostrar descrição e campos conforme tipo de usuário
 function mostrarDescricaoECampos() {
     const select = document.getElementById('tipoUsuario');
     const descricao = document.getElementById('descricaoUsuario');
     const container = document.getElementById('descricaoContainer');
 
-    // Ocultar todos os campos específicos
     document.getElementById('campoCPF').classList.add('hidden');
     document.getElementById('campoCNPJ').classList.add('hidden');
     document.getElementById('campoDescricaoONG').classList.add('hidden');
@@ -34,7 +31,6 @@ function mostrarDescricaoECampos() {
         descricao.textContent = descricoes[valorSelecionado];
         container.classList.remove("hidden");
 
-        // Exibir campos conforme o tipo
         switch (valorSelecionado) {
             case 'pf':
                 document.getElementById('campoCPF').classList.remove('hidden');
@@ -64,7 +60,6 @@ function mostrarDescricaoECampos() {
     }
 }
 
-// Função para limpar formulário de endereço
 function limparFormulario() {
     document.getElementById('endereco').value = '';
     document.getElementById('bairro').value = '';
@@ -72,7 +67,6 @@ function limparFormulario() {
     document.getElementById('estado').value = '';
 }
 
-// CEP via API
 const preencherFormulario = (endereco) => {
     document.getElementById('endereco').value = endereco.logradouro;
     document.getElementById('bairro').value = endereco.bairro;
@@ -101,11 +95,9 @@ const pesquisarCep = async () => {
     }
 };
 
-// Evento global ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
     mostrarDescricaoECampos();
 
-    // Máscaras de input
     document.getElementById('telefone').addEventListener('input', function (e) {
         let value = e.target.value.replace(/\D/g, '');
         value = value.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
@@ -132,7 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('cep').addEventListener('focusout', pesquisarCep);
 
-    // Geolocalização
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
             latitude = position.coords.latitude;
@@ -145,164 +136,158 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Envio do formulário com validação
 const form = document.getElementById('form');
 const erros = document.getElementById('erros');
-
 form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const tipoUsuario = document.getElementById("tipoUsuario").value;
+  e.preventDefault();
+  const tipoUsuario = document.getElementById("tipoUsuario").value;
 
-    const dados = {
+  const dados = {
     nome: document.getElementById("nome").value,
     telefone: document.getElementById("telefone").value,
     email: document.getElementById("email").value,
     senha: document.getElementById("password").value,
-    tipoUsuario: document.getElementById("tipoUsuario").value.toUpperCase(),
+    tipoUsuario: tipoUsuario.toUpperCase(),
     endereco: {
-    cep: document.getElementById("cep").value,
-    logradouro: document.getElementById("endereco").value,
-    bairro: document.getElementById("bairro").value,
-    cidade: document.getElementById("cidade").value,
-    estado: document.getElementById("estado").value,
-    numero: document.getElementById("numero").value,
-    latitude: document.getElementById("latitude").value,
-    longitude: document.getElementById("longitude").value
-   }
+      cep: document.getElementById("cep").value,
+      logradouro: document.getElementById("endereco").value,
+      bairro: document.getElementById("bairro").value,
+      cidade: document.getElementById("cidade").value,
+      estado: document.getElementById("estado").value,
+      numero: document.getElementById("numero").value,
+      latitude: document.getElementById("latitude").value,
+      longitude: document.getElementById("longitude").value
+    }
   };
 
-    if (tipoUsuario === "pf"|| tipoUsuario === "admin") {
-        dados.cpf = document.getElementById('cpf').value.replace(/\D/g, '');
-        dados.documentoComprovante = document.getElementById('documentoComprovante').value;
-    }
-
-   if (tipoUsuario === "voluntario") {
+  if (tipoUsuario === "pf" || tipoUsuario === "admin") {
+    dados.cpf = document.getElementById('cpf').value.replace(/\D/g, '');
+    dados.documentoComprovante = document.getElementById('documentoComprovante').value;
+  }
+  if (tipoUsuario === "voluntario") {
     const setorSelect = document.getElementById('setorAtuacao');
     const comprovanteInput = document.getElementById('documentoComprovante');
     const cpfInput = document.getElementById('cpf');
-
     if (!setorSelect || !comprovanteInput || !cpfInput) {
-        alert("Algum dos campos de voluntário não está presente. Verifique o tipo de usuário selecionado.");
-        return;
+      alert("Algum dos campos de voluntário não está presente. Verifique o tipo de usuário selecionado.");
+      return;
     }
-
     dados.setorAtuacao = setorSelect.value;
     dados.documentoComprovante = comprovanteInput.value;
     dados.cpf = cpfInput.value.replace(/\D/g, '');
-   }
+  }
+  if (tipoUsuario === "rural") {
+    dados.numeroRegistroRural = document.getElementById('numeroRegistroRural').value;
+  }
+  if (tipoUsuario === "ong") {
+    dados.cnpj = document.getElementById('cnpj').value;
+    dados.descricao = document.getElementById('descricaoONG').value;
+  }
+  if (tipoUsuario === "comercio") {
+    dados.cnpj = document.getElementById('cnpj').value;
+    dados.nomeFantasia = document.getElementById('nomeFantasia').value;
+    dados.tipoComercio = document.getElementById('tipoComercio').value;
+  }
 
+  const mensagensErro = [];
+  if (!dados.nome) mensagensErro.push("O nome é obrigatório.");
+  if (!dados.email || !dados.email.includes("@")) mensagensErro.push("Email inválido.");
+  if (!dados.senha || dados.senha.length < 6) mensagensErro.push("A senha deve ter no mínimo 6 caracteres.");
+  if (!dados.telefone) mensagensErro.push("O telefone é obrigatório.");
+  if (!dados.endereco.cep) mensagensErro.push("O CEP é obrigatório.");
+  if (!dados.endereco.logradouro) mensagensErro.push("O endereço é obrigatório.");
+  if (!dados.endereco.cidade) mensagensErro.push("A cidade é obrigatória.");
+  if (!dados.endereco.estado) mensagensErro.push("O estado é obrigatório.");
+  if (!dados.endereco.numero) mensagensErro.push("O número do endereço é obrigatório.");
+  if (!dados.endereco.bairro) mensagensErro.push("O bairro é obrigatório.");
+  if (!dados.endereco.latitude || !dados.endereco.longitude) mensagensErro.push("A localização é obrigatória.");
+  if (tipoUsuario === "pf" || tipoUsuario === "voluntario" || tipoUsuario === "admin") {
+    if (!dados.cpf) mensagensErro.push("O CPF é obrigatório.");
+    if (!dados.documentoComprovante) mensagensErro.push("Documento comprovante é obrigatório.");
+  }
+  if (tipoUsuario === "voluntario" && !dados.setorAtuacao) {
+    mensagensErro.push("O setor de atuação é obrigatório.");
+  }
+  if (tipoUsuario === "rural" && !dados.numeroRegistroRural) {
+    mensagensErro.push("Número de registro rural é obrigatório.");
+  }
+  if (tipoUsuario === "ong") {
+    if (!dados.cnpj) mensagensErro.push("CNPJ é obrigatório.");
+    if (!dados.descricao) mensagensErro.push("Descrição da ONG é obrigatória.");
+  }
+  if (tipoUsuario === "comercio") {
+    if (!dados.nomeFantasia) mensagensErro.push("Nome fantasia é obrigatório.");
+    if (!dados.tipoComercio) mensagensErro.push("Tipo de comércio é obrigatório.");
+  }
 
-    if (tipoUsuario === "rural") {
-        dados.numeroRegistroRural = document.getElementById('numeroRegistroRural').value;
-    }
+  if (mensagensErro.length > 0) {
+    erros.innerHTML = mensagensErro.map(e => `<p class="text-red-600 text-sm">${e}</p>`).join('');
+    return;
+  }
 
-    if (tipoUsuario === "ong") {
-        dados.cnpj = document.getElementById('cnpj').value;
-        dados.descricao = document.getElementById('descricaoONG').value;
-    }
+  const formData = new FormData();
+  formData.append("dto", new Blob([JSON.stringify(dados)], { type: "application/json" }));
 
-    if (tipoUsuario === "comercio") {
-        dados.cnpj = document.getElementById('cnpj').value;
-        dados.nomeFantasia = document.getElementById('nomeFantasia').value;
-        dados.tipoComercio = document.getElementById('tipoComercio').value;
-    }
+  const comprovanteFile = document.getElementById("documentoComprovante").files[0];
+  if (comprovanteFile) formData.append("comprovante", comprovanteFile);
 
-    try {
-    const mensagensErro = [];
-
-    if (!dados.nome) mensagensErro.push("O nome é obrigatório.");
-    if (!dados.email || !dados.email.includes("@")) mensagensErro.push("Email inválido.");
-    if (!dados.senha || dados.senha.length < 6) mensagensErro.push("A senha deve ter no mínimo 6 caracteres.");
-    if (!dados.telefone) mensagensErro.push("O telefone é obrigatório.");
-    if (!dados.endereco.cep) mensagensErro.push("O CEP é obrigatório.");
-    if (!dados.endereco.logradouro) mensagensErro.push("O endereço é obrigatório.");
-    if (!dados.endereco.cidade) mensagensErro.push("A cidade é obrigatória.");
-    if (!dados.endereco.estado) mensagensErro.push("O estado é obrigatório.");
-    if (!dados.endereco.numero) mensagensErro.push("O número do endereço é obrigatório.");
-    if (!dados.endereco.bairro) mensagensErro.push("O bairro é obrigatório.");
-    if (!dados.endereco.latitude || !dados.endereco.longitude) mensagensErro.push("A localização é obrigatória.");
-
-
-
-    if (tipoUsuario === "pf" || tipoUsuario === "voluntario" || tipoUsuario === "admin") {
-        if (!dados.cpf) mensagensErro.push("O CPF é obrigatório.");
-        if (!dados.documentoComprovante) mensagensErro.push("Documento comprovante é obrigatório.");
-    }
-
-    if (tipoUsuario === "voluntario" && !dados.setorAtuacao) {
-        mensagensErro.push("O setor de atuação é obrigatório.");
-    }
-
-    if (tipoUsuario === "rural" && !dados.numeroRegistroRural) {
-        mensagensErro.push("Número de registro rural é obrigatório.");
-    }
-
-    if (tipoUsuario === "ong") {
-        if (!dados.cnpj) mensagensErro.push("CNPJ é obrigatório.");
-        if (!dados.descricao) mensagensErro.push("Descrição da ONG é obrigatória.");
-    }
-
-    if ( tipoUsuario === "comercio") {
-    const nomeFantasia = document.getElementById('nomeFantasia').value;
-    const tipoComercio = document.getElementById('tipoComercio').value;
-
-    console.log("Nome fantasia:", nomeFantasia);
-    console.log("Tipo de comércio:", tipoComercio);
-
-    dados.nomeFantasia = nomeFantasia;
-    dados.tipoComercio = tipoComercio;
-    }
-
-    if (mensagensErro.length > 0) {
-        erros.innerHTML = mensagensErro.map(e => `<p class="text-red-600 text-sm">${e}</p>`).join('');
-        return;
-    }
-
-
-    const formData = new FormData();
-    formData.append("dto", new Blob([JSON.stringify(dados)], { type: "application/json" }));
-    formData.append("comprovante", document.getElementById("documentoComprovante").files[0]);
-    const fileInput = document.getElementById("fotoUrl");
-    if (fileInput.files.length > 0) {
-    formData.append("file", fileInput.files[0]);
-    } else {
+  const fotoFile = document.getElementById("fotoUrl").files[0];
+  if (!fotoFile) {
     alert("Por favor, selecione uma foto de perfil.");
     return;
-   }
+  }
+  formData.append("file", fotoFile);
 
-    const tipoMapeado = {
-        pf: "pessoa-fisica",
-        comercio: "comercio",
-        ong: "ong",
-        rural: "produtor-rural",
-        voluntario: "voluntario",
-        admin: "admin"
-    };
+  const tipoMapeado = {
+    pf: "pessoa-fisica",
+    comercio: "comercio",
+    ong: "ong",
+    rural: "produtor-rural",
+    voluntario: "voluntario",
+    admin: "admin"
+  };
+  const endpoint = `http://localhost:8080/${tipoMapeado[tipoUsuario]}/cadastrar`;
 
-    const endpoint = `http://localhost:8080/${tipoMapeado[tipoUsuario]}/cadastrar`;
-
+  try {
     const response = await fetch(endpoint, {
-    method: "POST",
-    body: formData
-});
+      method: "POST",
+      body: formData,
+    });
 
-if (response.ok) {
-    const resBody = await response.json();
-    localStorage.setItem("usuarioId", resBody.id);
+    const contentType = response.headers.get("content-type") || "";
 
-    if (dados.setorAtuacao === "TI") {
-        window.location.href = "/pages/voluntario/perfil-ti.html";
-    } else if (dados.setorAtuacao === "TRANSPORTE") {
-        window.location.href = "/pages/voluntario/cadastrotransportador.html";
-    } else {
+    if (response.ok) {
+      let resBody;
+      if (contentType.includes("application/json")) {
+        resBody = await response.json();
+      } else {
+        const text = await response.text();
+        alert(text); 
         window.location.href = "/pages/cadastrologin/login.html";
+        return;
+      }
+
+      localStorage.setItem("usuarioId", resBody.id);
+
+      if (dados.setorAtuacao === "TI") {
+        window.location.href = "/pages/voluntario/perfil-ti.html";
+      } else if (dados.setorAtuacao === "TRANSPORTE") {
+        window.location.href = "/pages/voluntario/cadastrotransportador.html";
+      } else {
+        window.location.href = "/pages/cadastrologin/login.html";
+      }
+    } else {
+      let erroMsg;
+      if (contentType.includes("application/json")) {
+        const erroJson = await response.json();
+        erroMsg = erroJson.message || JSON.stringify(erroJson);
+      } else {
+        erroMsg = await response.text();
+      }
+      console.error("Erro ao cadastrar:", erroMsg);
+      alert("Erro ao cadastrar usuário: " + erroMsg);
     }
-} else {
-    const errorText = await response.text();
-    console.error("Erro ao cadastrar:", errorText);
-    alert("Erro ao cadastrar usuário.");
-}
-} catch (err) {
+  } catch (err) {
     console.error("Erro inesperado:", err);
     alert("Erro inesperado no envio do formulário.");
   }

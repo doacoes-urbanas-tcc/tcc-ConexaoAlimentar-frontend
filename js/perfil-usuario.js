@@ -23,7 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .then(dados => preencherPerfil(dados, tipo, isAdmin))
     .catch(err => {
-      console.error("Erro:", err);
       alert("Erro ao carregar dados do perfil.");
     });
 
@@ -103,12 +102,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (isAdmin) {
-      info.appendChild(criarCampo("Ativo", Boolean(dados.ativo) ? "Sim" : "Não"));
-      if (dados.justificativaReprovacao) {
-        info.appendChild(criarCampo("Justificativa de Reprovação", dados.justificativaReprovacao));
-      }
+      info.appendChild(criarCampo("Status", dados.status || "Não informado"));
+    if (dados.justificativaReprovacao) {
+      info.appendChild(criarCampo("Justificativa de Reprovação", dados.justificativaReprovacao));
     }
-
+    }
     if (isAdmin) {
       document.getElementById("botoesAdmin").classList.remove("hidden");
 
