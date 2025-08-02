@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (isAdmin) {
-      info.appendChild(criarCampo("Ativo", dados.ativo ? "Sim" : "Não"));
+      info.appendChild(criarCampo("Ativo", Boolean(dados.ativo) ? "Sim" : "Não"));
       if (dados.justificativaReprovacao) {
         info.appendChild(criarCampo("Justificativa de Reprovação", dados.justificativaReprovacao));
       }
@@ -131,6 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     })
       .then(res => {
+          console.log("Dados recebidos do backend:", dados);
         if (res.ok) {
           alert(`Usuário ${acao === "aprovar" ? "aprovado" : "reprovado"} com sucesso.`);
           window.location.href = "usuarios-pendentes.html";

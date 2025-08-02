@@ -1,61 +1,93 @@
 const token = localStorage.getItem("token");
+const params = new URLSearchParams(window.location.search);
+const taskId = params.get("id");
 
-    async function fetchTasks() {
-      const res = await fetch("http://localhost:8080/tasks-ti/admin", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+async function fetchDados() {
+  const taskRes = await fetch(`http://localhost:8080/tasks-ti/admin/${taskId}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const task = await taskRes.json();
+  document.getElementById("titulo").textContent = task.titulo;
+  document.getElementById("descricao").textContent = task.descricao;
 
-      const tasks = await res.json();
-      const container = document.getElementById("lista-tasks");
-      container.innerHTML = "";
+  const resResp = await fetch(`http://localhost:8080/tasks-ti/admin/${taskId}/respostas`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const respostas = await resResp.json();
 
-      for (const task of tasks) {
-        const resResp = await fetch(`http://localhost:8080/tasks-ti/admin/${task.id}/respostas`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+  const container = document.getElementById("lista-respostas");
+  container.innerHTML = respostas.length === 0
+    ? '<p class="text-gray-600">Nenhuma resposta recebida ainda.</p>'
+    : "";
 
-        const respostas = await resResp.json();
+  respostas.forEach(r => {
+    const card = document.createElement("div");
+    card.className = "bg-white shadow rounded-lg p-6 flex justify-between items-start flex-col md:flex-row gap-4";
 
-        const card = document.createElement("div");
-        card.className = "bg-white p-6 rounded shadow";
+    card.innerHTML = `
+  <div class="flex-1">
+    <p class="text-sm text-gray-600 mb-1"><strong class="text-gray-800">Voluntário:</strong> ${r.nomeVoluntario}</p>
+    <p class="text-sm text-gray-600 mb-1"><strong class="text-gray-800">Link:</strong> 
+      <a href="${r.linkSolucao}" class="text-blue-600 underline" target="_blank">${r.linkSolucao}</a>
+    </p>
+    <p class="text-sm text-gray-600"><strong class="text-gray-800">Status:</strong> 
+      <span id="status-${r.id}" class="font-semibold">${r.status}</span>
+    </p>
+  </div>
+  <div class="flex flex-col items-end justify-center gap-2">
+    <button onclick="verPerfil(${r.voluntarioId})"
+      class="text-xs px-4 py-1 border border-gray-300 rounded-md bg-white hover:bg-gray-100 transition">
+      Ver perfil
+    </button>
+    <button onclick="alterarStatus(${r.id}, 'ACEITA')"
+      class="text-xs px-4 py-1 rounded-md bg-green-500 text-white hover:bg-green-600 transition">
+      Aceitar
+    </button>
+    <button onclick="alterarStatus(${r.id}, 'RECUSADA')"
+      class="text-xs px-4 py-1 rounded-md bg-red-500 text-white hover:bg-red-600 transition">
+      Recusar
+    </button>
+  </div>
+`;
 
-        card.innerHTML = `
-          <h2 class="text-xl font-semibold mb-2">${task.titulo}</h2>
-          <p class="text-gray-700 mb-4">${task.descricao}</p>
-          <div class="space-y-4">
-            ${respostas.map(r => `
-              <div class="border rounded p-4 bg-gray-50">
-                <p><strong>Voluntário:</strong> ${r.nomeVoluntario}</p>
-                <p><strong>Link:</strong> <a href="${r.linkSolucao}" target="_blank" class="text-blue-600 underline">${r.linkSolucao}</a></p>
-                <p><strong>Status:</strong> <span id="status-${r.id}" class="font-semibold">${r.status}</span></p>
-                <div class="mt-2 space-x-2">
-                  <button onclick="alterarStatus(${r.id}, 'ACEITA')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">Aceitar</button>
-                  <button onclick="alterarStatus(${r.id}, 'RECUSADA')" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">Recusar</button>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        `;
+    container.appendChild(card);
+  });
+}
 
-        container.appendChild(card);
-      }
-    }
+async function alterarStatus(respostaId, status) {
+  const confirmacao = confirm(`Tem certeza que deseja marcar como ${status}?`);
+  if (!confirmacao) return;
 
-    async function alterarStatus(respostaId, status) {
-      const confirmed = confirm(`Tem certeza que deseja marcar como ${status}?`);
-      if (!confirmed) return;
+  await fetch(`http://localhost:8080/tasks-ti/admin/respostas/${respostaId}/status?status=${status}`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${token}` }
+  });
 
-      await fetch(`http://localhost:8080/tasks-ti/admin/respostas/${respostaId}/status?status=${status}`, {
-        method: "PUT",
-        headers: { Authorization: `Bearer ${token}` }
-      });
+  document.getElementById(`status-${respostaId}`).textContent = status;
+}
 
-      document.getElementById(`status-${respostaId}`).textContent = status;
-    }
+async function fecharTask() {
+  const confirmacao = confirm("Tem certeza que deseja fechar esta task?");
+  if (!confirmacao) return;
 
-    function logout() {
-      localStorage.removeItem("token");
-      window.location.href = "/pages/cadastrologin/login.html";
-    }
+  await fetch(`http://localhost:8080/tasks-ti/admin/${taskId}/fechar`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${token}` }
+  });
 
-    fetchTasks();
+  alert("Task fechada com sucesso!");
+  window.location.href = "/pages/admin/listar-tasks.html";
+}
+
+function verPerfil(id) {
+ window.location.href = `../administrador/perfil-usuario.html?id=${id}&tipo=VOLUNTARIO`;
+}
+
+function logout() {
+  localStorage.removeItem("token");
+  window.location.href = "/pages/cadastrologin/login.html";
+}
+
+document.getElementById("fecharBtn").addEventListener("click", fecharTask);
+
+fetchDados();
