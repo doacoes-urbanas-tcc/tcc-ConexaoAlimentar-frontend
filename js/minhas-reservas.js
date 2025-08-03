@@ -73,4 +73,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 function formatarData(data) {
   return new Date(data).toLocaleDateString("pt-BR");
 }
+function formatarDataHora(dataHora) {
+  const opcoes = {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "America/Sao_Paulo",
+  };
+  return new Date(dataHora).toLocaleString("pt-BR", opcoes);
+}
+
 
