@@ -12,7 +12,6 @@
     <div class="flex flex-col justify-center min-h-screen">
         <div class="w-full max-w-screen-sm sm:max-w-screen-md lg:max-w-screen-lg mx-auto">
             <div class="bg-white py-6 px-4 sm:py-8 sm:px-6 lg:px-10 shadow-xl rounded-lg">
-                <!--logo e boas vindas-->
                 <div class="text-center mb-6">
                     <img class="rounded-md mx-auto mb-4" style="width: 80px; height: auto;" alt="Logo Conexão Alimentar"
                         src="/assets/Conexão Alimentar Logo PNG (1).png" />
@@ -26,7 +25,6 @@
 
                 <form id="form" class="space-y-4 sm:space-y-6">
 
-                    <!--campo global de usuários-->
                     <div class="space-y-4"> 
                         <h2 class="text-lg font-semibold text-gray-700 border-b pb-2">Dados Pessoais</h2>
 
@@ -70,15 +68,12 @@
                         </div>
 
                         <div>
-                            <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirmar senha</label>
-                            <input id="confirmPassword" name="confirmPassword" type="confirmpassword" autocomplete="new-password"
-                                required class="w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm 
-                                          focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500
-                                          text-sm">
+                           <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirmar senha</label>
+                           <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password"required class="w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 text-sm">
                         </div>
+
                     </div>
 
-                    <!--começando a parte do cep e endereço-->
                     <div class="space-y-4">
                         <h2 class="text-lg font-semibold text-gray-700 border-b pb-2">Endereço</h2>
 
@@ -169,8 +164,7 @@
                         </div>                  
                         
                     </div>
-                    <!--terminando a parte do cep e endereço-->
-                    <!--parte de usuário específico-->
+    
                     <div class="space-y-4">
                         <h2 class="text-lg font-semibold text-gray-700 border-b pb-2">Tipo de Usuário</h2>
 
@@ -272,7 +266,6 @@
 
 
                     </div>
-                    <!--botão de cadastro-->
                     <div class="pt-4">
                         <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent 
                                        rounded-md shadow-sm text-sm font-medium text-white bg-red-600
@@ -283,12 +276,10 @@
                         </button>
                     </div>
                 </form>
-                <!--caso haja algum erro de validação-->
                 <div id="erros" style="color: red; margin-top: 10px;"></div>
             </div>
         </div>
     </div>
-
     
     <script src="https://unpkg.com/vanilla-masker/build/vanilla-masker.min.js"></script>
     <script src="/js/cadastro.js" defer></script>

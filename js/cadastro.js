@@ -246,6 +246,17 @@ form.addEventListener('submit', async (e) => {
     voluntario: "voluntario",
     admin: "admin"
   };
+  document.getElementById("form").addEventListener("submit", function (e) {
+        const senha = document.getElementById("password").value;
+        const confirmar = document.getElementById("confirmPassword").value;
+        const erros = document.getElementById("erros");
+        erros.textContent = "";
+
+       if (senha !== confirmar) {
+        e.preventDefault();
+        erros.textContent = "As senhas não coincidem.";
+       }
+    });
   const endpoint = `http://localhost:8080/${tipoMapeado[tipoUsuario]}/cadastrar`;
 
   try {
