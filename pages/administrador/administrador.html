@@ -1,75 +1,131 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-
+<html lang="pt-br" class="bg-gray-100">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Controle - Administrador</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Administrador</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
 
-<body 
-    class="min-h-screen bg-gray-100 bg-cover bg-center" 
-    style="background-image: url('/assets/kaique\ fundo\ 2.0.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
-    
-    <!-- Navbar -->
-    <nav class="bg-white shadow px-4 py-3 flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-            <img class="rounded-md" style="width: 60px;" alt="Logo" src="/assets/Conexão Alimentar Logo PNG (1).png" />
-            <span class="text-2xl font-bold text-gray-800 hidden sm:block">Painel de Controle</span>
-        </div>
-        <button class="text-red-600 text-sm font-semibold hover:underline" onclick="voltar()">Voltar</button>
-        <div class="sm:hidden">
-            <button id="menu-toggle" class="text-gray-700 focus:outline-none" type="button" aria-label="Abrir menu">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-            </button>
-        </div>
-        <div id="navbar-links" class="hidden sm:flex space-x-2">
-            <a href="usuarios-ativos.html" class="bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold transition-colors text-sm text-center">
-                Cadastrar  Reprovar
-            </a>
-            <a href="relatoriousuariosdesativados.html" class="bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold transition-colors text-sm">Relatório usuários desativados</a>
-            <a href="usuarios-pendentes.html" class="bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold transition-colors text-sm">Painel checklist usuarios</a>
-            <a href="relatoriosdiversosPDF.html" class="bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold transition-colors text-sm">Gerar relatorio em PDF</a>
-        </div>
+<body class="flex h-screen text-gray-900">
+
+  <aside class="w-64 bg-white shadow h-full flex flex-col">
+    <div class="p-6 border-b">
+      <img src="/assets/Conexão Alimentar Logo PNG (1).png" class="w-40 mx-auto mb-4" alt="Logo" />
+      <h1 class="text-center text-xl font-bold text-red-600">Administrador</h1>
+    </div>
+    <nav class="flex-1 p-4 space-y-1 text-sm">
+      <a href="administrador.html" class="flex items-center p-2 rounded hover:bg-red-100 font-medium text-red-600">
+        <span class="material-symbols-outlined mr-2">dashboard</span> Dashboard
+      </a>
+      <a href="usuarios-ativos.html" class="flex items-center p-2 rounded hover:bg-gray-100">
+        <span class="material-symbols-outlined mr-2">verified</span> Ativos
+      </a>
+      <a href="usuarios-pendentes.html" class="flex items-center p-2 rounded hover:bg-gray-100">
+        <span class="material-symbols-outlined mr-2">schedule</span> Pendentes
+      </a>
+      <a href="usuarios-reprovados.html" class="flex items-center p-2 rounded hover:bg-gray-100">
+        <span class="material-symbols-outlined mr-2">block</span> Reprovados
+      </a>
+      <a href="cadastrar-task.html" class="flex items-center p-2 rounded hover:bg-gray-100">
+        <span class="material-symbols-outlined mr-2">task_alt</span> Task TI
+      </a>
+      <a href="listar-tasks.html" class="flex items-center p-2 rounded hover:bg-gray-100">
+      <span class="material-symbols-outlined mr-2">assignment</span> Tasks Abertas
+      </a>
+      <a href="relatorio-admin.html" class="flex items-center p-2 rounded hover:bg-gray-100">
+        <span class="material-symbols-outlined mr-2">analytics</span> Relatórios
+      </a>
     </nav>
-
-    <!-- Menu mobile -->
-    <div id="mobile-menu" class="sm:hidden hidden px-4 pb-4">
-        <a href="Cadastro1.html" class="block bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold mb-2 transition-colors text-sm text-center">
-            Cadastrar  Reprovar
-        </a>
-        <a href="relatoriousuariosdesativados.html" class="block bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold mb-2 transition-colors text-sm">Painel usuários desativados</a>
-        <a href="PainelListar.html" class="bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold transition-colors text-sm">Checklist usuarios ativos</a>
-        <a href="relatoriosdiversosPDF.html" class="block bg-red-200 hover:bg-red-300 text-black rounded-lg px-4 py-2 font-bold mb-2 transition-colors text-sm">Gerar relatorio em PDF</a>
+    <div class="p-4 border-t">
+      <button onclick="logout()" class="w-full text-left text-red-600 hover:underline font-semibold">Sair</button>
     </div>
+  </aside>
 
-    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-4xl flex flex-col sm:flex-row items-center justify-between gap-8">
-        <!-- Coluna Esquerda: ADMINISTRADOR -->
-        <div class="w-full sm:w-1/2">
-            <div class="bg-white py-8 px-6 shadow rounded-lg sm:px-10">
-                <button class="w-full bg-red-600 text-white rounded-full py-3 text-lg font-bold mb-6 cursor-default" type="button" disabled>ADMINISTRADOR</button>
-                <div class="w-full bg-gray-100 text-gray-500 rounded-full py-2 text-center mb-6 text-base select-none">
-                    Digite a opção que deseja
-                </div>
-            </div>
+  <div class="flex flex-col flex-1 min-h-screen">
+    <main class="flex-grow bg-gray-100 p-6 overflow-auto">
+      <div class="mb-6">
+        <h2 class="text-3xl font-bold text-gray-800">Painel de Controle</h2>
+        <p class="text-sm text-gray-500">Bem-vindo(a), administrador(a)!</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white shadow rounded-lg p-4 flex items-center space-x-4">
+          <div class="p-2 rounded-full bg-red-100">
+            <span class="material-symbols-outlined text-red-600 text-3xl">group</span>
+          </div>
+          <div class="flex flex-col justify-center">
+            <p class="text-sm text-gray-600">Usuários Ativos</p>
+            <p class="text-2xl font-bold text-red-600" id="qtd-ativos">---</p>
+          </div>
         </div>
 
-        <!-- Coluna Direita: Imagem -->
-        <div class="w-full sm:w-1/2 flex justify-center items-center">
-            <img 
-                src="/assets/down2.jpg" 
-                alt="Foto doação" 
-                class="rounded-lg shadow-lg max-h-72 max-w-xs w-full h-auto aspect-[4/3] object-cover bg-gray-200" 
-                style="object-position: center;" 
-            />
+        <div class="bg-white shadow rounded-lg p-4 flex items-center space-x-4">
+          <div class="p-2 rounded-full bg-yellow-100">
+            <span class="material-symbols-outlined text-yellow-600 text-3xl">schedule</span>
+          </div>
+          <div class="flex flex-col justify-center">
+            <p class="text-sm text-gray-600">Pendentes</p>
+            <p class="text-2xl font-bold text-yellow-600" id="qtd-pendentes">---</p>
+          </div>
         </div>
-    </div>
 
-    <script src="../../../js/administrador.js"></script>
+        <div class="bg-white shadow rounded-lg p-4 flex items-center space-x-4">
+          <div class="p-2 rounded-full bg-green-100">
+            <span class="material-symbols-outlined text-green-600 text-3xl">volunteer_activism</span>
+          </div>
+          <div class="flex flex-col justify-center">
+            <p class="text-sm text-gray-600">Doações Ativas</p>
+            <p class="text-2xl font-bold text-green-600" id="qtd-doacoes">---</p>
+          </div>
+        </div>
+
+        <div class="bg-white shadow rounded-lg p-4 flex items-center space-x-4">
+          <div class="p-2 rounded-full bg-blue-100">
+            <span class="material-symbols-outlined text-blue-600 text-3xl">engineering</span>
+          </div>
+          <div class="flex flex-col justify-center">
+            <p class="text-sm text-gray-600">Tasks Abertas</p>
+            <p class="text-2xl font-bold text-blue-600" id="qtd-tasks">---</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-semibold text-gray-800">Últimos Usuários Pendentes</h3>
+          <a href="usuarios-pendentes.html" class="text-sm text-red-600 hover:underline">Ver todos</a>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm">
+            <thead>
+              <tr class="border-b text-gray-600">
+                <th class="text-left px-4 py-2 font-medium">Nome</th>
+                <th class="text-left px-4 py-2 font-medium">Email</th>
+                <th class="text-left px-4 py-2 font-medium">Tipo</th>
+                <th class="text-left px-4 py-2 font-medium">Status</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-usuarios" class="text-gray-800">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <footer class="bg-white border-t text-gray-800 py-6">
+      <div class="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
+        <span class="font-semibold">&copy; 2025 Conexão Alimentar</span>
+        <div class="flex space-x-4 mt-2 md:mt-0">
+          <a href="#" class="hover:underline">Sobre</a>
+          <a href="#" class="hover:underline">Contato</a>
+          <a href="#" class="hover:underline">Privacidade</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/js/administrador.js"></script>
 </body>
-
 </html>

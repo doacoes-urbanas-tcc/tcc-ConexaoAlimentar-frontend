@@ -6,26 +6,36 @@
   <title>Login - Conexão Alimentar</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="bg-gradient-to-br from-red-100 via-white to-red-50 flex items-center justify-center min-h-screen">
 
-  <div class="bg-white shadow-md rounded px-10 py-10 w-full max-w-md">
-    <h2 class="text-2xl font-bold mb-6 text-red-600 text-center">Entrar na Plataforma</h2>
+  <div class="bg-white shadow-xl rounded-2xl px-8 py-10 w-full max-w-md">
+    <div class="text-center mb-6">
+      <img src="/assets/conexão (1).png" alt="Logo Conexão Alimentar" class="h-16 mx-auto mb-2">
+      <h2 class="text-2xl font-bold text-red-600">Entrar na Plataforma</h2>
+    </div>
 
-    <form id="form-login" class="space-y-4">
+    <form id="form-login" class="space-y-5">
       <div>
         <label class="block text-gray-700 font-medium">E-mail</label>
-        <input type="email" id="email" required class="w-full mt-1 px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-red-500" />
+        <input type="email" id="email" required 
+               class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm 
+                      focus:outline-none focus:ring-2 focus:ring-red-500" />
       </div>
+
       <div>
         <label class="block text-gray-700 font-medium">Senha</label>
-        <input type="password" id="senha" required class="w-full mt-1 px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-red-500" />
+        <input type="password" id="senha" required class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500" />
       </div>
 
-      <div id="erro" class="text-red-600 text-sm hidden">Erro no login. Verifique seu e-mail e senha.</div>
+      <div class="text-right">
+        <a href="/pages/cadastrologin/redefinir-senha.html" class="text-sm text-red-500 hover:underline">
+          Esqueci minha senha
+        </a>
+      </div>
 
-      <button type="submit" class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded font-semibold">
-        Entrar
-      </button>
+      <div id="erro" class="text-red-600 text-sm hidden text-center">Erro no login. Verifique seu e-mail e senha.</div>
+
+      <button type="submit" class="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-2 rounded-full font-semibold transition-all duration-300 shadow-md">Entrar</button>
     </form>
   </div>
 

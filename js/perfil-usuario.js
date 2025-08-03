@@ -23,7 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .then(dados => preencherPerfil(dados, tipo, isAdmin))
     .catch(err => {
-      console.error("Erro:", err);
       alert("Erro ao carregar dados do perfil.");
     });
 
@@ -103,18 +102,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (isAdmin) {
-      info.appendChild(criarCampo("Ativo", dados.ativo ? "Sim" : "Não"));
-      if (dados.justificativaReprovacao) {
-        info.appendChild(criarCampo("Justificativa de Reprovação", dados.justificativaReprovacao));
-      }
+      info.appendChild(criarCampo("Status", dados.status || "Não informado"));
+    if (dados.justificativaReprovacao) {
+      info.appendChild(criarCampo("Justificativa de Reprovação", dados.justificativaReprovacao));
     }
-
+    }
     if (isAdmin) {
       document.getElementById("botoesAdmin").classList.remove("hidden");
 
+      
       document.getElementById("btnAprovar").onclick = () => atualizarStatus("aprovar");
       document.getElementById("btnReprovar").onclick = () => atualizarStatus("reprovar");
     }
+    const divAvaliacoes = document.getElementById("verAvaliacoes");
+    const btnAvaliacoes = document.getElementById("btnAvaliacoes");
+
+    btnAvaliacoes.href = `../avaliacao/avaliacoes-usuario.html?id=${dados.id || id}`;
+    divAvaliacoes.classList.remove("hidden");
   }
 
   function atualizarStatus(acao) {
@@ -125,6 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     })
       .then(res => {
+          console.log("Dados recebidos do backend:", dados);
         if (res.ok) {
           alert(`Usuário ${acao === "aprovar" ? "aprovado" : "reprovado"} com sucesso.`);
           window.location.href = "usuarios-pendentes.html";

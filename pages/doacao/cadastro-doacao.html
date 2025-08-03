@@ -12,7 +12,6 @@
 
  <nav class="bg-red-500 shadow text-white">
   <div class="container mx-auto px-4 py-5 flex justify-between items-center flex-wrap">
-    
     <div class="flex items-center gap-2">
       <img class="h-10" src="/assets/conexão (1).png" alt="Logo" />
       <span class="font-bold text-lg">Conexão Alimentar</span>
@@ -21,44 +20,33 @@
     <div class="md:hidden text-3xl">
       <ion-icon name="menu-outline" onclick="Menu(this)"></ion-icon>
     </div>
-    <ul id="menu" class="hidden flex-col w-full md:flex md:flex-row md:items-center md:space-x-6 md:w-auto mt-4 md:mt-0 space-y-4 md:space-y-0">
-    <li>
-        <a href="#" class="text-xl block hover:text-white">Início</a>
-    </li>
-    <li>
-        <a href="/pages/doacao/cadastro-doacao.html" class="text-xl block hover:text-white">Cadastrar Doação</a>
-    </li>
-      <li>
-        <a href="/pages/doacao/minhas-doacoes.html" class="text-xl block hover:text-white">Minhas Doações</a>
-    </li>
+
+    <ul id="menu" class="hidden w-full md:flex md:items-center md:space-x-6 md:w-auto mt-4 md:mt-0">
+      <li><a href="/pages/doador/home-page.html" class="text-xl block hover:text-white">Início</a></li>
+
+      <li class="relative group">
+        <button
+          class="text-xl block hover:text-white focus:outline-none"
+          onclick="toggleDropdown()"
+        >
+          Doações
+        </button>
+        <ul id="dropdownDoacao" class="absolute z-10 hidden bg-white text-black rounded shadow-lg mt-2 w-48 group-hover:block">
+          <li><a href="/pages/doacao/cadastro-doacao.html" class="block px-4 py-2 hover:bg-red-100">Cadastrar Doação</a></li>
+          <li><a href="/pages/doacao/minhas-doacoes.html" class="block px-4 py-2 hover:bg-red-100">Minhas Doações</a></li>
+          <li><a href="/pages/doacao/historico.html" class="block px-4 py-2 hover:bg-red-100">Histórico</a></li>
+        </ul>
+      </li>
+
       <li class="mt-2 md:mt-0">
-        <button class="bg-white text-red-500 px-4 py-1 rounded-full font-semibold hover:bg-red-100 transition-colors">Sair</button>
+        <button id="btnLogout" class="bg-white text-red-500 px-4 py-1 rounded-full font-semibold hover:bg-red-100 transition-colors">
+        Sair
+      </button>
+
       </li>
     </ul>
   </div>
 </nav>
-
-  <script>
-  document.querySelector("button").addEventListener("click", function () {
-    localStorage.removeItem("token");
-    window.location.href = "/pages/cadastrologin/login.html"; 
-  });
-</script>
-
-  <script>
-    function Menu(e) {
-      const menu = document.getElementById("menu");
-      if (menu.classList.contains("hidden")) {
-        e.name = "close-outline";
-        menu.classList.remove("hidden");
-        menu.classList.add("flex");
-      } else {
-        e.name = "menu-outline";
-        menu.classList.remove("flex");
-        menu.classList.add("hidden");
-      }
-    }
-  </script>
 
   <div class="container mx-auto mt-10 bg-white p-8 rounded-lg shadow max-w-6xl">
     <h2 class="text-2xl font-bold mb-6 text-gray-800 col-span-2">Cadastrar Doação</h2>
@@ -132,6 +120,38 @@
       </div>
     </div>
   </footer>
+  <script>
+  function Menu(icon) {
+    const menu = document.getElementById("menu");
+    menu.classList.toggle("hidden");
+  }
+
+  function toggleDropdown() {
+    const dropdown = document.getElementById("dropdownDoacao");
+    dropdown.classList.toggle("hidden");
+  }
+
+  window.addEventListener("click", function (e) {
+    const dropdown = document.getElementById("dropdownDoacao");
+    if (!e.target.closest("li.group")) {
+      dropdown.classList.add("hidden");
+    }
+  });
+
+  const btnLogout = document.getElementById("btnLogout");
+  if (btnLogout) {
+    btnLogout.addEventListener("click", function () {
+      localStorage.removeItem("token");
+      window.location.href = "/pages/login.html";
+    });
+  }
+
+  const token = localStorage.getItem("token");
+  if (!token) {
+    window.location.href = "/pages/cadastrologin/login.html";
+  }
+</script>
+
   <script src="/js/cadastro-doacao.js"></script>
 </body>
 </html>

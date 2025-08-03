@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="bg-gray-100">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cadastrar Task de TI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+<body class="flex h-screen text-gray-900">
+
+  <aside class="w-64 bg-white shadow h-screen flex flex-col">
+  <div class="p-6 border-b">
+    <img src="/assets/Conexão Alimentar Logo PNG (1).png" class="w-40 mx-auto mb-4" alt="Logo" />
+    <h1 class="text-center text-xl font-bold text-red-600">Administrador</h1>
+  </div>
+  <nav class="flex-1 p-4 space-y-1 text-sm">
+    <a href="administrador.html" class="flex items-center p-2 rounded hover:bg-red-100 font-medium text-gray-800 hover:text-red-600 transition">
+      <span class="material-symbols-outlined mr-2 text-gray-800 hover:text-red-600">dashboard</span> Dashboard
+    </a>
+    <a href="usuarios-ativos.html" class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700 hover:text-red-600 transition">
+      <span class="material-symbols-outlined mr-2 text-gray-700 hover:text-red-600">verified</span> Ativos
+    </a>
+    <a href="usuarios-pendentes.html" class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700 hover:text-red-600 transition">
+      <span class="material-symbols-outlined mr-2 text-gray-700 hover:text-red-600">schedule</span> Pendentes
+    </a>
+    <a href="usuarios-reprovados.html" class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700 hover:text-red-600 transition">
+      <span class="material-symbols-outlined mr-2 text-gray-700 hover:text-red-600">block</span> Reprovados
+    </a>
+    <a href="cadastrar-task.html" class="flex items-center p-2 rounded bg-red-100 font-semibold text-red-700 cursor-default">
+      <span class="material-symbols-outlined mr-2 text-red-700">task_alt</span> Task TI
+    </a>
+    <a href="listar-tasks.html" class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700 hover:text-red-600 transition">
+    <span class="material-symbols-outlined mr-2">assignment</span> Tasks Abertas
+    </a>
+    <a href="relatorio-admin.html" class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700 hover:text-red-600 transition">
+      <span class="material-symbols-outlined mr-2 text-gray-700 hover:text-red-600">analytics</span> Relatórios
+    </a>
+  </nav>
+  <div class="p-4 border-t">
+    <button onclick="logout()" class="w-full text-left text-red-600 hover:underline font-semibold">Sair</button>
+  </div>
+</aside>
+
+
+    <div class="flex flex-col flex-1 min-h-screen overflow-auto bg-gray-100 p-4 sm:p-8 lg:p-12">
+    <main class="bg-white rounded-lg shadow p-6 sm:p-8 flex flex-col flex-grow">
+      <h2 class="text-3xl font-bold mb-6 text-gray-800">Cadastrar Task de TI</h2>
+      <form id="form-task" class="space-y-6 flex flex-col flex-grow">
+        <div>
+          <label for="titulo" class="block font-semibold mb-2 text-gray-700">Título</label>
+          <input type="text" id="titulo" name="titulo" required
+                 class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500 transition" />
+        </div>
+
+        <div>
+          <label for="descricao" class="block font-semibold mb-2 text-gray-700">Descrição</label>
+          <textarea id="descricao" name="descricao" rows="5" required
+                    class="w-full border border-gray-300 rounded-md px-4 py-3 resize-none focus:outline-none focus:ring-2 focus:ring-red-500 transition"></textarea>
+        </div>
+
+        <div>
+          <label for="linkRepositorio" class="block font-semibold mb-2 text-gray-700">Link do Repositório (opcional)</label>
+          <input type="url" id="linkRepositorio" name="linkRepositorio"
+                 class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500 transition" />
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-2 text-gray-700">Tags (clique para selecionar)</label>
+          <div id="tagsContainer" class="flex flex-wrap gap-2 mb-2"></div>
+          <input type="hidden" id="tags" name="tags" />
+          <p class="text-sm text-gray-500">Clique nas tecnologias para selecionar as tags.</p>
+        </div>
+
+        <button type="submit" 
+          class="bg-red-600 text-white font-semibold px-8 py-3 rounded-md hover:bg-red-700 transition self-start">
+          Cadastrar
+        </button>
+      </form>
+    </main>
+
+     <footer class="bg-white border-t text-gray-800 py-6">
+      <div class="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
+        <span class="font-semibold">&copy; 2025 Conexão Alimentar</span>
+        <div class="flex space-x-4 mt-2 md:mt-0">
+          <a href="#" class="hover:underline">Sobre</a>
+          <a href="#" class="hover:underline">Contato</a>
+          <a href="#" class="hover:underline">Privacidade</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+
+  <script src="/js/cadastrar-task.js"> </script>
+</body>
+</html>

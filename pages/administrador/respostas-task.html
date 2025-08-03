@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Respostas da Task</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+  <nav class="bg-red-500 shadow text-white">
+    <div class="container mx-auto px-4 py-5 flex justify-between items-center flex-wrap">
+      <div class="flex items-center gap-2">
+        <img class="h-10" src="/assets/conexão (1).png" alt="Logo" />
+        <span class="font-bold text-lg">Conexão Alimentar</span>
+      </div>
+      <div class="flex gap-4 items-center">
+        <a href="/pages/admin/listar-tasks.html" class="hover:underline text-white">← Voltar para Tasks</a>
+        <button onclick="logout()" class="bg-white text-red-500 px-4 py-1 rounded-full hover:bg-red-100 font-semibold">Sair</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container mx-auto mt-10 px-4 flex-grow">
+    <div class="mb-6">
+      <h1 id="titulo" class="text-2xl font-bold text-gray-800 mb-1"></h1>
+      <p id="descricao" class="text-gray-700"></p>
+    </div>
+
+    <div class="flex justify-end mb-6">
+      <button id="fecharBtn" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded shadow">
+        Fechar Task
+      </button>
+    </div>
+
+    <div id="lista-respostas" class="space-y-6"></div>
+  </main>
+
+  <footer class="bg-white border-t text-gray-800 py-6">
+      <div class="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
+        <span class="font-semibold">&copy; 2025 Conexão Alimentar</span>
+        <div class="flex space-x-4 mt-2 md:mt-0">
+          <a href="#" class="hover:underline">Sobre</a>
+          <a href="#" class="hover:underline">Contato</a>
+          <a href="#" class="hover:underline">Privacidade</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+ 
+  <script src="/js/respostas-task.js"></script>
+</body>
+</html>
