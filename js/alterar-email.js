@@ -1,40 +1,34 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("form-alterar-email");
+document.getElementById("form-alterar-email").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const novoEmail = document.getElementById("novoEmail").value;
   const mensagem = document.getElementById("mensagem");
 
+  const tipoUsuario = localStorage.getItem("tipoUsuario").toLowerCase();
+  const usuarioId = localStorage.getItem("usuarioId");
   const token = localStorage.getItem("token");
-  const tipo = localStorage.getItem("tipo"); 
-  const id = localStorage.getItem("id");
 
-  if (!token || !tipo || !id) {
-    mensagem.textContent = "Usuário não autenticado.";
-    mensagem.classList.add("text-red-500");
-    return;
-  }
-
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const novoEmail = form.novoEmail.value;
-
-    fetch(`http://localhost:8080/${tipo}/${id}/email`, {
+  try {
+    const response = await fetch(`http://localhost:8080/${tipoUsuario}/${usuarioId}/email`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ novoEmail })
-    })
-    .then(res => {
-      if (!res.ok) throw new Error("Erro ao atualizar e-mail");
-      mensagem.textContent = "E-mail atualizado com sucesso!";
-      mensagem.classList.remove("text-red-500");
-      mensagem.classList.add("text-green-600");
-      form.reset();
-    })
-    .catch(err => {
-      mensagem.textContent = "Erro ao atualizar e-mail. Verifique e tente novamente.";
-      mensagem.classList.remove("text-green-600");
-      mensagem.classList.add("text-red-500");
+      body: JSON.stringify({ novoEmail }),
     });
-  });
+
+    const texto = await response.text();
+
+    if (response.ok) {
+      mensagem.textContent = texto;
+      mensagem.className = "text-green-600";
+    } else {
+      mensagem.textContent = texto || "Erro ao atualizar e-mail.";
+      mensagem.className = "text-red-500";
+    }
+  } catch (err) {
+    mensagem.textContent = "Erro ao conectar ao servidor.";
+    mensagem.className = "text-red-500";
+  }
 });
