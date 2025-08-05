@@ -2,34 +2,64 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard Voluntário</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard Doador | Conexão Alimentar</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 min-h-screen">
-  <nav class="bg-red-600 p-4 text-white">
-    <div class="container mx-auto flex justify-between">
-      <span class="font-bold">Conexão Alimentar</span>
-      <div id="nome-voluntario"></div>
+
+  <nav class="bg-red-500 shadow text-white">
+  <div class="container mx-auto px-4 py-5 flex justify-between items-center flex-wrap">
+    <div class="flex items-center gap-2">
+      <img class="h-10" src="/assets/conexão (1).png" alt="Logo" />
+      <span class="font-bold text-lg">Conexão Alimentar</span>
     </div>
-  </nav>
 
-  <main class="flex flex-col items-center justify-center py-12">
-    <h1 class="text-3xl font-semibold mb-6 text-red-700">Bem-vindo, <span id="nomeSpan">Voluntário</span>!</h1>
+    <div class="md:hidden text-3xl">
+      <ion-icon name="menu-outline" onclick="Menu(this)"></ion-icon>
+    </div>
 
-    <div class="grid gap-6 w-full max-w-sm">
-      <a href="listar-tasks-recomendadas.html" class="block text-center bg-red-600 text-white px-6 py-4 rounded-lg shadow hover:bg-red-700 transition">
-        Ver Tasks Disponíveis
+    <ul id="menu" class="hidden w-full md:flex md:items-center md:space-x-6 md:w-auto mt-4 md:mt-0">
+      <li><a href="/pages/doador/home-page-voluntario.html" class="text-xl block hover:text-white">Início</a></li>
+
+      <li class="relative group">
+
+      <li class="mt-2 md:mt-0">
+        <button id="btnLogout" class="bg-white text-red-500 px-4 py-1 rounded-full font-semibold hover:bg-red-100 transition-colors">
+        Sair
+      </button>
+
+      </li>
+    </ul>
+  </div>
+</nav>
+
+  <main class="max-w-6xl mx-auto mt-10 p-3">
+    <h1 class="text-2xl font-semibold text-gray-800 mb-6">Bem-vindo(a), <span id="nomeUsuario"></span>!</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <a href="/pages/voluntario/listar-tasks-recomendadas.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
+        <h2 class="text-lg font-bold">Ver tasks disponíveis</h2>
+        <p class="mt-2 text-sm">Veja as tasks disponíveis para a sua stack</p>
       </a>
-      <a href="#" class="block text-center bg-red-600 text-white px-6 py-4 rounded-lg shadow hover:bg-red-700 transition">
-        Minhas Tasks
+
+      <a href="/pages/voluntario/minhas-respostas.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
+        <h2 class="text-lg font-bold">Minhas respostas</h2>
+        <p class="mt-2 text-sm">Acompanhe todas as doações já realizadas</p>
+      </a>
+
       </a>
     </div>
   </main>
+  <footer class="text-gray-800 mt-16 py-6">
+    <div class="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
+      <span class="font-semibold">&copy; 2025 Conexão Alimentar</span>
+      <div class="flex space-x-4 mt-2 md:mt-0">
+        <a href="#" class="hover:underline">Sobre</a>
+        <a href="#" class="hover:underline">Contato</a>
+        <a href="#" class="hover:underline">Privacidade</a>
+      </div>
+    </div>
+  </footer>
 </body>
-<script>
-  const nome = localStorage.getItem("nome") || "Voluntário";
-  document.getElementById("nomeSpan").textContent = nome;
-  document.getElementById("nome-voluntario").textContent = nome;
-</script>
 </html>
