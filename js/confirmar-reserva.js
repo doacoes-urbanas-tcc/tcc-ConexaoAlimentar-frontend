@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   btnConfirmar.addEventListener("click", async () => {
     try {
-      const response = await fetch("http://localhost:8080/reservas", {
+      const response = await fetch("/reservas", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      window.location.href = `/pages/reserva/qrcode.html?id=${idDoacao}`;
+      window.location.href = `https://conexao-alimentar.onrender.com/pages/reserva/qrcode.html?id=${idDoacao}`;
     } catch (err) {
       alert("Erro ao tentar reservar a doação.");
     }
