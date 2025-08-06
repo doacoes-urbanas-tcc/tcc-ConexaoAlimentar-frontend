@@ -1,12 +1,3 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const nome = localStorage.getItem('nome');
-  const boasVindasEl = document.getElementById('boasVindas');
-  if (nome) {
-    boasVindasEl.textContent = `Seja bem-vindo, ${nome}!`;
-  } else {
-    boasVindasEl.textContent = `Seja bem-vindo!`;
-  }
-});
 function logout() {
       localStorage.removeItem("token");
       window.location.href = "/pages/cadastrologin/login.html";
