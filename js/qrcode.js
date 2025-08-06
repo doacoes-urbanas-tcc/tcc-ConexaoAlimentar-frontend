@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const response = await fetch(`http://localhost:8080/qr-code/url/${id}`, {
+    const response = await fetch(`https://conexao-alimentar.onrender.com/qr-code/url/${id}`, {
       method: "GET",
       headers: {
         "Authorization": "Bearer " + token
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const intervaloStatus = setInterval(async () => {
         console.log("Checando status da reserva...");
         try {
-          const responseStatus = await fetch(`http://localhost:8080/qr-code/url/${id}`, {
+          const responseStatus = await fetch(`https://conexao-alimentar.onrender.com/qr-code/url/${id}`, {
             method: "GET",
             headers: {
               "Authorization": "Bearer " + token

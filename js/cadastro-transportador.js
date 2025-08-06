@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     formData.append("cnh", cnhFile);
 
     try {
-      const response = await fetch(`http://localhost:8080/voluntario/${voluntarioId}/veiculo`, {
+      const response = await fetch(`https://conexao-alimentar.onrender.com/${voluntarioId}/veiculo`, {
         method: "POST",
         body: formData
       });

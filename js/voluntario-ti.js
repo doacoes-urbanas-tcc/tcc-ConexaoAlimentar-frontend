@@ -1,6 +1,6 @@
 const token = localStorage.getItem("token");
 
-    fetch("http://localhost:8080/tasks-ti/voluntario", {
+    fetch("https://conexao-alimentar.onrender.com/tasks-ti/voluntario", {
       headers: {
         "Authorization": "Bearer " + token
       }

@@ -6,7 +6,7 @@ document.getElementById("form-login").addEventListener("submit", async function 
   const erro = document.getElementById("erro");
 
   try {
-    const resposta = await fetch("http://localhost:8080/auth/login", {
+    const resposta = await fetch("https://conexao-alimentar.onrender.com/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -27,22 +27,25 @@ document.getElementById("form-login").addEventListener("submit", async function 
 
     switch (dados.tipoUsuario) {
       case "ONG":
-        window.location.href = "/pages/doacao/lista-doacoes.html";
+        window.location.href = "/pages/ong/home-page-ong.html";
         break;
       case "COMERCIO":
-        window.location.href = "/pages/doacao/cadastro-doacao.html";
+        window.location.href = "/pages/doador/home-page-doador.html";
         break;
       case "PRODUTOR_RURAL":
-        window.location.href = "/pages/produtor/home.html";
+        window.location.href = "/pages/doador/home-page-doador.html";
         break;
       case "PESSOA_FISICA":
-        window.location.href = "/pages/voluntario/home.html";
+        window.location.href = "/pages/doador/home-page-doador.html";
         break;
       case "ADMIN":
-        window.location.href = "/pages/administrador/administrador.html";
+        window.location.href = "/pages/administrador/dashboard-administrador.html";
+        break
+      case "VOLUNTARIO":
+        window.location.href = "/pages/voluntario/home-page-voluntario.html";
         break
       default:
-        window.location.href = "/pages/home.html"; 
+        window.location.href = "/pages/cadastrologin/cadastro.html"; 
     }
   } catch (err) {
     console.error("Erro no login:", err);

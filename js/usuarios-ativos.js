@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", carregarUsuariosAtivos);
 
 async function carregarUsuariosAtivos() {
   const tipo = filtroTipo.value;
-  let endpoint = "http://localhost:8080/admin/usuarios/ativos";
+  let endpoint = "https://conexao-alimentar.onrender.com/admin/usuarios/ativos";
 
   if (tipo !== "todos") {
     endpoint += `/${tipo}`;

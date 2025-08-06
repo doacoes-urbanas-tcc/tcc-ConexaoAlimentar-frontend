@@ -257,7 +257,7 @@ form.addEventListener('submit', async (e) => {
         erros.textContent = "As senhas não coincidem.";
        }
     });
-  const endpoint = `http://localhost:8080/${tipoMapeado[tipoUsuario]}/cadastrar`;
+  const endpoint = `https://conexao-alimentar.onrender.com/${tipoMapeado[tipoUsuario]}/cadastrar`;
 
   try {
     const response = await fetch(endpoint, {

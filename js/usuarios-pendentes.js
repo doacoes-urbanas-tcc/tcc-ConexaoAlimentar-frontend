@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ? "/admin/usuarios/pendentes"
       : `/admin/usuarios/pendentes/${tipo}`;
 
-    fetch(`http://localhost:8080${endpoint}`, {
+    fetch(`https://conexao-alimentar.onrender.com${endpoint}`, {
       headers: { 
         Authorization: `Bearer ${token}` },
     })
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function aprovarUsuario(id) {
-    fetch(`http://localhost:8080/admin/usuarios/aprovar/${id}`, {
+    fetch(`https://conexao-alimentar.onrender.com/admin/usuarios/aprovar/${id}`, {
       method: "PATCH",
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    fetch(`http://localhost:8080/admin/usuarios/reprovar/${idUsuarioParaReprovar}`, {
+    fetch(`https://conexao-alimentar.onrender.com/admin/usuarios/reprovar/${idUsuarioParaReprovar}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
