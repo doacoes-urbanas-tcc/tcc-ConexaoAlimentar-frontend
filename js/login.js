@@ -6,7 +6,7 @@ document.getElementById("form-login").addEventListener("submit", async function 
   const erro = document.getElementById("erro");
 
   try {
-    const resposta = await fetch("http://localhost:8080/auth/login", {
+    const resposta = await fetch("https://conexao-alimentar.onrender.com/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

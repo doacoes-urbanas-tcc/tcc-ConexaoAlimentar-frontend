@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function validarQrCode(idDoacao) {
   const token = localStorage.getItem("token");
 
-  fetch(`http://localhost:8080/doacoes/validar-qr/${idDoacao}`, {
+  fetch(`https://conexao-alimentar.onrender.com/doacoes/validar-qr/${idDoacao}`, {
     method: "POST",
     headers: {
       "Authorization": "Bearer " + token
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
 
   try {
-    const response = await fetch(`http://localhost:8080/doacoes/validar-qr/${doacaoId}`, {
+    const response = await fetch(`https://conexao-alimentar.onrender.com/doacoes/validar-qr/${doacaoId}`, {
       method: "POST",
       headers: {
         "Authorization": "Bearer " + token

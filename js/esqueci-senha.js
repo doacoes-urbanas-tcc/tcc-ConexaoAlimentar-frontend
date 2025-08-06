@@ -5,7 +5,7 @@ document.getElementById("form-esqueci").addEventListener("submit", async (e) => 
   const mensagem = document.getElementById("mensagem");
 
   try {
-    const response = await fetch("http://localhost:8080/auth/recuperar-senha", {
+    const response = await fetch("https://conexao-alimentar.onrender.com/auth/recuperar-senha", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email })

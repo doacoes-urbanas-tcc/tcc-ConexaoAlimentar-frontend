@@ -72,7 +72,7 @@
   formData.append("certificacoesFile", document.getElementById("certificacoesFile").files[0]);
 
   try {
-    const response = await fetch(`http://localhost:8080/voluntario/${voluntarioId}/perfil-ti`, {
+    const response = await fetch(`https://conexao-alimentar.onrender.com/voluntario/${voluntarioId}/perfil-ti`, {
       method: "POST",
       body: formData
     });

@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   try {
-    const response = await fetch("http://localhost:8080/doacoes/minhas-doacoes", {
+    const response = await fetch("https://conexao-alimentar.onrender.com/minhas-doacoes", {
       headers: {
         "Authorization": "Bearer " + token
       }

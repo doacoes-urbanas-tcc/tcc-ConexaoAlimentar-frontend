@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
     botao.textContent = "Enviando...";
 
     try {
-      const response = await fetch("http://localhost:8080/doacoes/cadastrar", {
+      const response = await fetch("https://conexao-alimentar.onrender.com/doacoes/cadastrar", {
         method: "POST",
         headers: {
           "Authorization": "Bearer " + token

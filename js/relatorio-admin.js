@@ -1,6 +1,6 @@
 function baixar(tipo, formato) {
   const token = localStorage.getItem("token");
-  let url = `http://localhost:8080/admin/relatorio/${formato}`;
+  let url = `https://conexao-alimentar.onrender.com/admin/relatorio/${formato}`;
 
   if (tipo === 'doacoes-mensais') {
     const mes = document.getElementById('mes').value;

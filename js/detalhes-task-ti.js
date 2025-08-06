@@ -21,7 +21,7 @@
       e.preventDefault();
       const linkSolucao = document.getElementById("linkSolucao").value;
 
-      fetch(`http://localhost:8080/tasks-ti/voluntario/${taskId}/responder`, {
+      fetch(`https://conexao-alimentar.onrender.com/tasks-ti/voluntario/${taskId}/responder`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

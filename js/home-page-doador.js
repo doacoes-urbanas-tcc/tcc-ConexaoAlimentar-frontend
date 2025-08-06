@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  fetch(`http://localhost:8080/usuario/doador/dashboard/${usuarioId}`, {
+  fetch(`https://conexao-alimentar.onrender.com/usuario/doador/dashboard/${usuarioId}`, {
     headers: {
       Authorization: `Bearer ${token}`
     }

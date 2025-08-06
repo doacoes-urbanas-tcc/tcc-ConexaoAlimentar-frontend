@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("token");
 
   try {
-    const respEstatisticas = await fetch("http://localhost:8080/voluntario/dashboard", {
+    const respEstatisticas = await fetch("https://conexao-alimentar.onrender.com/voluntario/dashboard", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 async function carregarMinhasRespostas(token) {
   try {
-    const resp = await fetch("http://localhost:8080/voluntario/minhas-respostas", {
+    const resp = await fetch("https://conexao-alimentar.onrender.com/voluntario/minhas-respostas", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

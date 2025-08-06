@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     try {
-      const response = await fetch("http://localhost:8080/tasks-ti/admin", {
+      const response = await fetch("https://conexao-alimentar.onrender.com/tasks-ti/admin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

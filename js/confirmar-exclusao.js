@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const response = await fetch(`http://localhost:8080/doacoes/${id}`, {
+    const response = await fetch(`https://conexao-alimentar.onrender.com/doacoes/${id}`, {
       headers: {
         "Authorization": "Bearer " + token
       }
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!confirmado) return;
 
     try {
-      const deleteResp = await fetch(`http://localhost:8080/doacoes/${id}`, {
+      const deleteResp = await fetch(`https://conexao-alimentar.onrender.com/doacoes/${id}`, {
         method: "DELETE",
         headers: {
           "Authorization": "Bearer " + token

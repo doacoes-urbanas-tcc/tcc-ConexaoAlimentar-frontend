@@ -3,14 +3,14 @@ const params = new URLSearchParams(window.location.search);
 const taskId = params.get("id");
 
 async function fetchDados() {
-  const taskRes = await fetch(`http://localhost:8080/tasks-ti/admin/${taskId}`, {
+  const taskRes = await fetch(`https://conexao-alimentar.onrender.com/tasks-ti/admin/${taskId}`, {
     headers: { Authorization: `Bearer ${token}` }
   });
   const task = await taskRes.json();
   document.getElementById("titulo").textContent = task.titulo;
   document.getElementById("descricao").textContent = task.descricao;
 
-  const resResp = await fetch(`http://localhost:8080/tasks-ti/admin/${taskId}/respostas`, {
+  const resResp = await fetch(`https://conexao-alimentar.onrender.com/tasks-ti/admin/${taskId}/respostas`, {
     headers: { Authorization: `Bearer ${token}` }
   });
   const respostas = await resResp.json();
@@ -58,7 +58,7 @@ async function alterarStatus(respostaId, status) {
   const confirmacao = confirm(`Tem certeza que deseja marcar como ${status}?`);
   if (!confirmacao) return;
 
-  await fetch(`http://localhost:8080/tasks-ti/admin/respostas/${respostaId}/status?status=${status}`, {
+  await fetch(`https://conexao-alimentar.onrender.com/tasks-ti/admin/respostas/${respostaId}/status?status=${status}`, {
     method: "PUT",
     headers: { Authorization: `Bearer ${token}` }
   });
@@ -70,7 +70,7 @@ async function fecharTask() {
   const confirmacao = confirm("Tem certeza que deseja fechar esta task?");
   if (!confirmacao) return;
 
-  await fetch(`http://localhost:8080/tasks-ti/admin/${taskId}/fechar`, {
+  await fetch(`https://conexao-alimentar.onrender.com/tasks-ti/admin/${taskId}/fechar`, {
     method: "PUT",
     headers: { Authorization: `Bearer ${token}` }
   });

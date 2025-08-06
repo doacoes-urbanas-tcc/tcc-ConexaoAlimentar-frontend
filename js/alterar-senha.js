@@ -23,7 +23,7 @@ document.getElementById("form-alterar-senha").addEventListener("submit", async (
   }
 
   try {
-    const response = await fetch(`http://localhost:8080/${tipoUsuario}/${usuarioId}/senha`, {
+    const response = await fetch(`https://conexao-alimentar.onrender.com/${tipoUsuario}/${usuarioId}/senha`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

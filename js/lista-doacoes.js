@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const lista = document.getElementById("lista-doacoes");
 
   try {
-    const response = await fetch("http://localhost:8080/doacoes", {
+    const response = await fetch("https://conexao-alimentar.onrender.com/doacoes", {
       method: "GET",
       headers: {
         "Authorization": "Bearer " + token
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 async function verificarAvaliacoesPendentes(token) {
   try {
-    const response = await fetch("http://localhost:8080/reservas/avaliacoes-pendentes", {
+    const response = await fetch("https://conexao-alimentar.onrender.com/reservas/avaliacoes-pendentes", {
       headers: {
         "Authorization": "Bearer " + token
       }

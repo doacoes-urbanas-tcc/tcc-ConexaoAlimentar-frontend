@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  fetch(`http://localhost:8080/avaliacoes/${avaliadoId}`, {
+  fetch(`https://conexao-alimentar.onrender.com/avaliacoes/${avaliadoId}`, {
     headers: {
       "Authorization": `Bearer ${token}`
     }

@@ -1,7 +1,7 @@
 const token = localStorage.getItem("token");
 
     async function fetchTasks() {
-      const res = await fetch("http://localhost:8080/tasks-ti/admin", {
+      const res = await fetch("https://conexao-alimentar.onrender.com/tasks-ti/admin", {
         headers: { Authorization: `Bearer ${token}` }
       });
 

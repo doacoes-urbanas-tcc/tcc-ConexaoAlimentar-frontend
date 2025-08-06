@@ -14,7 +14,7 @@ async function carregarResumoDashboard() {
 
     async function carregarUltimosPendentes() {
       const token = localStorage.getItem("token");
-      const resp = await fetch("http://localhost:8080/admin/dashboard/usuarios/pendentes", {
+      const resp = await fetch("https://conexao-alimentar.onrender.com/admin/dashboard/usuarios/pendentes", {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (resp.ok) {

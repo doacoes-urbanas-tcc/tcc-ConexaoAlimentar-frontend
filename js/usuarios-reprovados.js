@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function carregarUsuarios(tipoSelecionado) {
     const tipo = tiposMap[tipoSelecionado] || null;
 
-    fetch(`http://localhost:8080/admin/usuarios/reprovados`, {
+    fetch(`https://conexao-alimentar.onrender.com/admin/usuarios/reprovados`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

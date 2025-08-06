@@ -9,7 +9,7 @@ document.getElementById("form-alterar-email").addEventListener("submit", async (
   const token = localStorage.getItem("token");
 
   try {
-    const response = await fetch(`http://localhost:8080/${tipoUsuario}/${usuarioId}/email`, {
+    const response = await fetch(`https://conexao-alimentar.onrender.com/${tipoUsuario}/${usuarioId}/email`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

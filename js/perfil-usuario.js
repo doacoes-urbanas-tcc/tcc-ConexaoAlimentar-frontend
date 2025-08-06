@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  fetch(`http://localhost:8080/admin/usuarios/perfil?id=${id}&tipo=${tipo}`, {
+  fetch(`https://conexao-alimentar.onrender.com/admin/usuarios/perfil?id=${id}&tipo=${tipo}`, {
     headers: { Authorization: `Bearer ${token}` }
   })
     .then(res => {
@@ -135,7 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function atualizarStatus(acao) {
-    fetch(`http://localhost:8080/admin/usuarios/${acao}/${id}`, {
+    fetch(`https://conexao-alimentar.onrender.com/admin/usuarios/${acao}/${id}`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`
@@ -168,7 +168,7 @@ document.getElementById("btnConfirmarReprovar").addEventListener("click", () => 
     return;
   }
 
-  const url = `http://localhost:8080/admin/usuarios/${tipoAcao}/${idUsuarioParaAcao}`;
+  const url = `https://conexao-alimentar.onrender.com/admin/usuarios/${tipoAcao}/${idUsuarioParaAcao}`;
   const payload = { motivo: justificativa };
 
 
