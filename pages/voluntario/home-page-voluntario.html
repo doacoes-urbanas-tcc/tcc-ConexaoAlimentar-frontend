@@ -3,54 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dashboard Doador | Conexão Alimentar</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Dashboard Voluntário | Conexão Alimentar</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
 
   <nav class="bg-red-500 shadow text-white">
-  <div class="container mx-auto px-4 py-5 flex justify-between items-center flex-wrap">
-    <div class="flex items-center gap-2">
-      <img class="h-10" src="/assets/conexão (1).png" alt="Logo" />
-      <span class="font-bold text-lg">Conexão Alimentar</span>
+    <div class="container mx-auto px-4 py-5 flex justify-between items-center flex-wrap">
+      <div class="flex items-center gap-2">
+        <img class="h-10" src="/assets/conexão (1).png" alt="Logo" />
+        <span class="font-bold text-lg">Conexão Alimentar</span>
+      </div>
+
+      <div class="md:hidden text-3xl">
+        <ion-icon name="menu-outline" onclick="Menu(this)"></ion-icon>
+      </div>
+
+      <ul id="menu" class="hidden w-full md:flex md:items-center md:space-x-6 md:w-auto mt-4 md:mt-0">
+        <li><a href="/pages/voluntario/home-page-voluntario.html" class="text-xl block hover:text-white">Início</a></li>
+        <li class="mt-2 md:mt-0">
+          <button id="btnLogout" class="bg-white text-red-500 px-4 py-1 rounded-full font-semibold hover:bg-red-100 transition-colors">
+            Sair
+          </button>
+        </li>
+      </ul>
     </div>
-
-    <div class="md:hidden text-3xl">
-      <ion-icon name="menu-outline" onclick="Menu(this)"></ion-icon>
-    </div>
-
-    <ul id="menu" class="hidden w-full md:flex md:items-center md:space-x-6 md:w-auto mt-4 md:mt-0">
-      <li><a href="/pages/doador/home-page-voluntario.html" class="text-xl block hover:text-white">Início</a></li>
-
-      <li class="relative group">
-
-      <li class="mt-2 md:mt-0">
-        <button id="btnLogout" class="bg-white text-red-500 px-4 py-1 rounded-full font-semibold hover:bg-red-100 transition-colors">
-        Sair
-      </button>
-
-      </li>
-    </ul>
-  </div>
-</nav>
+  </nav>
 
   <main class="container mx-auto px-4 py-6 flex-grow">
-    <h1 class="text-2xl font-semibold text-gray-800 mb-6">Bem-vindo(a), <span id="nomeUsuario"></span>!</h1>
+    <h1 class="text-2xl font-semibold text-gray-800 mb-6">
+      Bem-vindo(a), <span id="nomeUsuario" class="text-red-600"></span>!
+    </h1>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <a href="/pages/voluntario/listar-tasks-recomendadas.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
-        <h2 class="text-lg font-bold">Ver tasks disponíveis</h2>
-        <p class="mt-2 text-sm">Veja as tasks disponíveis para a sua stack</p>
-      </a>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <div class="bg-white shadow p-4 rounded-lg text-center">
+        <h2 class="text-xl font-bold text-red-600" id="tasksRespondidas">--</h2>
+        <p class="text-gray-600">Tasks Respondidas</p>
+      </div>
+      <div class="bg-white shadow p-4 rounded-lg text-center">
+        <h2 class="text-xl font-bold text-red-600" id="tasksAbertas">--</h2>
+        <p class="text-gray-600">Tasks Abertas</p>
+      </div>
+      <div class="bg-white shadow p-4 rounded-lg text-center">
+        <h2 class="text-xl font-bold text-red-600" id="mediaAvaliacoes">-- ★</h2>
+        <p class="text-gray-600">Média de Avaliações</p>
+      </div>
+    </div>
 
-      <a href="/pages/voluntario/minhas-respostas.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
-        <h2 class="text-lg font-bold">Minhas respostas</h2>
-        <p class="mt-2 text-sm">Acompanhe todas as doações já realizadas</p>
-      </a>
-
-      </a>
+    <div id="cardsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
     </div>
   </main>
+
   <footer class="text-gray-800 mt-16 py-6">
     <div class="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
       <span class="font-semibold">&copy; 2025 Conexão Alimentar</span>
@@ -61,6 +66,7 @@
       </div>
     </div>
   </footer>
+
   <script src="/js/home-page-voluntario.js"></script>
 </body>
 </html>
