@@ -1,25 +1,36 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const nome = localStorage.getItem('nome');
-  const boasVindasEl = document.getElementById('boasVindas');
-  if (nome) {
-    boasVindasEl.textContent = `Seja bem-vindo, ${nome}!`;
-  } else {
-    boasVindasEl.textContent = `Seja bem-vindo!`;
+document.addEventListener("DOMContentLoaded", () => {
+  const token = localStorage.getItem("token");
+  const usuarioId = localStorage.getItem("usuarioId");
+
+  if (!token || !usuarioId) {
+    window.location.href = "/login.html";
+    return;
   }
-});
-function logout() {
-      localStorage.removeItem("token");
-      window.location.href = "/pages/cadastrologin/login.html";
+
+  fetch(`http://localhost:8080/usuario/doador/dashboard/${usuarioId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
     }
-    function Menu(e) {
-      const menu = document.getElementById("menu");
-      if (menu.classList.contains("hidden")) {
-        e.name = "close-outline";
-        menu.classList.remove("hidden");
-        menu.classList.add("flex");
-      } else {
-        e.name = "menu-outline";
-        menu.classList.remove("flex");
-        menu.classList.add("hidden");
+  })
+    .then(res => {
+      if (!res.ok) throw new Error("Erro ao buscar dashboard");
+      return res.json();
+    })
+    .then(data => {
+      document.getElementById("nome").textContent = localStorage.getItem("nomeUsuario") || "Doador";
+      document.getElementById("totalDoacoes").textContent = data.totalDoacoes;
+      document.getElementById("ongsBeneficiadas").textContent = data.ongsBeneficiadas;
+      document.getElementById("mediaAvaliacoes").textContent = `${(data.mediaAvaliacoes || 0).toFixed(1)} ★`;
+
+      if (data.ultimaDoacao) {
+        document.getElementById("dataUltimaDoacao").textContent = "Data: " + data.ultimaDoacao.data;
+        document.getElementById("itensUltimaDoacao").textContent = "Itens: " + data.ultimaDoacao.itens;
+        document.getElementById("destinoUltimaDoacao").textContent = "Destino: " + data.ultimaDoacao.destino;
+        document.getElementById("statusUltimaDoacao").textContent = "Status: " + data.ultimaDoacao.status;
       }
-    }
+    })
+    .catch(error => {
+      console.error(error);
+      alert("Erro ao carregar dados do dashboard.");
+    });
+});

@@ -1,25 +1,55 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const nome = localStorage.getItem('nome');
-  const boasVindasEl = document.getElementById('boasVindas');
-  if (nome) {
-    boasVindasEl.textContent = `Seja bem-vindo, ${nome}!`;
-  } else {
-    boasVindasEl.textContent = `Seja bem-vindo!`;
+document.addEventListener("DOMContentLoaded", async () => {
+  const token = localStorage.getItem("token");
+
+  try {
+    const respEstatisticas = await fetch("http://localhost:8080/voluntario/dashboard", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!respEstatisticas.ok) throw new Error("Falha ao buscar estatísticas.");
+
+    const data = await respEstatisticas.json();
+
+    document.getElementById("nomeUsuario").textContent = data.nome;
+    document.getElementById("tasksRespondidas").textContent = data.tasksRespondidas;
+    document.getElementById("tasksAbertas").textContent = data.tasksAbertas;
+    document.getElementById("mediaAvaliacoes").textContent = `${data.mediaAvaliacoes.toFixed(1)} ★`;
+
+    carregarMinhasRespostas(token);
+  } catch (e) {
+    console.error(e);
+    alert("Erro ao carregar dashboard do voluntário.");
   }
 });
-function logout() {
-      localStorage.removeItem("token");
-      window.location.href = "/pages/cadastrologin/login.html";
-    }
-    function Menu(e) {
-      const menu = document.getElementById("menu");
-      if (menu.classList.contains("hidden")) {
-        e.name = "close-outline";
-        menu.classList.remove("hidden");
-        menu.classList.add("flex");
-      } else {
-        e.name = "menu-outline";
-        menu.classList.remove("flex");
-        menu.classList.add("hidden");
-      }
-    }
+
+async function carregarMinhasRespostas(token) {
+  try {
+    const resp = await fetch("http://localhost:8080/voluntario/minhas-respostas", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!resp.ok) throw new Error("Erro ao buscar respostas.");
+
+    const respostas = await resp.json();
+    const container = document.getElementById("cardsContainer");
+    container.innerHTML = "";
+
+    respostas.forEach(resposta => {
+      const card = document.createElement("div");
+      card.className = "bg-white p-4 shadow rounded-lg";
+
+      card.innerHTML = `
+        <h3 class="text-lg font-bold text-red-600">${resposta.tituloTask}</h3>
+        <p class="text-sm text-gray-600 mt-2">${resposta.resposta}</p>
+        <p class="text-xs text-gray-400 mt-1">Respondida em: ${new Date(resposta.dataResposta).toLocaleDateString()}</p>
+      `;
+      container.appendChild(card);
+    });
+  } catch (e) {
+    console.error(e);
+  }
+}
