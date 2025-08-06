@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dashboard Doador | Conexão Alimentar</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
 
@@ -33,29 +36,65 @@
     </ul>
   </div>
 </nav>
-<main class="container mx-auto px-4 py-6 flex-grow">
-    <h1 class="text-2xl font-semibold text-gray-800 mb-6">Bem-vindo(a), <span id="nome"></span>!</h1>
+<main class="container mx-auto px-4 py-8 flex-grow">
+  <h1 class="text-3xl font-bold text-gray-800 mb-4">Olá, <span id="nome" class="text-red-600 font-semibold"></span> 👋</h1>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 content-center">
-      <a href="/pages/doacao/cadastro-doacao.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
-        <h2 class="text-lg font-bold">Cadastrar Doação</h2>
-        <p class="mt-2 text-sm">Registre uma nova doação de alimentos</p>
-      </a>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+  <div class="bg-white shadow p-4 rounded-lg text-center">
+    <h2 class="text-xl font-bold text-red-600" id="totalDoacoes">--</h2>
+    <p class="text-gray-600">Doações Realizadas</p>
+  </div>
+  <div class="bg-white shadow p-4 rounded-lg text-center">
+    <h2 class="text-xl font-bold text-red-600" id="ongsBeneficiadas">--</h2>
+    <p class="text-gray-600">ONGs Beneficiadas</p>
+  </div>
+  <div class="bg-white shadow p-4 rounded-lg text-center">
+    <h2 class="text-xl font-bold text-red-600" id="mediaAvaliacoes">-- ★</h2>
+    <p class="text-gray-600">Média de Avaliações</p>
+  </div>
+</div>
 
-      <a href="/pages/doacao/minhas-doacoes.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
-        <h2 class="text-lg font-bold">Minhas Doações</h2>
-        <p class="mt-2 text-sm">Acompanhe todas as doações já realizadas</p>
-      </a>
+ <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+  <a href="/pages/doacao/cadastro-doacao.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
+    <ion-icon name="add-circle-outline" class="text-3xl mb-2"></ion-icon>
+    <h2 class="text-xl font-bold">Cadastrar Doação</h2>
+    <p class="mt-1 text-sm">Registre uma nova doação de alimentos</p>
+  </a>
 
-      <a href="/pages/avaliacao/avaliacoes-usuario.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
-        <h2 class="text-lg font-bold">Avaliações Recebidas</h2>
-        <p class="mt-2 text-sm">Veja o que as ONGs estão dizendo sobre suas doações</p>
-      </a>
-    </div>
-  </main>
+  <a href="/pages/doacao/minhas-doacoes.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
+    <ion-icon name="clipboard-outline" class="text-3xl mb-2"></ion-icon>
+    <h2 class="text-xl font-bold">Minhas Doações</h2>
+    <p class="mt-1 text-sm">Acompanhe todas as doações realizadas</p>
+  </a>
+
+  <a href="/pages/avaliacao/avaliacoes-usuario.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
+    <ion-icon name="star-outline" class="text-3xl mb-2"></ion-icon>
+    <h2 class="text-xl font-bold">Avaliações Recebidas</h2>
+    <p class="mt-1 text-sm">Veja o que as ONGs dizem sobre você</p>
+  </a>
+
+  <a href="/pages/reserva/validar-qr.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
+    <ion-icon name="qr-code-outline" class="text-3xl mb-2"></ion-icon>
+    <h2 class="text-xl font-bold">Validar QR Code</h2>
+    <p class="mt-1 text-sm">Escaneie o QR Code da ONG para confirmar a retirada</p>
+  </a>
+</div>
 
 
-  
+<div class="mt-12">
+  <div class="bg-white text-gray-800 border border-gray-300 p-6 rounded-xl shadow text-center transition">
+    <ion-icon name="cube-outline" class="text-3xl mb-2"></ion-icon>
+    <h3 class="text-xl font-bold mb-2">Última Doação</h3>
+    <p class="text-sm" id="dataUltimaDoacao">Data: </p>
+    <p class="text-sm" id="itensUltimaDoacao">Itens: </p>
+    <p class="text-sm" id="destinoUltimaDoacao">Destino: </p>
+    <p class="text-sm" id="statusUltimaDoacao">Status: </p>
+  </div>
+</div>
+
+</main>
+
+
   <footer class="text-gray-800 mt-16 py-6">
     <div class="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
       <span class="font-semibold">&copy; 2025 Conexão Alimentar</span>
