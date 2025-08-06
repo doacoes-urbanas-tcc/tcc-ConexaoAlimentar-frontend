@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Esqueci minha senha</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+  <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+    <h2 class="text-2xl font-bold mb-4 text-red-600 text-center">Esqueci minha senha</h2>
+    <p class="text-gray-600 text-center mb-6">Informe seu e-mail para receber um link de redefinição de senha.</p>
+    <form id="form-esqueci">
+      <input type="email" id="email" placeholder="Seu e-mail" required
+        class="w-full px-4 py-2 mb-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500" />
+      <button type="submit"
+        class="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition">Enviar e-mail</button>
+    </form>
+    <p id="mensagem" class="mt-4 text-sm text-center text-gray-600"></p>
+  </div>
+</body>
+<script src="/js/esqueci-senha.js"></script>
+</html>

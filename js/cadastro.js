@@ -1,21 +1,25 @@
-//inserindo função que mostra a descrição do tipo de
-//usuario a partir da escolha do select e gerencia os campos específicos
+'use strict';
+
+let latitude = "";
+let longitude = "";
 
 function mostrarDescricaoECampos() {
     const select = document.getElementById('tipoUsuario');
     const descricao = document.getElementById('descricaoUsuario');
     const container = document.getElementById('descricaoContainer');
 
-    // ocultando campos específicos
     document.getElementById('campoCPF').classList.add('hidden');
     document.getElementById('campoCNPJ').classList.add('hidden');
     document.getElementById('campoDescricaoONG').classList.add('hidden');
     document.getElementById('campoRegistroRural').classList.add('hidden');
-    document.getElementById('campoTipoVoluntario').classList.add('hidden');
+    document.getElementById('campoSetorAtuacao').classList.add('hidden');
+    document.getElementById('campoDocumentoComprovante').classList.add('hidden');
+    document.getElementById('campoNomeFantasia').classList.add('hidden');
+    document.getElementById('campoTipoComercio').classList.add('hidden');
 
     const descricoes = {
         pf: "Pessoa comum que deseja doar alimentos ou produtos como indivíduo.",
-        cnpj: "Estabelecimentos comerciais ou empresas que fazem doações como pessoa jurídica.",
+        comercio: "Estabelecimentos comerciais ou empresas que fazem doações como pessoa jurídica.",
         ong: "Organizações que recebem e distribuem as doações para quem precisa.",
         rural: "Produtores do campo que desejam doar excedentes da produção.",
         voluntario: "Pessoas que ajudam em áreas como Transporte e TI.",
@@ -26,14 +30,16 @@ function mostrarDescricaoECampos() {
     if (descricoes[valorSelecionado]) {
         descricao.textContent = descricoes[valorSelecionado];
         container.classList.remove("hidden");
-        
-        // mostrando campo de cada usuario
-        switch(valorSelecionado) {
+
+        switch (valorSelecionado) {
             case 'pf':
                 document.getElementById('campoCPF').classList.remove('hidden');
+                document.getElementById('campoDocumentoComprovante').classList.remove('hidden');
                 break;
-            case 'cnpj':
+            case 'comercio':
                 document.getElementById('campoCNPJ').classList.remove('hidden');
+                document.getElementById('campoNomeFantasia').classList.remove('hidden');
+                document.getElementById('campoTipoComercio').classList.remove('hidden');
                 break;
             case 'ong':
                 document.getElementById('campoCNPJ').classList.remove('hidden');
@@ -44,10 +50,8 @@ function mostrarDescricaoECampos() {
                 break;
             case 'voluntario':
                 document.getElementById('campoCPF').classList.remove('hidden');
-                document.getElementById('campoTipoVoluntario').classList.remove('hidden');
-                break;
-            case 'admin':
-                document.getElementById('campoCPF').classList.remove('hidden');
+                document.getElementById('campoSetorAtuacao').classList.remove('hidden');
+                document.getElementById('campoDocumentoComprovante').classList.remove('hidden');
                 break;
         }
     } else {
@@ -56,39 +60,28 @@ function mostrarDescricaoECampos() {
     }
 }
 
-
-document.addEventListener('DOMContentLoaded', function() {
-    mostrarDescricaoECampos();
-});
-
-//inserindo api CEP
-'use strict';
-
-const limparFormulario = (endereco) => {
+function limparFormulario() {
     document.getElementById('endereco').value = '';
     document.getElementById('bairro').value = '';
     document.getElementById('cidade').value = '';
     document.getElementById('estado').value = '';
 }
 
-
 const preencherFormulario = (endereco) => {
     document.getElementById('endereco').value = endereco.logradouro;
     document.getElementById('bairro').value = endereco.bairro;
     document.getElementById('cidade').value = endereco.localidade;
     document.getElementById('estado').value = endereco.uf;
-}
-
+};
 
 const eNumero = (numero) => /^[0-9]+$/.test(numero);
-
-const cepValido = (cep) => cep.length == 8 && eNumero(cep);
+const cepValido = (cep) => cep.length === 8 && eNumero(cep);
 
 const pesquisarCep = async () => {
     limparFormulario();
-
     const cep = document.getElementById('cep').value.replace("-", "");
     const url = `https://viacep.com.br/ws/${cep}/json/`;
+
     if (cepValido(cep)) {
         const dados = await fetch(url);
         const endereco = await dados.json();
@@ -100,88 +93,213 @@ const pesquisarCep = async () => {
     } else {
         document.getElementById('endereco').value = 'CEP incorreto!';
     }
+};
 
-}
+document.addEventListener('DOMContentLoaded', () => {
+    mostrarDescricaoECampos();
 
-document.getElementById('cep')
-    .addEventListener('focusout', pesquisarCep);
-
-//final da api CEP
-
-// mascara de input
-document.addEventListener('DOMContentLoaded', function() {
-    // mascara para telefone
-    const telefoneInput = document.getElementById('telefone');
-    telefoneInput.addEventListener('input', function(e) {
+    document.getElementById('telefone').addEventListener('input', function (e) {
         let value = e.target.value.replace(/\D/g, '');
         value = value.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
         e.target.value = value;
     });
 
-    // mascara para CEP
-    const cepInput = document.getElementById('cep');
-    cepInput.addEventListener('input', function(e) {
+    document.getElementById('cep').addEventListener('input', function (e) {
         let value = e.target.value.replace(/\D/g, '');
         value = value.replace(/^(\d{5})(\d{3})$/, '$1-$2');
         e.target.value = value;
     });
 
-    // mascara para CPF
-    const cpfInput = document.getElementById('cpf');
-    cpfInput.addEventListener('input', function(e) {
+    document.getElementById('cpf').addEventListener('input', function (e) {
         let value = e.target.value.replace(/\D/g, '');
         value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
         e.target.value = value;
     });
 
-    // mascara pra pj
-    const cnpjInput = document.getElementById('cnpj');
-    cnpjInput.addEventListener('input', function(e) {
+    document.getElementById('cnpj').addEventListener('input', function (e) {
         let value = e.target.value.replace(/\D/g, '');
         value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
         e.target.value = value;
     });
+
+    document.getElementById('cep').addEventListener('focusout', pesquisarCep);
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            latitude = position.coords.latitude;
+            longitude = position.coords.longitude;
+            document.getElementById('latitude').value = latitude;
+            document.getElementById('longitude').value = longitude;
+        }, () => {
+            console.warn("Permissão de localização negada.");
+        });
+    }
 });
 
-//fazendo validação dos dados com a lib schema yup e regex
 const form = document.getElementById('form');
 const erros = document.getElementById('erros');
-
-const schema = yup.object().shape({
-    nome: yup.string()
-        .required("O nome é obrigatório"),
-    telefone: yup.string()
-        .min(11, "O número de telefone precisa conter 11 dígitos").
-        max(11)
-        .required("O número de telefone é obrigatório"),
-    email: yup.string().email.
-        required("O email é obrigatório"),
-    password: yup.string()
-        .min(6, "A senha deve ter pelo menos 6 dígitos")
-        .required("A senha é obrigatória "),
-    confirmPassword: yup.string()
-        .required("Confirmar a senha é obrigatório")
-        .oneOf([yup.ref("password")], "As senhas devem ser iguais"),
-    cep: yup.string().min(8, "O CEP deve ter pelo menos 8 dígitos")
-        .max(8).required("O CEP é obrigatório")
-        .matches(/^\d{5}-\d{3}$/, 'CEP inválido'),
-    cpf: yup.string().matches(/^\d{11}$/),
-    cnpj: yup.string().matches(/^\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}$/, 'CNPJ inválido'),
-    numeroRegistroRural: yup.string().min(13).max(13),
-});
-
 form.addEventListener('submit', async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+  const tipoUsuario = document.getElementById("tipoUsuario").value;
 
-    const dados = {
-        nome: document.getElementById('nome').value,
-        cpf: document.getElementById('cpf').value.replace(/\D/g, ''),
-    };
-
-    try {
-        await schema.validate(dados, { abortEarly: false });
-        erros.innerHTML = "Tudo certo!";
-    } catch (err) {
-        erros.innerHTML = err.errors.map(msg => `<p>${msg}</p>`).join('');
+  const dados = {
+    nome: document.getElementById("nome").value,
+    telefone: document.getElementById("telefone").value,
+    email: document.getElementById("email").value,
+    senha: document.getElementById("password").value,
+    tipoUsuario: tipoUsuario.toUpperCase(),
+    endereco: {
+      cep: document.getElementById("cep").value,
+      logradouro: document.getElementById("endereco").value,
+      bairro: document.getElementById("bairro").value,
+      cidade: document.getElementById("cidade").value,
+      estado: document.getElementById("estado").value,
+      numero: document.getElementById("numero").value,
+      latitude: document.getElementById("latitude").value,
+      longitude: document.getElementById("longitude").value
     }
+  };
+
+  if (tipoUsuario === "pf" || tipoUsuario === "admin") {
+    dados.cpf = document.getElementById('cpf').value.replace(/\D/g, '');
+    dados.documentoComprovante = document.getElementById('documentoComprovante').value;
+  }
+  if (tipoUsuario === "voluntario") {
+    const setorSelect = document.getElementById('setorAtuacao');
+    const comprovanteInput = document.getElementById('documentoComprovante');
+    const cpfInput = document.getElementById('cpf');
+    if (!setorSelect || !comprovanteInput || !cpfInput) {
+      alert("Algum dos campos de voluntário não está presente. Verifique o tipo de usuário selecionado.");
+      return;
+    }
+    dados.setorAtuacao = setorSelect.value;
+    dados.documentoComprovante = comprovanteInput.value;
+    dados.cpf = cpfInput.value.replace(/\D/g, '');
+  }
+  if (tipoUsuario === "rural") {
+    dados.numeroRegistroRural = document.getElementById('numeroRegistroRural').value;
+  }
+  if (tipoUsuario === "ong") {
+    dados.cnpj = document.getElementById('cnpj').value;
+    dados.descricao = document.getElementById('descricaoONG').value;
+  }
+  if (tipoUsuario === "comercio") {
+    dados.cnpj = document.getElementById('cnpj').value;
+    dados.nomeFantasia = document.getElementById('nomeFantasia').value;
+    dados.tipoComercio = document.getElementById('tipoComercio').value;
+  }
+
+  const mensagensErro = [];
+  if (!dados.nome) mensagensErro.push("O nome é obrigatório.");
+  if (!dados.email || !dados.email.includes("@")) mensagensErro.push("Email inválido.");
+  if (!dados.senha || dados.senha.length < 6) mensagensErro.push("A senha deve ter no mínimo 6 caracteres.");
+  if (!dados.telefone) mensagensErro.push("O telefone é obrigatório.");
+  if (!dados.endereco.cep) mensagensErro.push("O CEP é obrigatório.");
+  if (!dados.endereco.logradouro) mensagensErro.push("O endereço é obrigatório.");
+  if (!dados.endereco.cidade) mensagensErro.push("A cidade é obrigatória.");
+  if (!dados.endereco.estado) mensagensErro.push("O estado é obrigatório.");
+  if (!dados.endereco.numero) mensagensErro.push("O número do endereço é obrigatório.");
+  if (!dados.endereco.bairro) mensagensErro.push("O bairro é obrigatório.");
+  if (!dados.endereco.latitude || !dados.endereco.longitude) mensagensErro.push("A localização é obrigatória.");
+  if (tipoUsuario === "pf" || tipoUsuario === "voluntario" || tipoUsuario === "admin") {
+    if (!dados.cpf) mensagensErro.push("O CPF é obrigatório.");
+    if (!dados.documentoComprovante) mensagensErro.push("Documento comprovante é obrigatório.");
+  }
+  if (tipoUsuario === "voluntario" && !dados.setorAtuacao) {
+    mensagensErro.push("O setor de atuação é obrigatório.");
+  }
+  if (tipoUsuario === "rural" && !dados.numeroRegistroRural) {
+    mensagensErro.push("Número de registro rural é obrigatório.");
+  }
+  if (tipoUsuario === "ong") {
+    if (!dados.cnpj) mensagensErro.push("CNPJ é obrigatório.");
+    if (!dados.descricao) mensagensErro.push("Descrição da ONG é obrigatória.");
+  }
+  if (tipoUsuario === "comercio") {
+    if (!dados.nomeFantasia) mensagensErro.push("Nome fantasia é obrigatório.");
+    if (!dados.tipoComercio) mensagensErro.push("Tipo de comércio é obrigatório.");
+  }
+
+  if (mensagensErro.length > 0) {
+    erros.innerHTML = mensagensErro.map(e => `<p class="text-red-600 text-sm">${e}</p>`).join('');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("dto", new Blob([JSON.stringify(dados)], { type: "application/json" }));
+
+  const comprovanteFile = document.getElementById("documentoComprovante").files[0];
+  if (comprovanteFile) formData.append("comprovante", comprovanteFile);
+
+  const fotoFile = document.getElementById("fotoUrl").files[0];
+  if (!fotoFile) {
+    alert("Por favor, selecione uma foto de perfil.");
+    return;
+  }
+  formData.append("file", fotoFile);
+
+  const tipoMapeado = {
+    pf: "pessoa-fisica",
+    comercio: "comercio",
+    ong: "ong",
+    rural: "produtor-rural",
+    voluntario: "voluntario",
+    admin: "admin"
+  };
+  document.getElementById("form").addEventListener("submit", function (e) {
+        const senha = document.getElementById("password").value;
+        const confirmar = document.getElementById("confirmPassword").value;
+        const erros = document.getElementById("erros");
+        erros.textContent = "";
+
+       if (senha !== confirmar) {
+        e.preventDefault();
+        erros.textContent = "As senhas não coincidem.";
+       }
+    });
+  const endpoint = `https://conexao-alimentar.onrender.com/${tipoMapeado[tipoUsuario]}/cadastrar`;
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      body: formData,
+    });
+
+    const contentType = response.headers.get("content-type") || "";
+
+    if (response.ok) {
+      let resBody;
+      if (contentType.includes("application/json")) {
+        resBody = await response.json();
+      } else {
+        const text = await response.text();
+        alert(text); 
+        window.location.href = "/pages/cadastrologin/login.html";
+        return;
+      }
+
+      localStorage.setItem("usuarioId", resBody.id);
+
+      if (dados.setorAtuacao === "TI") {
+        window.location.href = "/pages/voluntario/perfil-ti.html";
+      } else if (dados.setorAtuacao === "TRANSPORTE") {
+        window.location.href = "/pages/voluntario/cadastrotransportador.html";
+      } else {
+        window.location.href = "/pages/cadastrologin/login.html";
+      }
+    } else {
+      let erroMsg;
+      if (contentType.includes("application/json")) {
+        const erroJson = await response.json();
+        erroMsg = erroJson.message || JSON.stringify(erroJson);
+      } else {
+        erroMsg = await response.text();
+      }
+      console.error("Erro ao cadastrar:", erroMsg);
+      alert("Erro ao cadastrar usuário: " + erroMsg);
+    }
+  } catch (err) {
+    console.error("Erro inesperado:", err);
+    alert("Erro inesperado no envio do formulário.");
+  }
 });

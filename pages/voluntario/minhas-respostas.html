@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Respostas | Conexão Alimentar</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col" >
+
+    <nav class="bg-red-500 shadow text-white">
+       <div class="container mx-auto px-4 py-5 flex justify-between items-center flex-wrap">
+          <div class="flex items-center gap-2">
+            <img class="h-10" src="/assets/conexão (1).png" alt="Logo" />
+            <span class="font-bold text-lg">Conexão Alimentar</span>
+       </div>
+
+       <div class="md:hidden text-3xl">
+           <ion-icon name="menu-outline" onclick="Menu(this)"></ion-icon>
+           </div>
+
+    <ul id="menu" class="hidden w-full md:flex md:items-center md:space-x-6 md:w-auto mt-4 md:mt-0">
+      <li><a href="/pages/voluntario/home-page-voluntario.html" class="text-xl block hover:text-white">Início</a></li>
+
+      <li class="relative group">
+
+      <li class="mt-2 md:mt-0">
+        <button id="btnLogout" class="bg-white text-red-500 px-4 py-1 rounded-full font-semibold hover:bg-red-100 transition-colors">
+        Sair
+      </button>
+
+      </li>
+    </ul>
+  </div>
+</nav>
+  <main class="flex-1 p-6 overflow-auto">
+      <h1 class="text-3xl font-bold text-gray-800 mb-6">Minhas repostas</h1>
+      <div id="lista-respostas" class="space-y-6"></div>
+    </main>
+
+
+    <footer class="text-gray-800 mt-16 py-6">
+    <div class="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
+      <span class="font-semibold">&copy; 2025 Conexão Alimentar</span>
+      <div class="flex space-x-4 mt-2 md:mt-0">
+        <a href="#" class="hover:underline">Sobre</a>
+        <a href="#" class="hover:underline">Contato</a>
+        <a href="#" class="hover:underline">Privacidade</a>
+      </div>
+    </div>
+  </footer>
+  <script src="/js/minhas-respostas.js"></script>
+</body>
+</html>

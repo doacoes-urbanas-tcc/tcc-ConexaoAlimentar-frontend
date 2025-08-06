@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tasks de TI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+<body class="flex -h-screen text-gray-900 bg-gray-100">
+
+  <aside class="w-64 bg-white shadow h-screen flex flex-col">
+    <div class="p-6 border-b">
+      <img src="/assets/conexão (1).png" class="w-32 mx-auto mb-4" alt="Logo" />
+      <h1 class="text-center text-xl font-bold text-red-600">Administrador</h1>
+    </div>
+    <nav class="flex-1 p-4 space-y-1 text-sm">
+      <a href="dashboard-administrador.html" class="flex items-center p-2 rounded hover:bg-red-100 font-medium text-gray-700">
+        <span class="material-symbols-outlined mr-2">dashboard</span> Dashboard
+      </a>
+      <a href="usuarios-ativos.html" class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700">
+        <span class="material-symbols-outlined mr-2">verified</span> Ativos
+      </a>
+      <a href="usuarios-pendentes.html" class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700">
+        <span class="material-symbols-outlined mr-2">schedule</span> Pendentes
+      </a>
+      <a href="usuarios-reprovados.html" class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700">
+        <span class="material-symbols-outlined mr-2">block</span> Reprovados
+      </a>
+      <a href="cadastrar-task.html" class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700">
+        <span class="material-symbols-outlined mr-2">task_alt</span> Cadastrar Task
+      </a>
+      <a href="listar-tasks.html" class="flex items-center p-2 rounded bg-red-100 font-semibold text-red-700">
+      <span class="material-symbols-outlined mr-2">assignment</span> Tasks Abertas
+      </a>
+      <a href="relatorio-admin.html" class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700">
+        <span class="material-symbols-outlined mr-2">analytics</span> Relatórios
+      </a>
+    </nav>
+    <div class="p-4 border-t">
+      <button onclick="logout()" class="w-full text-left text-red-600 hover:underline font-semibold">Sair</button>
+    </div>
+  </aside>
+
+  <div class="flex-1 flex flex-col min-h-screen">
+    <main class="flex-1 p-6 overflow-auto">
+      <h1 class="text-2xl font-bold text-gray-800 mb-6">Tasks Cadastradas</h1>
+      <div id="lista-tasks" class="space-y-6"></div>
+    </main>
+
+    <footer class="bg-white border-t text-gray-800 py-6">
+      <div class="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
+        <span class="font-semibold">&copy; 2025 Conexão Alimentar</span>
+        <div class="flex space-x-4 mt-2 md:mt-0">
+          <a href="#" class="hover:underline">Sobre</a>
+          <a href="#" class="hover:underline">Contato</a>
+          <a href="#" class="hover:underline">Privacidade</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/js/listar-tasks.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visualizar Perfil</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen py-10 px-4">
+  <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
+  <span class="text-red-600 text-sm font-semibold cursor-pointer hover:underline" onclick="window.location.href='usuarios-pendentes.html'">&larr; Voltar</span>
+
+  <div class="text-center mt-2 mb-4">
+    <h1 class="text-2xl font-bold text-gray-800">Perfil do Usuário</h1>
+  </div>
+
+  <div id="fotoPerfil" class="flex justify-center mb-6"></div>
+
+  <div id="infoPerfil" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"></div>
+
+  <div class="flex flex-wrap justify-center items-center gap-4 mt-4">
+    <div id="verAvaliacoes" class="hidden">
+      <a id="btnAvaliacoes" class="inline-block bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors cursor-pointer">
+        Ver Avaliações Recebidas
+      </a>
+    </div>
+
+    <div id="botoesAdmin" class="hidden flex gap-4">
+      <button id="btnAprovar" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors">Aprovar</button>
+      <button id="btnReprovar" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors">Reprovar</button>
+       <button id="btnDesativar" class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded hidden">Desativar Conta</button>
+    </div>
+    </div>
+  </div>
+</div>
+<div id="modalJustificativa" class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center hidden">
+  <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+    <h2 class="text-lg font-semibold mb-4">Justificativa</h2>
+    <textarea id="inputJustificativa" rows="4" class="w-full p-2 border border-gray-300 rounded mb-4" placeholder="Digite a justificativa..."></textarea>
+    <div class="flex justify-end gap-4">
+      <button id="btnCancelarReprovar" class="text-gray-600 hover:underline">Cancelar</button>
+      <button id="btnConfirmarReprovar" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+
+  </div>
+
+  <script src="/js/perfil-usuario.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="bg-gray-100">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Administrador</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+
+<body class="flex h-screen text-gray-900">
+
+  <aside class="w-64 bg-white shadow h-full flex flex-col">
+    <div class="p-6 border-b">
+      <img src="/assets/Conexão Alimentar Logo PNG (1).png" class="w-40 mx-auto mb-4" alt="Logo" />
+      <h1 class="text-center text-xl font-bold text-red-600">Administrador</h1>
+    </div>
+    <nav class="flex-1 p-4 space-y-1 text-sm">
+      <a href="dashboard-administrador.html" class="flex items-center p-2 rounded hover:bg-red-100 font-medium text-red-600">
+        <span class="material-symbols-outlined mr-2">dashboard</span> Dashboard
+      </a>
+      <a href="usuarios-ativos.html" class="flex items-center p-2 rounded hover:bg-gray-100">
+        <span class="material-symbols-outlined mr-2">verified</span> Ativos
+      </a>
+      <a href="usuarios-pendentes.html" class="flex items-center p-2 rounded hover:bg-gray-100">
+        <span class="material-symbols-outlined mr-2">schedule</span> Pendentes
+      </a>
+      <a href="usuarios-reprovados.html" class="flex items-center p-2 rounded hover:bg-gray-100">
+        <span class="material-symbols-outlined mr-2">block</span> Reprovados
+      </a>
+      <a href="cadastrar-task.html" class="flex items-center p-2 rounded hover:bg-gray-100">
+        <span class="material-symbols-outlined mr-2">task_alt</span> Task TI
+      </a>
+      <a href="listar-tasks.html" class="flex items-center p-2 rounded hover:bg-gray-100">
+      <span class="material-symbols-outlined mr-2">assignment</span> Tasks Abertas
+      </a>
+      <a href="relatorio-admin.html" class="flex items-center p-2 rounded hover:bg-gray-100">
+        <span class="material-symbols-outlined mr-2">analytics</span> Relatórios
+      </a>
+    </nav>
+    <div class="p-4 border-t">
+      <button onclick="logout()" class="w-full text-left text-red-600 hover:underline font-semibold">Sair</button>
+    </div>
+  </aside>
+
+  <div class="flex flex-col flex-1 min-h-screen">
+    <main class="flex-grow bg-gray-100 p-6 overflow-auto">
+      <div class="mb-6">
+        <h2 class="text-3xl font-bold text-gray-800">Painel de Controle</h2>
+        <p class="text-sm text-gray-500">Bem-vindo(a), administrador(a)!</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white shadow rounded-lg p-4 flex items-center space-x-4">
+          <div class="p-2 rounded-full bg-red-100">
+            <span class="material-symbols-outlined text-red-600 text-3xl">group</span>
+          </div>
+          <div class="flex flex-col justify-center">
+            <p class="text-sm text-gray-600">Usuários Ativos</p>
+            <p class="text-2xl font-bold text-red-600" id="qtd-ativos">---</p>
+          </div>
+        </div>
+
+        <div class="bg-white shadow rounded-lg p-4 flex items-center space-x-4">
+          <div class="p-2 rounded-full bg-yellow-100">
+            <span class="material-symbols-outlined text-yellow-600 text-3xl">schedule</span>
+          </div>
+          <div class="flex flex-col justify-center">
+            <p class="text-sm text-gray-600">Pendentes</p>
+            <p class="text-2xl font-bold text-yellow-600" id="qtd-pendentes">---</p>
+          </div>
+        </div>
+
+        <div class="bg-white shadow rounded-lg p-4 flex items-center space-x-4">
+          <div class="p-2 rounded-full bg-green-100">
+            <span class="material-symbols-outlined text-green-600 text-3xl">volunteer_activism</span>
+          </div>
+          <div class="flex flex-col justify-center">
+            <p class="text-sm text-gray-600">Doações Ativas</p>
+            <p class="text-2xl font-bold text-green-600" id="qtd-doacoes">---</p>
+          </div>
+        </div>
+
+        <div class="bg-white shadow rounded-lg p-4 flex items-center space-x-4">
+          <div class="p-2 rounded-full bg-blue-100">
+            <span class="material-symbols-outlined text-blue-600 text-3xl">engineering</span>
+          </div>
+          <div class="flex flex-col justify-center">
+            <p class="text-sm text-gray-600">Tasks Abertas</p>
+            <p class="text-2xl font-bold text-blue-600" id="qtd-tasks">---</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-semibold text-gray-800">Últimos Usuários Pendentes</h3>
+          <a href="usuarios-pendentes.html" class="text-sm text-red-600 hover:underline">Ver todos</a>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm">
+            <thead>
+              <tr class="border-b text-gray-600">
+                <th class="text-left px-4 py-2 font-medium">Nome</th>
+                <th class="text-left px-4 py-2 font-medium">Email</th>
+                <th class="text-left px-4 py-2 font-medium">Tipo</th>
+                <th class="text-left px-4 py-2 font-medium">Status</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-usuarios" class="text-gray-800">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <footer class="bg-white border-t text-gray-800 py-6">
+      <div class="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
+        <span class="font-semibold">&copy; 2025 Conexão Alimentar</span>
+        <div class="flex space-x-4 mt-2 md:mt-0">
+          <a href="#" class="hover:underline">Sobre</a>
+          <a href="#" class="hover:underline">Contato</a>
+          <a href="#" class="hover:underline">Privacidade</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/js/dashboard-administrador.js"></script>
+</body>
+</html>
