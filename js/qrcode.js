@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   let data = null; 
 
-  if (!token || !id) {
+  if (!token || !doacaoId) {
     qrContainer.innerHTML = `<p class="text-red-600">Acesso inválido.</p>`;
     return;
   }
