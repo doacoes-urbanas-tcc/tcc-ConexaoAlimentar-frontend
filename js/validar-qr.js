@@ -50,31 +50,4 @@ document.addEventListener("DOMContentLoaded", () => {
   }).catch(err => {
     mensagem.textContent = "Erro ao acessar a câmera: " + err;
   });
-});async function validarQRCodeTeste(doacaoId) {
-  const token = localStorage.getItem("token");
-
-  try {
-    const response = await fetch(`https://conexao-alimentar.onrender.com/doacoes/validar-qr/${doacaoId}`, {
-      method: "POST",
-      headers: {
-        "Authorization": "Bearer " + token
-      }
-    });
-
-    if (response.ok) {
-      const data = await response.json(); 
-      const idReserva = data.idReserva;   
-
-      alert("QR Code validado com sucesso! Doação concluída.");
-      window.location.href = `../avaliacao/avaliacao.html?idReserva=${idReserva}`;
- 
-    } else {
-      const erro = await response.text();
-      alert("Erro ao validar QR Code: " + erro);
-    }
-  } catch (err) {
-    console.error("Erro na requisição de validação:", err);
-    alert("Erro ao validar QR Code.");
-  }
-}
-
+});
