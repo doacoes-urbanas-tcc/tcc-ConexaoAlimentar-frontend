@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
-  const id = params.get("doacaoId");
+  const doacaoId = params.get("doacaoId");
   const token = localStorage.getItem("token");
   const qrContainer = document.getElementById("qr-container");
   const tempoExpiracao = document.getElementById("tempo-expiracao");
@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const response = await fetch(`https://conexao-alimentar.onrender.com/qr-code/url/${id}`, {
+    const response = await fetch(`https://conexao-alimentar.onrender.com/qr-code/url/${doacaoId}`, {
       method: "GET",
       headers: {
         "Authorization": "Bearer " + token
