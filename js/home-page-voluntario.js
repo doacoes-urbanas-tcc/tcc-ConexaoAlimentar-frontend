@@ -1,14 +1,15 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("token");
+  const usuarioId = localStorage.getItem("usuarioId");
 
-  if (!token) {
+  if (!token || !usuarioId) {
     alert("Você precisa estar logado.");
     window.location.href = "/pages/cadastrologin/login.html";
     return;
   }
 
   try {
-    const respEstatisticas = await fetch("https://conexao-alimentar.onrender.com/voluntario/dashboard-ti", {
+    const respEstatisticas = await fetch(`https://conexao-alimentar.onrender.com/voluntario/dashboard-ti/${usuarioId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -41,7 +42,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       card.innerHTML = `
         <h3 class="text-lg font-bold text-red-600">${resposta.tituloTask}</h3>
-        <p class="text-sm text-gray-600 mt-2">${resposta.resposta}</p>
+        <p class="text-sm text-gray-600 mt-2">
+          <a href="${resposta.linkSolucao}" target="_blank" class="text-blue-500 underline">Ver solução</a>
+        </p>
         <p class="text-xs text-gray-400 mt-1">Respondida em: ${new Date(resposta.dataResposta).toLocaleDateString()}</p>
       `;
 
