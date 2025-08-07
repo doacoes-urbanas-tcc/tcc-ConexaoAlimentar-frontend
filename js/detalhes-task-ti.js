@@ -3,7 +3,7 @@
     const token = localStorage.getItem("token");
     const voluntarioId = localStorage.getItem("usuarioId");
 
-    fetch(`http://localhost:8080/tasks-ti/voluntario/${taskId}`, {
+    fetch(`https://conexao-alimentar.onrender.com/tasks-ti/voluntario/${taskId}`, {
       headers: { "Authorization": "Bearer " + token }
     })
     .then(res => res.json())

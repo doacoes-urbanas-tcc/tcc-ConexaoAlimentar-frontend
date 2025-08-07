@@ -1,6 +1,6 @@
 async function carregarResumoDashboard() {
     const token = localStorage.getItem("token");
-    const resp = await fetch("http://localhost:8080/admin/dashboard/resumo", {
+    const resp = await fetch("https://conexao-alimentar.onrender.com/admin/dashboard/resumo", {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (resp.ok) {
