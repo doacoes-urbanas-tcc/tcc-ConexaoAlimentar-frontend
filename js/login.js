@@ -27,7 +27,7 @@ document.getElementById("form-login").addEventListener("submit", async function 
 
     switch (dados.tipoUsuario) {
       case "ONG":
-        window.location.href = "/pages/ong/home-page-ong.html";
+        window.location.href = "/pages/reserva/minhas-reservas";
         break;
       case "COMERCIO":
         window.location.href = "/pages/doador/home-page-doador.html";
