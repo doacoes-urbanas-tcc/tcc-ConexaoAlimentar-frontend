@@ -38,22 +38,40 @@
     </h1>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-      <div class="bg-white shadow p-4 rounded-lg text-center">
-        <h2 class="text-xl font-bold text-red-600" id="tasksRespondidas">--</h2>
+      <div class="bg-white shadow p-6 rounded-lg text-center">
+        <ion-icon name="checkmark-done-circle" class="text-red-500 text-4xl mb-2"></ion-icon>
+        <h2 class="text-2xl font-bold text-red-600" id="tasksRespondidas">--</h2>
         <p class="text-gray-600">Tasks Respondidas</p>
       </div>
-      <div class="bg-white shadow p-4 rounded-lg text-center">
-        <h2 class="text-xl font-bold text-red-600" id="tasksAbertas">--</h2>
+      <div class="bg-white shadow p-6 rounded-lg text-center">
+        <ion-icon name="clipboard-outline" class="text-red-500 text-4xl mb-2"></ion-icon>
+        <h2 class="text-2xl font-bold text-red-600" id="tasksAbertas">--</h2>
         <p class="text-gray-600">Tasks Abertas</p>
       </div>
-      <div class="bg-white shadow p-4 rounded-lg text-center">
-        <h2 class="text-xl font-bold text-red-600" id="mediaAvaliacoes">-- ★</h2>
+      <div class="bg-white shadow p-6 rounded-lg text-center">
+        <ion-icon name="star" class="text-red-500 text-4xl mb-2"></ion-icon>
+        <h2 class="text-2xl font-bold text-red-600" id="mediaAvaliacoes">-- ★</h2>
         <p class="text-gray-600">Média de Avaliações</p>
       </div>
     </div>
+       <div class="flex justify-center">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+             <a href="/pages/voluntario/listar-tasks-recomendadas.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
+               <ion-icon name="add-circle-outline" class="text-3xl mb-2"></ion-icon>
+               <h2 class="text-xl font-bold">Tasks Recomendadas</h2>
+                <p class="mt-1 text-sm">Lista das tasks de acordo com sua stack</p>
+            </a>
 
-    <div id="cardsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    </div>
+            <a href="/pages/voluntario/minhas-respostas.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
+                <ion-icon name="clipboard-outline" class="text-3xl mb-2"></ion-icon>
+                <h2 class="text-xl font-bold">Minhas Respostas</h2>
+            <p class="mt-1 text-sm">Acompanhe todas as tasks já respondidas por você</p>
+          </a>
+     </div>
+     </div>
+
+
+
   </main>
 
   <footer class="text-gray-800 mt-16 py-6">
