@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   btnConfirmar.addEventListener("click", async () => {
     try {
-      const response = await fetch("/reservas", {
+      const response = await fetch("https://conexao-alimentar.onrender.com/reservas", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
