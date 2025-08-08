@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
-  const doacaoId = params.get("doacaoId");
+  const idDoacao = params.get("doacaoId");
   const token = localStorage.getItem("token");
   const qrContainer = document.getElementById("qr-container");
   const tempoExpiracao = document.getElementById("tempo-expiracao");
@@ -8,13 +8,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   let data = null; 
 
-  if (!token || !doacaoId) {
+  if (!token || !idDoacao) {
     qrContainer.innerHTML = `<p class="text-red-600">Acesso inválido.</p>`;
     return;
   }
 
   try {
-    const response = await fetch(`https://conexao-alimentar.onrender.com/qr-code/url/${doacaoId}`, {
+    const response = await fetch(`https://conexao-alimentar.onrender.com/qr-code/url/${idDoacao}`, {
       method: "GET",
       headers: {
         "Authorization": "Bearer " + token
