@@ -22,7 +22,7 @@ document.getElementById("form-login").addEventListener("submit", async function 
   fecharModal.addEventListener("click", fecharModalErro);
 
   try {
-    await fetch("https://conexao-alimentar.onrender.com/actuator/health", { method: "GET" });
+    await fetch("https://conexao-alimentar.onrender.com/health", { method: "GET" });
 
     const resposta = await fetch("https://conexao-alimentar.onrender.com/auth/login", {
       method: "POST",
