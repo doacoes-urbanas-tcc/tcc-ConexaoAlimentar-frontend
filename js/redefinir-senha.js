@@ -20,11 +20,12 @@ document.getElementById("form-redefinir").addEventListener("submit", async (e) =
   }
 
   try {
-    const response = await fetch("https://conexao-alimentar.onrender.com/auth/recuperar-senha", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token, novaSenha: senha })
-    });
+    const response = await fetch("https://conexao-alimentar.onrender.com/auth/redefinir-senha", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ token, novaSenha: senha })
+  });
+
 
     if (response.ok) {
       mensagem.textContent = "Senha redefinida com sucesso. Redirecionando...";
