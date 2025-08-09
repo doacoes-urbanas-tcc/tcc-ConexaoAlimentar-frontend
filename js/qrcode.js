@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
-  const idDoacao = params.get("doacaoId");
+  const idDoacao = params.get("id");
   const token = localStorage.getItem("token");
   const qrContainer = document.getElementById("qr-container");
   const tempoExpiracao = document.getElementById("tempo-expiracao");
