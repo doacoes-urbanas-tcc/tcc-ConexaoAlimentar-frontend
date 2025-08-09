@@ -140,13 +140,21 @@ const form = document.getElementById('form');
 const erros = document.getElementById('erros');
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
+  erros.innerHTML = "";
   const tipoUsuario = document.getElementById("tipoUsuario").value;
+
+  const senha = document.getElementById("password").value;
+  const confirmar = document.getElementById("confirmPassword").value;
+  if (senha !== confirmar) {
+    erros.innerHTML = '<p class="text-red-600 text-sm">As senhas não coincidem.</p>';
+    return;
+  }
 
   const dados = {
     nome: document.getElementById("nome").value,
     telefone: document.getElementById("telefone").value,
     email: document.getElementById("email").value,
-    senha: document.getElementById("password").value,
+    senha: senha,
     tipoUsuario: tipoUsuario.toUpperCase(),
     endereco: {
       cep: document.getElementById("cep").value,
@@ -169,7 +177,7 @@ form.addEventListener('submit', async (e) => {
     const comprovanteInput = document.getElementById('documentoComprovante');
     const cpfInput = document.getElementById('cpf');
     if (!setorSelect || !comprovanteInput || !cpfInput) {
-      alert("Algum dos campos de voluntário não está presente. Verifique o tipo de usuário selecionado.");
+      showError("Algum dos campos de voluntário não está presente. Verifique o tipo de usuário selecionado.");
       return;
     }
     dados.setorAtuacao = setorSelect.value;
@@ -233,7 +241,7 @@ form.addEventListener('submit', async (e) => {
 
   const fotoFile = document.getElementById("fotoUrl").files[0];
   if (!fotoFile) {
-    alert("Por favor, selecione uma foto de perfil.");
+    showError("Por favor, selecione uma foto de perfil.");
     return;
   }
   formData.append("file", fotoFile);
@@ -246,17 +254,7 @@ form.addEventListener('submit', async (e) => {
     voluntario: "voluntario",
     admin: "admin"
   };
-  document.getElementById("form").addEventListener("submit", function (e) {
-        const senha = document.getElementById("password").value;
-        const confirmar = document.getElementById("confirmPassword").value;
-        const erros = document.getElementById("erros");
-        erros.textContent = "";
 
-       if (senha !== confirmar) {
-        e.preventDefault();
-        erros.textContent = "As senhas não coincidem.";
-       }
-    });
   const endpoint = `https://conexao-alimentar.onrender.com/${tipoMapeado[tipoUsuario]}/cadastrar`;
 
   try {
@@ -271,22 +269,18 @@ form.addEventListener('submit', async (e) => {
       let resBody;
       if (contentType.includes("application/json")) {
         resBody = await response.json();
-      } else {
-        const text = await response.text();
-        alert(text); 
-        window.location.href = "/pages/cadastrologin/login.html";
-        return;
       }
+      localStorage.setItem("usuarioId", resBody?.id);
 
-      localStorage.setItem("usuarioId", resBody.id);
-
-      if (dados.setorAtuacao === "TI") {
-        window.location.href = "/pages/voluntario/perfil-ti.html";
-      } else if (dados.setorAtuacao === "TRANSPORTE") {
-        window.location.href = "/pages/voluntario/cadastrotransportador.html";
-      } else {
-        window.location.href = "/pages/cadastrologin/login.html";
-      }
+      showSuccess("Cadastro realizado com sucesso!", () => {
+        if (dados.setorAtuacao === "TI") {
+          window.location.href = "/pages/voluntario/perfil-ti.html";
+        } else if (dados.setorAtuacao === "TRANSPORTE") {
+          window.location.href = "/pages/voluntario/cadastrotransportador.html";
+        } else {
+          window.location.href = "/pages/cadastrologin/login.html";
+        }
+      });
     } else {
       let erroMsg;
       if (contentType.includes("application/json")) {
@@ -296,10 +290,64 @@ form.addEventListener('submit', async (e) => {
         erroMsg = await response.text();
       }
       console.error("Erro ao cadastrar:", erroMsg);
-      alert("Erro ao cadastrar usuário: " + erroMsg);
+      showError("Erro ao cadastrar usuário: " + erroMsg);
     }
   } catch (err) {
     console.error("Erro inesperado:", err);
-    alert("Erro inesperado no envio do formulário.");
+    showError("Erro inesperado no envio do formulário.");
   }
 });
+
+function showSuccess(message, onOk = null) {
+const modal = document.getElementById('modalSuccess');
+const msgEl = document.getElementById('modalSuccessMessage');
+msgEl.textContent = message;
+modal.classList.remove('hidden');
+
+function closeHandler() {
+modal.classList.add('hidden');
+if (onOk) onOk();
+removeListeners();
+}
+
+function removeListeners() {
+okBtn.removeEventListener('click', closeHandler);
+closeBtn.removeEventListener('click', closeHandler);
+}
+
+const okBtn = modal.querySelector('button.bg-green-500');
+const closeBtn = modal.querySelector('button.absolute');
+
+okBtn.addEventListener('click', closeHandler);
+closeBtn.addEventListener('click', closeHandler);
+}
+
+function showError(message, onOk = null) {
+const modal = document.getElementById('modalError');
+const msgEl = document.getElementById('modalErrorMessage');
+msgEl.textContent = message;
+modal.classList.remove('hidden');
+
+function closeHandler() {
+modal.classList.add('hidden');
+if (onOk) onOk();
+removeListeners();
+}
+
+function removeListeners() {
+okBtn.removeEventListener('click', closeHandler);
+closeBtn.removeEventListener('click', closeHandler);
+}
+
+const okBtn = modal.querySelector('button.bg-red-500');
+const closeBtn = modal.querySelector('button.absolute');
+
+okBtn.addEventListener('click', closeHandler);
+closeBtn.addEventListener('click', closeHandler);
+}
+
+function closeModal(modalId) {
+document.getElementById(modalId).classList.add('hidden');
+}
+
+
