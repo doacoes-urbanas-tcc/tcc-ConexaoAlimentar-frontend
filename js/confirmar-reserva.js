@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      window.location.href = `https://conexao-alimentar.onrender.com/pages/reserva/qrcode.html?id=${idDoacao}`;
+      window.location.href = `/pages/reserva/qrcode.html?id=${idDoacao}`;
     } catch (err) {
       alert("Erro ao tentar reservar a doação.");
     }
