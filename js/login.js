@@ -24,6 +24,7 @@ document.getElementById("form-login").addEventListener("submit", async function 
     localStorage.setItem("token", dados.token);
     localStorage.setItem("usuarioId", dados.usuarioId);
     localStorage.setItem("tipoUsuario", dados.tipoUsuario);
+    await new Promise(r => setTimeout(r, 100));
 
     switch (dados.tipoUsuario) {
       case "ONG":
