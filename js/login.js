@@ -3,33 +3,40 @@ document.getElementById("form-login").addEventListener("submit", async function 
 
   const email = document.getElementById("email").value.trim();
   const senha = document.getElementById("senha").value.trim();
-  const erro = document.getElementById("erro");
 
-  const mostrarErro = (mensagem) => {
-    erro.textContent = mensagem;
-    erro.classList.remove("hidden");
+  const modalErro = document.getElementById("modal-erro");
+  const mensagemErro = document.getElementById("mensagem-erro");
+  const fecharModal = document.getElementById("fechar-modal");
+
+  const mostrarModalErro = (mensagem) => {
+    mensagemErro.textContent = mensagem;
+    modalErro.classList.remove("hidden");
+    modalErro.classList.add("flex"); 
   };
 
-  erro.classList.add("hidden");
+  const fecharModalErro = () => {
+    modalErro.classList.add("hidden");
+    modalErro.classList.remove("flex");
+  };
+
+  fecharModal.addEventListener("click", fecharModalErro);
 
   try {
     await fetch("https://conexao-alimentar.onrender.com/actuator/health", { method: "GET" });
 
     const resposta = await fetch("https://conexao-alimentar.onrender.com/auth/login", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, senha }),
     });
 
     if (resposta.status === 403) {
-      mostrarErro("Acesso negado. Verifique seu e-mail e senha.");
+      mostrarModalErro("Acesso negado. Verifique seu e-mail e senha.");
       return;
     }
 
     if (!resposta.ok) {
-      mostrarErro("Falha no login. Tente novamente.");
+      mostrarModalErro("Falha no login. Tente novamente.");
       return;
     }
 
@@ -62,6 +69,6 @@ document.getElementById("form-login").addEventListener("submit", async function 
 
   } catch (err) {
     console.error("Erro no login:", err);
-    mostrarErro("Erro de conexão com o servidor. Tente novamente em alguns segundos.");
+    mostrarModalErro("Erro de conexão com o servidor. Tente novamente em alguns segundos.");
   }
 });
