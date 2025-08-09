@@ -50,7 +50,7 @@ document.getElementById("form-login").addEventListener("submit", async function 
 
     switch (dados.tipoUsuario) {
       case "ONG":
-        window.location.href = "/pages/reserva/minhas-reservas";
+        window.location.href = "/pages/ong/home-page-ong.html";
         break;
       case "COMERCIO":
       case "PRODUTOR_RURAL":
