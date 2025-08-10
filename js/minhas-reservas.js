@@ -8,6 +8,45 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
+  function parseDateTimeToMs(value) {
+    if (!value) return null;
+    if (typeof value === "number") return value;
+    const tryDate = new Date(value);
+    if (!isNaN(tryDate.getTime())) return tryDate.getTime();
+
+    const tryZ = new Date(value + "Z");
+    if (!isNaN(tryZ.getTime())) return tryZ.getTime();
+
+    const tryT = new Date(value.replace(" ", "T"));
+    if (!isNaN(tryT.getTime())) return tryT.getTime();
+
+    const parsed = Date.parse(value);
+    if (!isNaN(parsed)) return parsed;
+
+    console.warn("Falha ao parsear dataExpiracao:", value);
+    return null;
+  }
+
+  function formatarData(data) {
+    if (!data) return "";
+    return new Date(data).toLocaleDateString("pt-BR");
+  }
+
+  function formatarDataHora(dataHora) {
+    if (!dataHora) return "";
+    const d = new Date(dataHora);
+    const opcoes = {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+      timeZone: "America/Sao_Paulo",
+    };
+    return d.toLocaleString("pt-BR", opcoes);
+  }
+
   try {
     const response = await fetch("https://conexao-alimentar.onrender.com/reservas/minhas-reservas", {
       method: "GET",
@@ -22,68 +61,58 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const reservas = await response.json();
 
-    if (reservas.length === 0) {
+    if (!Array.isArray(reservas) || reservas.length === 0) {
       lista.innerHTML = `<p class="text-gray-600">Você ainda não possui reservas.</p>`;
       return;
     }
 
+    lista.innerHTML = "";
+
     reservas.forEach(reserva => {
-  const card = document.createElement("div");
-  card.className = "bg-white rounded-lg shadow p-4 flex flex-col md:flex-row gap-4";
+      const card = document.createElement("div");
+      card.className = "bg-white rounded-lg shadow p-4 flex flex-col md:flex-row gap-4";
 
-  const status = reserva.status.replace("_", " ");
-  const dataExpiracao = reserva.dataExpiracao ? new Date(reserva.dataExpiracao) : null;
-  const agora = new Date();
+      const status = (reserva.status || "").replace(/_/g, " ");
+      const dataExpiracaoMs = reserva.dataExpiracao ? parseDateTimeToMs(reserva.dataExpiracao) : null;
+      const agoraMs = Date.now();
 
-  const podeVerQRCode = reserva.status === "RESERVADA" && agora < dataExpiracao;
+      const podeVerQRCode = reserva.status === "RESERVADA" && dataExpiracaoMs !== null && agoraMs < dataExpiracaoMs;
 
-  card.innerHTML = `
-    <img src="${reserva.urlImagem}" alt="${reserva.nomeAlimento}" class="w-full md:w-48 h-48 object-cover rounded-lg">
-    <div class="flex-1">
-      <h3 class="text-xl font-semibold text-red-600">${reserva.nomeAlimento}</h3>
-      <p class="text-gray-700 mb-2">${reserva.descricao || "Sem descrição."}</p>
-      <div class="text-sm text-gray-600 space-y-1 mb-3">
-        <p><strong>Categoria:</strong> ${reserva.categoria}</p>
-        <p><strong>Quantidade:</strong> ${reserva.quantidade} ${reserva.unidadeMedida.toLowerCase()}</p>
-        <p><strong>Validade:</strong> ${formatarData(reserva.dataValidade)}</p>
-        <p><strong>Doador:</strong> ${reserva.doadorNome}</p>
-        <p><strong>Status:</strong> ${status}</p>
-       <p><strong>Expira em:</strong> ${dataExpiracao ? formatarDataHora(dataExpiracao) : "Não disponível"}</p>
-      </div>
-      <div class="flex flex-wrap gap-2 mt-2">
-        ${podeVerQRCode 
-          ? `<a href="/pages/reserva/qrcode.html?id=${reserva.id}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">Ver QR Code</a>` 
-          : `<span class="text-sm text-red-600 font-semibold">QR Code expirado</span>`}
-        <a href="/pages/administrador/perfil-usuario.html?id=${reserva.doadorId}&tipo=${reserva.doadorTipo}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
-          Ver Perfil do doador
-        </a>
-      </div>
-    </div>
-  `;
+      const validadeFormatada = reserva.dataValidade ? formatarData(reserva.dataValidade) : "Não disponível";
+      const expiraEmExibicao = dataExpiracaoMs ? formatarDataHora(dataExpiracaoMs) : "Não disponível";
+      const unidade = reserva.unidadeMedida ? reserva.unidadeMedida.toLowerCase() : "";
 
-  lista.appendChild(card);
-});
+      card.innerHTML = `
+        <img src="${reserva.urlImagem || ''}" alt="${reserva.nomeAlimento || 'Imagem'}" class="w-full md:w-48 h-48 object-cover rounded-lg">
+        <div class="flex-1">
+          <h3 class="text-xl font-semibold text-red-600">${reserva.nomeAlimento || 'Item'}</h3>
+          <p class="text-gray-700 mb-2">${reserva.descricao || "Sem descrição."}</p>
+          <div class="text-sm text-gray-600 space-y-1 mb-3">
+            <p><strong>Categoria:</strong> ${reserva.categoria || "-"}</p>
+            <p><strong>Quantidade:</strong> ${reserva.quantidade ?? '-'} ${unidade}</p>
+            <p><strong>Validade:</strong> ${validadeFormatada}</p>
+            <p><strong>Doador:</strong> ${reserva.doadorNome || "-"}</p>
+            <p><strong>Status:</strong> ${status}</p>
+            <p><strong>Expira em:</strong> ${expiraEmExibicao}</p>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-2">
+            ${podeVerQRCode 
+              ? `<a href="/pages/reserva/qrcode.html?id=${reserva.id}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">Ver QR Code</a>`
+              : `<span class="text-sm text-red-600 font-semibold">QR Code expirado</span>`
+            }
+            <a href="/pages/administrador/perfil-usuario.html?id=${reserva.doadorId}&tipo=${reserva.doadorTipo}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
+              Ver Perfil do doador
+            </a>
+          </div>
+        </div>
+      `;
+
+      lista.appendChild(card);
+    });
 
   } catch (err) {
     console.error(err);
     lista.innerHTML = `<p class="text-red-600">Erro ao carregar suas reservas.</p>`;
   }
 });
-
-function formatarData(data) {
-  return new Date(data).toLocaleDateString("pt-BR");
-}
-function formatarDataHora(dataHora) {
-  const opcoes = {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-    timeZone: "America/Sao_Paulo",
-  };
-  return new Date(dataHora).toLocaleString("pt-BR", opcoes);
-}
-
 
