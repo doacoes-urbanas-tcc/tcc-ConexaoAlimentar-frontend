@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
         qrCodeMessage => {
           qrScanner.stop(); 
           validarQrCode(qrCodeMessage.trim());
-        },
+        }
       );
     } else {
       mensagem.textContent = "Nenhuma câmera encontrada.";
