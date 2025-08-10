@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   const id = urlParams.get("id");
+  const origem = urlParams.get("origem") || "pendentes"; 
+  const pagina = urlParams.get("page") || 1; 
   const tipo = urlParams.get("tipo")?.toUpperCase();
   const token = localStorage.getItem("token");
   const tipoUsuarioLogado = localStorage.getItem("tipoUsuario");
@@ -131,8 +133,16 @@ document.addEventListener("DOMContentLoaded", () => {
         };
        }
        }
-
+        const btnVoltar = document.getElementById("btnVoltar");
+       if (btnVoltar) {
+      btnVoltar.addEventListener("click", () => {
+        window.location.href = `usuarios-${origem}.html?page=${pagina}`;
+      });
+    }
   }
+
+      
+      
 
   function atualizarStatus(acao) {
     fetch(`https://conexao-alimentar.onrender.com/admin/usuarios/${acao}/${id}`, {
