@@ -1,7 +1,9 @@
+
 document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
   const idDoacao = params.get("id");
   const token = localStorage.getItem("token");
+
   const qrContainer = document.getElementById("qr-container");
   const tempoExpiracao = document.getElementById("tempo-expiracao");
   const progressBar = document.getElementById("progress-bar");
@@ -17,7 +19,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const res = await fetch(url, opts);
     const text = await res.text();
     let body;
-    try { body = JSON.parse(text); } catch (e) { body = text; }
+    try {
+      body = JSON.parse(text);
+    } catch (e) {
+      body = text;
+    }
 
     if (!res.ok) {
       const msg = (body && body.msg) || res.statusText || "Erro na requisição";
@@ -26,53 +32,67 @@ document.addEventListener("DOMContentLoaded", async () => {
       err.body = body;
       throw err;
     }
+
     if (body && typeof body === "object" && body.code && body.code === 403) {
       const err = new Error(body.msg || "permission error");
       err.status = 403;
       err.body = body;
       throw err;
     }
+
     return body;
   }
 
-  let data = null;
-
-  try {
-    data = await safeFetch(`https://conexao-alimentar.onrender.com/qr-code/url/${idDoacao}`, { method: "GET" });
-
-    const imageUrl = data.url;
-    const segundosRestantes = data.segundosRestantes ?? (data.segundosTotais ? data.segundosTotais : 0);
-    const totalOriginal = data.segundosTotais ?? 7200;
-
-    qrContainer.innerHTML = `<img src="${imageUrl}" alt="QR Code" class="h-64 mx-auto">`;
-
-    iniciarContagemRegressiva(segundosRestantes, totalOriginal);
-  } catch (err) {
-    console.error("Erro ao carregar QR:", err);
-    if (err.status === 403) {
-      qrContainer.innerHTML = `<p class="text-red-600">Permissão negada. Faça login com conta ONG.</p>`;
-    } else {
-      qrContainer.innerHTML = `<p class="text-red-600">${err.message}</p>`;
-    }
-    return;
+  function mostrarQRCodeExpirado() {
+    tempoExpiracao.textContent = "expirado";
+    qrContainer.innerHTML = `<p class="text-red-600 font-semibold">QR Code expirado.</p>`;
+    if (progressBar) progressBar.style.width = "0%";
   }
+
+  function redirecionarParaAvaliacao(reservaId) {
+    alert("A doação foi retirada! Você será direcionado para avaliar o doador.");
+    window.location.href = `../avaliacao/avaliacao.html?idReserva=${reservaId}`;
+  }
+
+  let intervaloStatus = null;
+  let intervaloCountdown = null;
 
   function iniciarContagemRegressiva(segundosRestantes, totalOriginal) {
     let segundos = Number(segundosRestantes);
-    const idReserva = data.reservaId;
-    const statusAtual = data.statusReserva;
 
-    if (statusAtual === "RETIRADA") {
-      redirecionarParaAvaliacao(idReserva);
+    if (intervaloStatus) clearInterval(intervaloStatus);
+    if (intervaloCountdown) clearInterval(intervaloCountdown);
+
+    if (data.statusReserva === "RETIRADA") {
+      redirecionarParaAvaliacao(data.reservaId);
       return;
     }
 
-    const intervaloStatus = setInterval(async () => {
+    if (segundos <= 0) {
+      tempoExpiracao.textContent = "Verificando validade...";
+      setTimeout(async () => {
+        try {
+          const novaData = await safeFetch(`https://conexao-alimentar.onrender.com/qr-code/url/${idDoacao}`, { method: "GET" });
+          if (novaData.segundosRestantes > 0) {
+            iniciarContagemRegressiva(novaData.segundosRestantes, novaData.segundosTotais);
+          } else {
+            mostrarQRCodeExpirado();
+          }
+        } catch {
+          mostrarQRCodeExpirado();
+        }
+      }, 3000);
+      return;
+    }
+
+    intervaloStatus = setInterval(async () => {
       try {
         const novaData = await safeFetch(`https://conexao-alimentar.onrender.com/qr-code/url/${idDoacao}`, { method: "GET" });
         console.log("Status atual:", novaData.statusReserva);
+
         if (novaData.statusReserva === "RETIRADA") {
           clearInterval(intervaloStatus);
+          clearInterval(intervaloCountdown);
           redirecionarParaAvaliacao(novaData.reservaId);
         } else {
           if (typeof novaData.segundosRestantes === "number") {
@@ -84,17 +104,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("Erro ao verificar status da reserva:", e);
         if (e.status === 403) {
           clearInterval(intervaloStatus);
+          clearInterval(intervaloCountdown);
+          localStorage.removeItem("token");
           qrContainer.innerHTML = `<p class="text-red-600">Permissão negada. Faça login novamente.</p>`;
+          setTimeout(() => {
+            window.location.href = "/pages/cadastrologin/login.html";
+          }, 3000);
         }
       }
     }, 5000);
 
-    const intervalo = setInterval(() => {
+    intervaloCountdown = setInterval(() => {
       if (segundos <= 0) {
-        clearInterval(intervalo);
-        tempoExpiracao.textContent = "expirado";
-        qrContainer.innerHTML = `<p class="text-red-600 font-semibold">QR Code expirado.</p>`;
-        if (progressBar) progressBar.style.width = "0%";
+        clearInterval(intervaloCountdown);
+        clearInterval(intervaloStatus);
+        mostrarQRCodeExpirado();
         return;
       }
 
@@ -109,8 +133,29 @@ document.addEventListener("DOMContentLoaded", async () => {
     }, 1000);
   }
 
-  function redirecionarParaAvaliacao(reservaId) {
-    alert("A doação foi retirada! Você será direcionado para avaliar o doador.");
-    window.location.href = `../avaliacao/avaliacao.html?idReserva=${reservaId}`;
+  let data = null;
+
+  try {
+    data = await safeFetch(`https://conexao-alimentar.onrender.com/qr-code/url/${idDoacao}`, { method: "GET" });
+
+    if (!data.url) {
+      qrContainer.innerHTML = `<p class="text-red-600">QR Code não encontrado.</p>`;
+      return;
+    }
+
+    qrContainer.innerHTML = `<img src="${data.url}" alt="QR Code" class="h-64 mx-auto">`;
+
+    iniciarContagemRegressiva(data.segundosRestantes ?? 0, data.segundosTotais ?? 7200);
+  } catch (err) {
+    console.error("Erro ao carregar QR:", err);
+    if (err.status === 403) {
+      localStorage.removeItem("token");
+      qrContainer.innerHTML = `<p class="text-red-600">Permissão negada. Faça login com conta ONG.</p>`;
+      setTimeout(() => {
+        window.location.href = "/pages/cadastrologin/login.html";
+      }, 3000);
+    } else {
+      qrContainer.innerHTML = `<p class="text-red-600">${err.message}</p>`;
+    }
   }
 });
