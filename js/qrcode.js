@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const tempoExpiracao = document.getElementById("tempo-expiracao");
   const progressBar = document.getElementById("progress-bar");
 
-  let data = null; 
+  let data = null;
 
   if (!token || !idDoacao) {
     qrContainer.innerHTML = `<p class="text-red-600">Acesso inválido.</p>`;
@@ -23,8 +23,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!response.ok) throw new Error("QR Code não encontrado.");
 
-    data = await response.json(); 
-    const imageUrl = data.url; 
+    data = await response.json();
+    const imageUrl = data.url;
     const segundosRestantes = data.segundosRestantes;
 
     qrContainer.innerHTML = `<img src="${imageUrl}" alt="QR Code" class="h-64 mx-auto">`;
@@ -37,17 +37,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   function iniciarContagemRegressiva(segundos) {
     const idReserva = data.reservaId;
     const statusAtual = data.statusReserva;
+    const totalOriginal = data.segundosTotais; 
+
     console.log("Status inicial:", statusAtual);
 
     if (statusAtual === "RETIRADA") {
       console.log("Status RETIRADA no carregamento, redirecionando...");
       redirecionarParaAvaliacao(idReserva);
-      
+
     } else {
       const intervaloStatus = setInterval(async () => {
         console.log("Checando status da reserva...");
         try {
-          const responseStatus = await fetch(`https://conexao-alimentar.onrender.com/qr-code/url/${id}`, {
+          const responseStatus = await fetch(`https://conexao-alimentar.onrender.com/qr-code/url/${idDoacao}`, {
             method: "GET",
             headers: {
               "Authorization": "Bearer " + token
@@ -59,17 +61,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Status atual:", novaData.statusReserva);
             if (novaData.statusReserva === "RETIRADA") {
               clearInterval(intervaloStatus);
-               console.log("Status mudou para RETIRADA, redirecionando...");
+              console.log("Status mudou para RETIRADA, redirecionando...");
               redirecionarParaAvaliacao(novaData.reservaId);
             }
           }
         } catch (e) {
           console.error("Erro ao verificar status da reserva:", e);
         }
-      }, 5000); 
+      }, 5000);
     }
-
-    const total = segundos;
 
     const intervalo = setInterval(() => {
       if (segundos <= 0) {
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const restoSegundos = segundos % 60;
       tempoExpiracao.textContent = `${minutos}m ${restoSegundos}s`;
 
-      const porcentagem = (segundos / total) * 100;
+      const porcentagem = (segundos / totalOriginal) * 100;
       progressBar.style.width = `${porcentagem}%`;
 
       segundos--;
