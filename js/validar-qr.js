@@ -1,38 +1,42 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const videoElement = document.getElementById("preview");
   const mensagem = document.getElementById("mensagem");
-
   const qrScanner = new Html5Qrcode("preview");
 
   function validarQrCode(idDoacao) {
-  const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-  fetch(`https://conexao-alimentar.onrender.com/doacoes/validar-qr/${idDoacao}`, {
-    method: "POST",
-    headers: {
-      "Authorization": "Bearer " + token
-    }
-  })
-  .then(response => {
-    if (!response.ok) {
-      return response.text().then(texto => { throw new Error(texto); });
-    }
-    return response.json(); 
-  })
-  .then(data => {
-    const idReserva = data.idReserva;
-    window.location.href = `../avaliacao/avaliacao.html?idReserva=${idReserva}`;
-  })
-  .catch(error => {
-    mensagem.textContent = error.message;
-    mensagem.classList.replace("text-gray-700", "text-red-600");
-  });
-}
-
+    fetch(`https://conexao-alimentar.onrender.com/doacoes/validar-qr/${idDoacao}`, {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + token
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(texto => { throw new Error(texto); });
+      }
+      return response.json();
+    })
+    .then(data => {
+      const idReserva = data.idReserva;
+      window.location.href = `../avaliacao/avaliacao.html?idReserva=${idReserva}`;
+    })
+    .catch(error => {
+      mensagem.textContent = error.message;
+      mensagem.classList.replace("text-gray-700", "text-red-600");
+    });
+  }
 
   Html5Qrcode.getCameras().then(cameras => {
     if (cameras && cameras.length) {
-      const cameraId = cameras[0].id;
+      const backCamera = cameras.find(cam =>
+        cam.label.toLowerCase().includes("back") ||
+        cam.label.toLowerCase().includes("traseira") ||
+        cam.label.toLowerCase().includes("rear")
+      );
+
+      const cameraId = backCamera ? backCamera.id : cameras[0].id;
+
       qrScanner.start(
         cameraId,
         {
@@ -40,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
           qrbox: { width: 250, height: 250 }
         },
         qrCodeMessage => {
-          qrScanner.stop(); 
+          qrScanner.stop();
           validarQrCode(qrCodeMessage.trim());
         }
       );
