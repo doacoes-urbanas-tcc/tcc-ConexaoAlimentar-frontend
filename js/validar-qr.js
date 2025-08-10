@@ -1,11 +1,20 @@
 document.addEventListener("DOMContentLoaded", () => {
   const mensagem = document.getElementById("mensagem");
+  const cameraContainer = document.getElementById("camera-container");
   const qrScanner = new Html5Qrcode("preview");
 
-  function validarQrCode(idDoacao) {
+  let idDoacaoEscaneada = null;
+
+  function validarRetirada() {
+    if (!idDoacaoEscaneada) {
+      mensagem.textContent = "Nenhuma doação escaneada para validar.";
+      mensagem.classList.replace("text-gray-700", "text-red-600");
+      return;
+    }
+
     const token = localStorage.getItem("token");
 
-    fetch(`https://conexao-alimentar.onrender.com/doacoes/validar-qr/${idDoacao}`, {
+    fetch(`https://conexao-alimentar.onrender.com/doacoes/validar-qr/${idDoacaoEscaneada}`, {
       method: "POST",
       headers: {
         "Authorization": "Bearer " + token
@@ -18,12 +27,14 @@ document.addEventListener("DOMContentLoaded", () => {
       return response.json();
     })
     .then(data => {
-      const idReserva = data.idReserva;
-      window.location.href = `../avaliacao/avaliacao.html?idReserva=${idReserva}`;
+      mensagem.textContent = "Retirada validada com sucesso!";
+      mensagem.classList.replace("text-red-600", "text-green-600");
+      const btn = document.getElementById("btnValidarRetirada");
+      if (btn) btn.style.display = "none";
     })
     .catch(error => {
-      mensagem.textContent = error.message;
-      mensagem.classList.replace("text-gray-700", "text-red-600");
+      mensagem.textContent = "Erro ao validar retirada: " + error.message;
+      mensagem.classList.replace("text-green-600", "text-red-600");
     });
   }
 
@@ -45,7 +56,19 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         qrCodeMessage => {
           qrScanner.stop();
-          validarQrCode(qrCodeMessage.trim());
+          idDoacaoEscaneada = qrCodeMessage.trim();
+
+          if (!document.getElementById("btnValidarRetirada")) {
+            const btn = document.createElement("button");
+            btn.id = "btnValidarRetirada";
+            btn.textContent = "Validar Retirada";
+            btn.className = "block mx-auto mt-4 bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-semibold";
+            btn.onclick = validarRetirada;
+            cameraContainer.appendChild(btn);
+          }
+
+          mensagem.textContent = `QR Code escaneado: ${idDoacaoEscaneada}`;
+          mensagem.classList.replace("text-red-600", "text-gray-700");
         }
       );
     } else {
