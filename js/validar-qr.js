@@ -20,22 +20,22 @@ document.addEventListener("DOMContentLoaded", () => {
         "Authorization": "Bearer " + token
       }
     })
-    .then(response => {
-      if (!response.ok) {
-        return response.text().then(texto => { throw new Error(texto); });
-      }
-      return response.json();
-    })
-    .then(data => {
-      mensagem.textContent = "Retirada validada com sucesso!";
-      mensagem.classList.replace("text-red-600", "text-green-600");
-      const btn = document.getElementById("btnValidarRetirada");
-      if (btn) btn.style.display = "none";
-    })
-    .catch(error => {
-      mensagem.textContent = "Erro ao validar retirada: " + error.message;
-      mensagem.classList.replace("text-green-600", "text-red-600");
-    });
+      .then(response => {
+        if (!response.ok) {
+          return response.text().then(texto => { throw new Error(texto); });
+        }
+        return response.json();
+      })
+      .then(data => {
+        mensagem.textContent = "Retirada validada com sucesso!";
+        mensagem.classList.replace("text-red-600", "text-green-600");
+        const btn = document.getElementById("btnValidarRetirada");
+        if (btn) btn.style.display = "none";
+      })
+      .catch(error => {
+        mensagem.textContent = "Erro ao validar retirada: " + error.message;
+        mensagem.classList.replace("text-green-600", "text-red-600");
+      });
   }
 
   Html5Qrcode.getCameras().then(cameras => {
@@ -56,7 +56,13 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         qrCodeMessage => {
           qrScanner.stop();
-          idDoacaoEscaneada = qrCodeMessage.trim();
+
+          try {
+            const dados = JSON.parse(qrCodeMessage);
+            idDoacaoEscaneada = dados.doacaoId; 
+          } catch (e) {
+            idDoacaoEscaneada = qrCodeMessage.trim();
+          }
 
           if (!document.getElementById("btnValidarRetirada")) {
             const btn = document.createElement("button");
