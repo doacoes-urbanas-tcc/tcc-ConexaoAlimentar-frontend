@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const comentario = document.getElementById("comentario").value;
 
     try {
-      const response = await fetch(`https://conexao-alimentar.onrender.com/${idReserva}/avaliar`, {
+      const response = await fetch(`https://conexao-alimentar.onrender.com/avaliacaoes/${idReserva}/avaliar`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
