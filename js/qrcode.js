@@ -6,77 +6,95 @@ document.addEventListener("DOMContentLoaded", async () => {
   const tempoExpiracao = document.getElementById("tempo-expiracao");
   const progressBar = document.getElementById("progress-bar");
 
-  let data = null;
-
   if (!token || !idDoacao) {
     qrContainer.innerHTML = `<p class="text-red-600">Acesso inválido.</p>`;
     return;
   }
 
+  async function safeFetch(url, opts = {}) {
+    opts.headers = opts.headers || {};
+    if (token) opts.headers["Authorization"] = `Bearer ${token}`;
+    const res = await fetch(url, opts);
+    const text = await res.text();
+    let body;
+    try { body = JSON.parse(text); } catch (e) { body = text; }
+
+    if (!res.ok) {
+      const msg = (body && body.msg) || res.statusText || "Erro na requisição";
+      const err = new Error(msg);
+      err.status = res.status;
+      err.body = body;
+      throw err;
+    }
+    if (body && typeof body === "object" && body.code && body.code === 403) {
+      const err = new Error(body.msg || "permission error");
+      err.status = 403;
+      err.body = body;
+      throw err;
+    }
+    return body;
+  }
+
+  let data = null;
+
   try {
-    const response = await fetch(`https://conexao-alimentar.onrender.com/qr-code/url/${idDoacao}`, {
-      method: "GET",
-      headers: {
-        "Authorization": "Bearer " + token
-      }
-    });
+    data = await safeFetch(`https://conexao-alimentar.onrender.com/qr-code/url/${idDoacao}`, { method: "GET" });
 
-    if (!response.ok) throw new Error("QR Code não encontrado.");
-
-    data = await response.json();
     const imageUrl = data.url;
-    const segundosRestantes = data.segundosRestantes;
+    const segundosRestantes = data.segundosRestantes ?? (data.segundosTotais ? data.segundosTotais : 0);
+    const totalOriginal = data.segundosTotais ?? 7200;
 
     qrContainer.innerHTML = `<img src="${imageUrl}" alt="QR Code" class="h-64 mx-auto">`;
 
-    iniciarContagemRegressiva(segundosRestantes);
+    iniciarContagemRegressiva(segundosRestantes, totalOriginal);
   } catch (err) {
-    qrContainer.innerHTML = `<p class="text-red-600">${err.message}</p>`;
+    console.error("Erro ao carregar QR:", err);
+    if (err.status === 403) {
+      qrContainer.innerHTML = `<p class="text-red-600">Permissão negada. Faça login com conta ONG.</p>`;
+    } else {
+      qrContainer.innerHTML = `<p class="text-red-600">${err.message}</p>`;
+    }
+    return;
   }
 
-  function iniciarContagemRegressiva(segundos) {
+  function iniciarContagemRegressiva(segundosRestantes, totalOriginal) {
+    let segundos = Number(segundosRestantes);
     const idReserva = data.reservaId;
     const statusAtual = data.statusReserva;
-    const totalOriginal = data.segundosTotais; 
-
-    console.log("Status inicial:", statusAtual);
 
     if (statusAtual === "RETIRADA") {
-      console.log("Status RETIRADA no carregamento, redirecionando...");
       redirecionarParaAvaliacao(idReserva);
-
-    } else {
-      const intervaloStatus = setInterval(async () => {
-        console.log("Checando status da reserva...");
-        try {
-          const responseStatus = await fetch(`https://conexao-alimentar.onrender.com/qr-code/url/${idDoacao}`, {
-            method: "GET",
-            headers: {
-              "Authorization": "Bearer " + token
-            }
-          });
-
-          if (responseStatus.ok) {
-            const novaData = await responseStatus.json();
-            console.log("Status atual:", novaData.statusReserva);
-            if (novaData.statusReserva === "RETIRADA") {
-              clearInterval(intervaloStatus);
-              console.log("Status mudou para RETIRADA, redirecionando...");
-              redirecionarParaAvaliacao(novaData.reservaId);
-            }
-          }
-        } catch (e) {
-          console.error("Erro ao verificar status da reserva:", e);
-        }
-      }, 5000);
+      return;
     }
+
+    const intervaloStatus = setInterval(async () => {
+      try {
+        const novaData = await safeFetch(`https://conexao-alimentar.onrender.com/qr-code/url/${idDoacao}`, { method: "GET" });
+        console.log("Status atual:", novaData.statusReserva);
+        if (novaData.statusReserva === "RETIRADA") {
+          clearInterval(intervaloStatus);
+          redirecionarParaAvaliacao(novaData.reservaId);
+        } else {
+          if (typeof novaData.segundosRestantes === "number") {
+            segundos = novaData.segundosRestantes;
+            totalOriginal = novaData.segundosTotais ?? totalOriginal;
+          }
+        }
+      } catch (e) {
+        console.error("Erro ao verificar status da reserva:", e);
+        if (e.status === 403) {
+          clearInterval(intervaloStatus);
+          qrContainer.innerHTML = `<p class="text-red-600">Permissão negada. Faça login novamente.</p>`;
+        }
+      }
+    }, 5000);
 
     const intervalo = setInterval(() => {
       if (segundos <= 0) {
         clearInterval(intervalo);
         tempoExpiracao.textContent = "expirado";
         qrContainer.innerHTML = `<p class="text-red-600 font-semibold">QR Code expirado.</p>`;
-        progressBar.style.width = "0%";
+        if (progressBar) progressBar.style.width = "0%";
         return;
       }
 
@@ -85,7 +103,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       tempoExpiracao.textContent = `${minutos}m ${restoSegundos}s`;
 
       const porcentagem = (segundos / totalOriginal) * 100;
-      progressBar.style.width = `${porcentagem}%`;
+      if (progressBar) progressBar.style.width = `${porcentagem}%`;
 
       segundos--;
     }, 1000);

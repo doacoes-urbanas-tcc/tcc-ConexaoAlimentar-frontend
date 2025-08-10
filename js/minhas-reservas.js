@@ -8,21 +8,43 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
+  async function safeFetch(url, opts = {}) {
+    opts.headers = opts.headers || {};
+    if (token) opts.headers["Authorization"] = `Bearer ${token}`;
+    const res = await fetch(url, opts);
+    const text = await res.text();
+    let body;
+    try { body = JSON.parse(text); } catch (e) { body = text; }
+
+    if (!res.ok) {
+      const msg = (body && body.msg) || res.statusText || "Erro na requisição";
+      const err = new Error(msg);
+      err.status = res.status;
+      err.body = body;
+      throw err;
+    }
+
+    if (body && typeof body === "object" && body.code && body.code === 403) {
+      const err = new Error(body.msg || "permission error");
+      err.status = 403;
+      err.body = body;
+      throw err;
+    }
+
+    return body;
+  }
+
   function parseDateTimeToMs(value) {
     if (!value) return null;
     if (typeof value === "number") return value;
     const tryDate = new Date(value);
     if (!isNaN(tryDate.getTime())) return tryDate.getTime();
-
     const tryZ = new Date(value + "Z");
     if (!isNaN(tryZ.getTime())) return tryZ.getTime();
-
     const tryT = new Date(value.replace(" ", "T"));
     if (!isNaN(tryT.getTime())) return tryT.getTime();
-
     const parsed = Date.parse(value);
     if (!isNaN(parsed)) return parsed;
-
     console.warn("Falha ao parsear dataExpiracao:", value);
     return null;
   }
@@ -48,18 +70,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const response = await fetch("https://conexao-alimentar.onrender.com/reservas/minhas-reservas", {
-      method: "GET",
-      headers: {
-        "Authorization": "Bearer " + token
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error("Erro ao buscar reservas.");
-    }
-
-    const reservas = await response.json();
+    const reservas = await safeFetch("https://conexao-alimentar.onrender.com/reservas/minhas-reservas", { method: "GET" });
 
     if (!Array.isArray(reservas) || reservas.length === 0) {
       lista.innerHTML = `<p class="text-gray-600">Você ainda não possui reservas.</p>`;
@@ -69,14 +80,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     lista.innerHTML = "";
 
     reservas.forEach(reserva => {
+      console.log("Reserva recebida:", reserva);
+
       const card = document.createElement("div");
       card.className = "bg-white rounded-lg shadow p-4 flex flex-col md:flex-row gap-4";
 
       const status = (reserva.status || "").replace(/_/g, " ");
-      const dataExpiracaoMs = reserva.dataExpiracao ? parseDateTimeToMs(reserva.dataExpiracao) : null;
+      const dataExpiracaoMs = reserva.dataExpiracao
+        ? parseDateTimeToMs(reserva.dataExpiracao)
+        : (reserva.dataReserva && reserva.segundosTotais ? (parseDateTimeToMs(reserva.dataReserva) + (reserva.segundosTotais * 1000)) : null);
+
       const agoraMs = Date.now();
 
-      const podeVerQRCode = reserva.status === "RESERVADA" && dataExpiracaoMs !== null && agoraMs < dataExpiracaoMs;
+      const podeVerPeloBackend = typeof reserva.qrCodeAtivo === "boolean" ? reserva.qrCodeAtivo : null;
+
+      const podeVerQRCode = (podeVerPeloBackend !== null)
+        ? (reserva.status === "RESERVADA" && podeVerPeloBackend)
+        : (reserva.status === "RESERVADA" && dataExpiracaoMs !== null && agoraMs < dataExpiracaoMs);
 
       const validadeFormatada = reserva.dataValidade ? formatarData(reserva.dataValidade) : "Não disponível";
       const expiraEmExibicao = dataExpiracaoMs ? formatarDataHora(dataExpiracaoMs) : "Não disponível";
@@ -111,8 +131,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
   } catch (err) {
-    console.error(err);
-    lista.innerHTML = `<p class="text-red-600">Erro ao carregar suas reservas.</p>`;
+    console.error("Erro ao buscar reservas:", err);
+    if (err.status === 403) {
+      lista.innerHTML = `<p class="text-red-600">Permissão negada. Faça login com uma conta ONG.</p>`;
+
+    } else {
+      lista.innerHTML = `<p class="text-red-600">Erro ao carregar suas reservas.</p>`;
+    }
   }
 });
-
