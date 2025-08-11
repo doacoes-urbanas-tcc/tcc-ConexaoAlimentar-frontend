@@ -73,7 +73,7 @@ function formatarDataHora(dataHora) {
 
 function showSuccess(message, onOk = null) {
   const modal = document.getElementById('modalSuccess');
-  const msgEl = document.getElementById('modalSuccessMessage');
+  const msgEl = document.getElementById('mensagem-sucesso');
   msgEl.textContent = message;
   modal.classList.remove('hidden');
 
