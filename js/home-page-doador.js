@@ -1,11 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
-  const nomeUsuario = localStorage.getItem("nomeUsuario") || "Doador";
+  const nomeUsuario = localStorage.getItem("nome") || "Doador";
 
-  if (!token) {
-    window.location.href = "/login.html";
+    if (!token) {
+    window.location.href = "/pages/cadastrologin/login.html";
     return;
-  }
+    }
+
 
   fetch("https://conexao-alimentar.onrender.com/doacoes/metricas", {
     headers: {
@@ -17,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return res.json();
     })
     .then(data => {
-      document.getElementById("nome").textContent = nomeUsuario;
+      document.getElementById("nome").textContent = data.nome;
       document.getElementById("totalDoacoes").textContent = data.totalDoacoes;
       document.getElementById("ongsBeneficiadas").textContent = data.ongsBeneficiadas;
       document.getElementById("mediaAvaliacoes").textContent = `${(data.mediaAvaliacoes || 0).toFixed(1)} ★`;
@@ -82,7 +83,4 @@ function showError(message, onOk = null) {
   okBtn.addEventListener('click', closeHandler);
   closeBtn.addEventListener('click', closeHandler);
 }
-
-
-
 

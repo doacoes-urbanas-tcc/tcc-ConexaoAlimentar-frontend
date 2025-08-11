@@ -12,10 +12,18 @@ document.addEventListener("DOMContentLoaded", () => {
       Authorization: `Bearer ${token}`
     }
   })
-    .then(res => res.json())
+    .then(res => {
+      if (!res.ok) throw new Error("Erro ao carregar estatísticas");
+      return res.json();
+    })
     .then(data => {
+      document.getElementById("nome").textContent = data.nome || "ONG";
+
       document.getElementById("totalDoacoesRecebidas").textContent = data.totalDoacoesRecebidas;
       document.getElementById("mediaAvaliacoes").textContent = data.mediaAvaliacoes.toFixed(1);
     })
-    .catch(err => console.error("Erro ao carregar estatísticas:", err));
+    .catch(err => {
+      console.error("Erro ao carregar estatísticas:", err);
+      document.getElementById("nome").textContent = "ONG";
+    });
 });
