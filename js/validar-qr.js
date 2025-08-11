@@ -27,16 +27,24 @@ document.addEventListener("DOMContentLoaded", () => {
         return response.json();
       })
       .then(data => {
-        mensagem.textContent = "Retirada validada com sucesso!";
-        mensagem.classList.replace("text-red-600", "text-green-600");
-        const btn = document.getElementById("btnValidarRetirada");
-        if (btn) btn.style.display = "none";
+         mensagem.textContent = "Retirada validada com sucesso!";
+         mensagem.classList.replace("text-red-600", "text-green-600");
+         const btn = document.getElementById("btnValidarRetirada");
+         if (btn) btn.style.display = "none";
+
+         const idReserva = data.reservaId || data.idReserva; 
+
+         if (idReserva) {
+         window.location.href = `/pages/avaliacao/avaliacao.html?idReserva=${idReserva}`;
+        } else {
+        console.warn("idReserva não recebido na resposta do servidor.");
+       }
       })
       .catch(error => {
         mensagem.textContent = "Erro ao validar retirada: " + error.message;
         mensagem.classList.replace("text-green-600", "text-red-600");
       });
-  }
+    }
 
   Html5Qrcode.getCameras().then(cameras => {
     if (cameras && cameras.length) {
