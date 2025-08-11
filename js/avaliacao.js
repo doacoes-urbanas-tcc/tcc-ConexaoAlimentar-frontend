@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (!idReserva) {
     console.error("ID da reserva não informado na URL.");
-    alert("Reserva inválida. Retorne e tente novamente.");
+    showError("Reserva inválida. Retorne e tente novamente.");
     return;
   }
 
@@ -60,11 +60,79 @@ document.addEventListener("DOMContentLoaded", async () => {
         throw new Error(erro);
       }
 
-      alert("Avaliação enviada com sucesso!");
-      window.location.href = "/pages/dashboard.html"; 
+      showSuccess("Avaliação enviada com sucesso!", () => {
+      const tipoUsuario = localStorage.getItem("tipoUsuario")?.toLowerCase();
+
+      switch (tipoUsuario) {
+        case "ONG":
+        window.location.href = "/pages/ong/home-page-ong.html";
+        break;
+      case "COMERCIO":
+        window.location.href = "/pages/doador/home-page-doador.html";
+        break;
+      case "VOLUNTARIO":
+        window.location.href = "/pages/voluntario/home-page-voluntario.html";
+        break;
+      case "ADMIN":
+        window.location.href = "/pages/administrador/dashboard-administrador.html";
+        break;
+      default:
+       window.location.href = "/pages/dashboard.html";
+    }
+    });
+
     } catch (err) {
       console.error("Erro ao enviar avaliação:", err);
-      alert("Erro ao enviar avaliação: " + err.message);
+      showError("Erro ao enviar avaliação: " + err.message);
     }
   });
 });
+function showSuccess(message, onOk = null) {
+  const modal = document.getElementById('modalSuccess');
+  const msgEl = document.getElementById('modalSuccessMessage');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-green-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
+}
+
+function showError(message, onOk = null) {
+  const modal = document.getElementById('modalError');
+  const msgEl = document.getElementById('modalErrorMessage');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-red-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
+}
+
+

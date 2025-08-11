@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
       .then((res) => {
         if (res.ok) carregarUsuarios(filtro.value);
-        else alert("Erro ao aprovar usuário");
+        else showError("Erro ao aprovar usuário");
       });
   }
 
@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const justificativa = document.getElementById("inputJustificativa").value;
 
     if (!justificativa.trim()) {
-      alert("Por favor, informe a justificativa.");
+      showError("Por favor, informe a justificativa.");
       return;
     }
 
@@ -125,18 +125,19 @@ document.addEventListener("DOMContentLoaded", () => {
     })
       .then(res => {
         if (res.ok) {
-          alert("Usuário reprovado com sucesso!");
-          window.location.href = "/pages/administrador/usuarios-reprovados.html";
+          showSuccess("Usuário reprovado com sucesso!", () => {
+            window.location.href = "/pages/administrador/usuarios-reprovados.html";
+          });
         } else {
           return res.text().then(msg => {
             console.error("Erro:", msg);
-            alert("Erro ao reprovar usuário.");
+            showError("Erro ao reprovar usuário.");
           });
         }
       })
       .catch(err => {
         console.error("Erro de rede:", err);
-        alert("Erro ao se comunicar com o servidor.");
+        showError("Erro ao se comunicar com o servidor.");
       })
       .finally(() => fecharModal());
   });
@@ -145,3 +146,57 @@ document.addEventListener("DOMContentLoaded", () => {
 
   carregarUsuarios("todos");
 });
+
+
+function showSuccess(message, onOk = null) {
+  const modal = document.getElementById('modalSuccess');
+  const msgEl = document.getElementById('modalSuccessMessage');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-green-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
+}
+
+function showError(message, onOk = null) {
+  const modal = document.getElementById('modalError');
+  const msgEl = document.getElementById('modalErrorMessage');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-red-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
+}
+
+
+
+
+

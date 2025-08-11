@@ -64,14 +64,16 @@ document.addEventListener("DOMContentLoaded", () => {
         body: JSON.stringify(dto)
       });
 
-      if (response.ok) {
-        alert("Task cadastrada com sucesso!");
-        window.location.reload();
-      } else {
-        alert("Erro ao cadastrar task.");
+       if (response.ok) {
+       showSuccess("Task cadastrada com sucesso!", () => {
+       window.location.reload();
+       });
+       } else {
+       showError("Erro ao cadastrar task.");
       }
+
     } catch (err) {
-      alert("Erro ao cadastrar task.");
+      showError("Erro ao cadastrar task.");
       console.error(err);
     }
   });
@@ -81,3 +83,54 @@ function logout() {
   localStorage.removeItem("token");
   window.location.href = "/pages/cadastrologin/login.html";
 }
+
+
+function showSuccess(message, onOk = null) {
+  const modal = document.getElementById('modalSuccess');
+  const msgEl = document.getElementById('modalSuccessMessage');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-green-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
+}
+
+function showError(message, onOk = null) {
+  const modal = document.getElementById('modalError');
+  const msgEl = document.getElementById('modalErrorMessage');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-red-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
+}
+
+

@@ -271,16 +271,16 @@ form.addEventListener('submit', async (e) => {
         resBody = await response.json();
       }
       localStorage.setItem("usuarioId", resBody?.id);
-
       showSuccess("Cadastro realizado com sucesso!", () => {
         if (dados.setorAtuacao === "TI") {
-          window.location.href = "/pages/voluntario/perfil-ti.html";
+        window.location.href = "/pages/voluntario/perfil-ti.html";
         } else if (dados.setorAtuacao === "TRANSPORTE") {
-          window.location.href = "/pages/voluntario/cadastrotransportador.html";
+         window.location.href = "/pages/voluntario/cadastrotransportador.html";
         } else {
-          window.location.href = "/pages/cadastrologin/login.html";
-        }
+        window.location.href = "/pages/cadastrologin/login.html";
+       }
       });
+
     } else {
       let erroMsg;
       if (contentType.includes("application/json")) {
@@ -293,8 +293,8 @@ form.addEventListener('submit', async (e) => {
       showError("Erro ao cadastrar usuário: " + erroMsg);
     }
   } catch (err) {
-    console.error("Erro inesperado:", err);
     showError("Erro inesperado no envio do formulário.");
+    showError("Erro ao cadastrar usuário: " + erroMsg);
   }
 });
 

@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let idUsuarioParaAcao = null;
   let tipoAcao = ""; 
   if (!id || !tipo) {
-    alert("Dados inválidos na URL");
+    showError("Dados inválidos na URL", )
     return;
   }
 
@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return res.json();
     })
     .then(dados => preencherPerfil(dados, tipo, isAdmin))
-    .catch(() => alert("Erro ao carregar dados do perfil."));
+    .catch(() => showError("Erro ao carregar dados do perfil."));
 
   function preencherPerfil(dados, tipo, isAdmin) {
     const info = document.getElementById("infoPerfil");
@@ -153,10 +153,10 @@ document.addEventListener("DOMContentLoaded", () => {
     })
       .then(res => {
         if (res.ok) {
-          alert(`Usuário ${acao} com sucesso.`);
+          showSuccess(`Usuário ${acao} com sucesso.`);
           window.location.href = "usuarios-pendentes.html";
         } else {
-          alert("Erro ao atualizar status.");
+          showError("Erro ao atualizar status.");
         }
       });
   }
@@ -169,12 +169,12 @@ document.addEventListener("DOMContentLoaded", () => {
 document.getElementById("btnConfirmarReprovar").addEventListener("click", () => {
   const justificativa = document.getElementById("inputJustificativa").value.trim();
   if (!justificativa) {
-    alert("Por favor, insira a justificativa.");
+    showError("Por favor, insira a justificativa.");
     return;
   }
 
   if (!tipoAcao || !idUsuarioParaAcao) {
-    alert("Ação inválida.");
+    showError("Ação inválida.");
     return;
   }
 
@@ -192,15 +192,15 @@ document.getElementById("btnConfirmarReprovar").addEventListener("click", () => 
   })
     .then(async res => {
       if (res.ok) {
-        alert(`Usuário ${tipoAcao} com sucesso.`);
+        showSuccess(`Usuário ${tipoAcao} com sucesso.`);
         window.location.href = tipoAcao === "reprovar" ? "usuarios-pendentes.html" : "usuarios-ativos.html";
       } else {
         const msg = await res.text();
-        alert(`Erro ao atualizar status.\nCódigo: ${res.status}\n${msg}`);
+        showError(`Erro ao atualizar status.\nCódigo: ${res.status}\n${msg}`);
       }
     })
     .catch(err => {
-      alert("Erro ao se comunicar com o servidor.");
+      showError("Erro ao se comunicar com o servidor.");
     })
     .finally(() => {
       document.getElementById("modalJustificativa").classList.add("hidden");
@@ -209,3 +209,55 @@ document.getElementById("btnConfirmarReprovar").addEventListener("click", () => 
     });
 });
 });
+
+function showSuccess(message, onOk = null) {
+  const modal = document.getElementById('modalSuccess');
+  const msgEl = document.getElementById('modalSuccessMessage');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-green-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
+}
+
+function showError(message, onOk = null) {
+  const modal = document.getElementById('modalError');
+  const msgEl = document.getElementById('modalErrorMessage');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-red-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
+}
+
+
+
+

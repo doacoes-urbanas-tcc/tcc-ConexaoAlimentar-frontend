@@ -77,14 +77,14 @@ async function verificarAvaliacoesPendentes(token) {
 
     if (reservasPendentes.length > 0) {
       const reserva = reservasPendentes[0]; 
-      alert("Você precisa concluir suas avaliações antes de continuar.");
+      showError("Você precisa concluir suas avaliações antes de continuar.");
       window.location.href = `/pages/avaliacao/avaliacao.html?idReserva=${reserva.id}`;
       return false;
     }
 
     return true;
   } catch (err) {
-    console.error("Erro ao verificar avaliações pendentes:", err);
+    showError("Erro ao verificar avaliações pendentes:", err);
     return true; 
   }
 }
@@ -96,3 +96,56 @@ function formatarData(data) {
 function formatarDataHora(dataHora) {
   return new Date(dataHora).toLocaleString("pt-BR");
 }
+
+function showSuccess(message, onOk = null) {
+  const modal = document.getElementById('modalSuccess');
+  const msgEl = document.getElementById('modalSuccessMessage');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-green-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
+}
+
+function showError(message, onOk = null) {
+  const modal = document.getElementById('modalError');
+  const msgEl = document.getElementById('modalErrorMessage');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-red-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
+}
+
+
+
+
+

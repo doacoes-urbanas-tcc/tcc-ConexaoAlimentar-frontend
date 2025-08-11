@@ -4,21 +4,18 @@ document.getElementById("form-alterar-senha").addEventListener("submit", async (
   const senhaAtual = document.getElementById("senhaAtual").value;
   const novaSenha = document.getElementById("novaSenha").value;
   const confirmar = document.getElementById("confirmarNovaSenha").value;
-  const mensagem = document.getElementById("mensagem");
 
   if (novaSenha !== confirmar) {
-    mensagem.textContent = "As senhas não coincidem.";
-    mensagem.classList.add("text-red-500");
+    showError("As senhas não coincidem.");
     return;
   }
 
   const token = localStorage.getItem("token");
   const usuarioId = localStorage.getItem("usuarioId");
-  const tipoUsuario = localStorage.getItem("tipoUsuario")?.toLowerCase(); 
+  const tipoUsuario = localStorage.getItem("tipoUsuario")?.toLowerCase();
 
   if (!tipoUsuario || !usuarioId || !token) {
-    mensagem.textContent = "Erro de autenticação. Faça login novamente.";
-    mensagem.classList.add("text-red-500");
+    showError("Erro de autenticação. Faça login novamente.");
     return;
   }
 
@@ -33,17 +30,63 @@ document.getElementById("form-alterar-senha").addEventListener("submit", async (
     });
 
     if (response.ok) {
-      mensagem.textContent = "Senha atualizada com sucesso!";
-      mensagem.classList.remove("text-red-500");
-      mensagem.classList.add("text-green-600");
-      window.location.href = "/pages/cadastrologin/login.html";
+      showSuccess("Senha atualizada com sucesso!", () => {
+        window.location.href = "/pages/cadastrologin/login.html";
+      });
     } else {
       const msg = await response.text();
-      mensagem.textContent = msg || "Erro ao atualizar senha.";
-      mensagem.classList.add("text-red-500");
+      showError(msg || "Erro ao atualizar senha.");
     }
   } catch (err) {
-    mensagem.textContent = "Erro na solicitação.";
-    mensagem.classList.add("text-red-500");
+    showError("Erro na solicitação.");
   }
 });
+
+function showSuccess(message, onOk = null) {
+  const modal = document.getElementById('modalSuccess');
+  const msgEl = document.getElementById('modalSuccessMessage');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-green-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
+}
+
+function showError(message, onOk = null) {
+  const modal = document.getElementById('modalError');
+  const msgEl = document.getElementById('modalErrorMessage');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-red-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
+}
+

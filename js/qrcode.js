@@ -50,8 +50,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function redirecionarParaAvaliacao(reservaId) {
-    alert("A doação foi retirada! Você será direcionado para avaliar o doador.");
-    window.location.href = `../avaliacao/avaliacao.html?idReserva=${reservaId}`;
+    showSuccess("A doação foi retirada! Você será direcionado para avaliar o doador.", () =>{
+      window.location.href = `../avaliacao/avaliacao.html?idReserva=${reservaId}`;
+    });
+   
   }
 
   let intervaloStatus = null;
@@ -159,3 +161,56 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 });
+
+
+function showSuccess(message, onOk = null) {
+  const modal = document.getElementById('modalSuccess');
+  const msgEl = document.getElementById('modalSuccessMessage');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-green-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
+}
+
+function showError(message, onOk = null) {
+  const modal = document.getElementById('modalError');
+  const msgEl = document.getElementById('modalErrorMessage');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-red-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
+}
+
+
+
+

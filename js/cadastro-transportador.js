@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cnhFile = document.getElementById("cnh").files[0];
 
     if (!placa || !modelo || !cor || !carga || !cnhFile) {
-      alert("Preencha todos os campos e selecione uma imagem da CNH.");
+      showError("Preencha todos os campos e selecione uma imagem da CNH.");
       return;
     }
 
@@ -46,11 +46,63 @@ document.addEventListener('DOMContentLoaded', () => {
         throw new Error("Erro ao cadastrar veículo: " + resText);
       }
 
-      alert("Veículo cadastrado com sucesso!");
+     showSuccess("Veículo cadastrado com sucesso!");
       form.reset();
     } catch (err) {
       console.error(err);
-      alert("Erro ao enviar dados do veículo. Tente novamente.");
+      showError("Erro ao enviar dados do veículo. Tente novamente.");
     }
   });
 });
+
+
+function showSuccess(message, onOk = null) {
+  const modal = document.getElementById('modalSuccess');
+  const msgEl = document.getElementById('modalSuccessMessage');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-green-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
+}
+
+function showError(message, onOk = null) {
+  const modal = document.getElementById('modalError');
+  const msgEl = document.getElementById('modalErrorMessage');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-red-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
+}
+
+
+

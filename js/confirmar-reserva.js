@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("token");
 
   if (!idDoacao || !token) {
-    alert("ID de doação inválido ou usuário não está logado.");
+    showError("ID de doação inválido ou usuário não está logado.");
     window.location.href = "/pages/doacao/lista-doacoes.html";
     return;
   }
@@ -51,13 +51,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       if (!response.ok) {
         const erro = await response.text();
-        alert("Erro ao reservar: " + erro);
+        showError("Erro ao reservar: " + erro);
         return;
       }
 
       window.location.href = `/pages/reserva/qrcode.html?id=${idDoacao}`;
     } catch (err) {
-      alert("Erro ao tentar reservar a doação.");
+      showError("Erro ao tentar reservar a doação.");
     }
   });
 });
@@ -69,3 +69,56 @@ function formatarData(data) {
 function formatarDataHora(dataHora) {
   return new Date(dataHora).toLocaleString("pt-BR");
 }
+
+
+function showSuccess(message, onOk = null) {
+  const modal = document.getElementById('modalSuccess');
+  const msgEl = document.getElementById('modalSuccessMessage');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-green-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
+}
+
+function showError(message, onOk = null) {
+  const modal = document.getElementById('modalError');
+  const msgEl = document.getElementById('modalErrorMessage');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-red-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
+}
+
+
+
+
