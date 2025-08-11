@@ -189,7 +189,7 @@ function showSuccess(message, onOk = null) {
 
 function showError(message, onOk = null) {
   const modal = document.getElementById('modalError');
-  const msgEl = document.getElementById('modalErrorMessage');
+  const msgEl = document.getElementById('mensagem-erro');
   msgEl.textContent = message;
   modal.classList.remove('hidden');
 
