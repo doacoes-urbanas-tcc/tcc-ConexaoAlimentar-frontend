@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const lista = document.getElementById("lista-avaliacoes");
   const urlParams = new URLSearchParams(window.location.search);
-  const avaliadoId = urlParams.get("id");
+  const avaliadoId = urlParams.get("avaliadoId");
   const token = localStorage.getItem("token");
 
   if (!avaliadoId) {
