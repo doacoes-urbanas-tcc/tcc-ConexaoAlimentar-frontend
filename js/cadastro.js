@@ -5,6 +5,7 @@ let longitude = "";
 
 function mostrarDescricaoECampos() {
     const select = document.getElementById('tipoUsuario');
+    const valorSelecionado = select.value;
     const descricao = document.getElementById('descricaoUsuario');
     const container = document.getElementById('descricaoContainer');
 
@@ -36,7 +37,6 @@ function mostrarDescricaoECampos() {
     };
     
 
-    const valorSelecionado = select.value;
     if (descricoes[valorSelecionado]) {
         descricao.textContent = descricoes[valorSelecionado];
         container.classList.remove("hidden");
