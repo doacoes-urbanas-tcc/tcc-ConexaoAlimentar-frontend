@@ -116,12 +116,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             <p><strong>Status:</strong> ${status}</p>
             <p><strong>Expira em:</strong> ${expiraEmExibicao}</p>
           </div>
-          <div class="flex flex-wrap gap-2 mt-2">
+          <div class="flex flex-col md:flex-row gap-2 mt-2">
             ${podeVerQRCode 
-              ? `<a href="/pages/reserva/qrcode.html?id=${reserva.id}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">Ver QR Code</a>`
+              ? `<a href="/pages/reserva/qrcode.html?id=${reserva.id}" class="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-center">Ver QR Code</a>`
               : `<span class="text-sm text-red-600 font-semibold">QR Code expirado</span>`
             }
-            <a href="/pages/administrador/perfil-usuario.html?id=${reserva.doadorId}&tipo=${reserva.doadorTipo}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
+            <a href="/pages/administrador/perfil-usuario.html?id=${reserva.doadorId}&tipo=${reserva.doadorTipo}" class="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-center">
               Ver Perfil do doador
             </a>
           </div>
