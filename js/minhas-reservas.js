@@ -119,14 +119,17 @@ document.addEventListener("DOMContentLoaded", async () => {
           <p><strong>Expira em:</strong> ${expiraEmExibicao}</p>
         </div>
       </div>
-      <div class="mt-4 flex flex-col md:flex-row gap-3">
-        ${podeVerQRCode 
-          ? `<a href="/pages/reserva/qrcode.html?id=${reserva.id}" class="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-center">Ver QR Code</a>`
-          : `<span class="text-sm text-red-600 font-semibold self-center md:self-start">QR Code expirado</span>`
-        }
-        <a href="/pages/administrador/perfil-usuario.html?id=${reserva.doadorId}&tipo=${reserva.doadorTipo}" class="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-center">
-          Ver Perfil do doador
-        </a>
+      <div class="mt-4 flex flex-col md:flex-row gap-3 items-center">
+  ${podeVerQRCode 
+    ? `<a href="/pages/reserva/qrcode.html?id=${reserva.id}" class="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-center">
+        Ver QR Code
+      </a>`
+    : `<span class="text-sm text-red-600 font-semibold mr-auto">QR Code expirado</span>`
+  }
+  <a href="/pages/administrador/perfil-usuario.html?id=${reserva.doadorId}&tipo=${reserva.doadorTipo}" 
+     class="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-center">
+    Ver Perfil do doador
+  </a>
       </div>
     </div>
   </div>
