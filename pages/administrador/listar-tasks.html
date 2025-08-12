@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
-<body class="flex -h-screen text-gray-900 bg-gray-100">
+<body class="flex h-screen text-gray-900">
 
   <aside class="w-64 bg-white shadow h-screen flex flex-col">
     <div class="p-6 border-b">
@@ -42,8 +42,8 @@
     </div>
   </aside>
 
-  <div class="flex-1 flex flex-col min-h-screen">
-    <main class="flex-1 p-6 overflow-auto">
+  <div class="flex flex-col flex-1 min-h-screen">
+    <main class="flex-grow bg-gray-100 p-6 overflow-auto">
       <h1 class="text-2xl font-bold text-gray-800 mb-6">Tasks Cadastradas</h1>
       <div id="lista-tasks" class="space-y-6"></div>
     </main>
