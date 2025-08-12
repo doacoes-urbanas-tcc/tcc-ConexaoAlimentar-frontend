@@ -40,14 +40,6 @@ function mostrarDescricaoECampos() {
     if (descricoes[valorSelecionado]) {
         descricao.textContent = descricoes[valorSelecionado];
         container.classList.remove("hidden");
-        function openModal() {
-        document.getElementById('modalTermo').classList.remove('hidden');
-        }
-
-       function closeModal(id) {
-       document.getElementById(id).classList.add('hidden');
-       }
-
         switch (valorSelecionado) {
             case 'pf':
                 document.getElementById('campoCPF').classList.remove('hidden');
@@ -377,6 +369,17 @@ const closeBtn = modal.querySelector('button.absolute');
 
 okBtn.addEventListener('click', closeHandler);
 closeBtn.addEventListener('click', closeHandler);
+}
+function openModal() {
+  const modal = document.getElementById('modalTermo');
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+}
+
+function closeModal(id) {
+  const modal = document.getElementById(id);
+  modal.classList.add('hidden');
+  modal.classList.remove('flex');
 }
 
 
