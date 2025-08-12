@@ -307,14 +307,14 @@
   </div>
   </div>
 
-<button type="button" onclick="openModal()" class="text-blue-600 underline">
+  <button id="btnLerTermo" type="button" onclick="openModal()" 
+        class="text-blue-600 underline hidden">
   Ler Termo de Aceite
-</button>
+  </button>
 
-<div id="modalTermo" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+   <div id="modalTermo" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
   <div class="bg-white rounded-lg shadow-lg w-11/12 md:w-2/3 lg:w-1/2 p-6 relative max-h-[90vh] overflow-y-auto">
-    <button onclick="closeModal()" class="absolute top-3 right-3 text-gray-500 hover:text-black text-2xl">&times;</button>
-
+    <button onclick="closeModal('modalTermo')" class="absolute top-3 right-3 text-gray-500 hover:text-black text-2xl">&times;</button>
     <h2 class="text-2xl font-bold mb-4">Termo de Aceite para Doação de Alimentos</h2>
     <p class="text-justify whitespace-pre-line">
 O(a) Doador(a) ou a ONG declara ter lido, compreendido e concordado com as disposições da Lei nº 14.016, de 23 de junho de 2020, que dispõe sobre o combate ao desperdício de alimentos e a doação de excedentes para o consumo humano, bem como com as orientações da ANVISA contidas no Guia para Doação de Alimentos com Segurança Sanitária.
@@ -341,10 +341,10 @@ Este termo visa assegurar transparência e conformidade legal, colaborando para 
   </div>
 </div>
 
-<label class="flex items-center space-x-2 mt-4">
-  <input type="checkbox" required name="aceiteTermo" class="w-4 h-4">
+  <label id="labelAceite" class="flex items-center space-x-2 mt-4 hidden">
+  <input type="checkbox" id="aceiteTermo" name="aceiteTermo" class="w-4 h-4">
   <span>Li e concordo com o Termo de Aceite</span>
-</label>
+  </label>
 
 
     <script src="https://unpkg.com/vanilla-masker/build/vanilla-masker.min.js"></script>

@@ -17,6 +17,15 @@ function mostrarDescricaoECampos() {
     document.getElementById('campoNomeFantasia').classList.add('hidden');
     document.getElementById('campoTipoComercio').classList.add('hidden');
 
+    const tiposComTermo = ['ong', 'comercio', 'rural', 'pf'];
+    if (tiposComTermo.includes(valorSelecionado)) {
+        document.getElementById('btnLerTermo').classList.remove('hidden');
+        document.getElementById('labelAceite').classList.remove('hidden');
+    } else {
+        document.getElementById('btnLerTermo').classList.add('hidden');
+        document.getElementById('labelAceite').classList.add('hidden');
+        document.getElementById('aceiteTermo').checked = false;
+    }
     const descricoes = {
         pf: "Pessoa comum que deseja doar alimentos ou produtos como indivíduo.",
         comercio: "Estabelecimentos comerciais ou empresas que fazem doações como pessoa jurídica.",
@@ -25,11 +34,19 @@ function mostrarDescricaoECampos() {
         voluntario: "Pessoas que ajudam em áreas como Transporte e TI.",
         admin: "Equipe de gestão ou desenvolvimento do sistema com acesso administrativo."
     };
+    
 
     const valorSelecionado = select.value;
     if (descricoes[valorSelecionado]) {
         descricao.textContent = descricoes[valorSelecionado];
         container.classList.remove("hidden");
+        function openModal() {
+        document.getElementById('modalTermo').classList.remove('hidden');
+        }
+
+       function closeModal(id) {
+       document.getElementById(id).classList.add('hidden');
+       }
 
         switch (valorSelecionado) {
             case 'pf':
@@ -143,13 +160,14 @@ form.addEventListener('submit', async (e) => {
   erros.innerHTML = "";
   const tipoUsuario = document.getElementById("tipoUsuario").value;
 
-   if (tipoUsuario === "ong" || tipoUsuario === "comercio") {
-    if (!termoAceito) {
-      e.preventDefault();
-      modalTermo.classList.remove('hidden');
-      return;
+    const tiposComTermo = ['ong', 'comercio', 'rural', 'pf'];
+    if (tiposComTermo.includes(tipoUsuario)) {
+        const aceiteTermo = document.getElementById('aceiteTermo').checked;
+        if (!aceiteTermo) {
+            erros.innerHTML = '<p class="text-red-600 text-sm">Você deve aceitar o termo para continuar.</p>';
+            return;
+        }
     }
-  }
 
 
   const senha = document.getElementById("password").value;
@@ -359,10 +377,6 @@ const closeBtn = modal.querySelector('button.absolute');
 
 okBtn.addEventListener('click', closeHandler);
 closeBtn.addEventListener('click', closeHandler);
-}
-
-function closeModal(modalId) {
-document.getElementById(modalId).classList.add('hidden');
 }
 
 
