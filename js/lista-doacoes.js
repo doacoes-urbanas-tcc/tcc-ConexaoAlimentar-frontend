@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     const doacoes = await response.json();
+    console.log("Doações recebidas:", doacoes);
     const doacoesFiltradas = doacoes.filter(d => d.status === "PENDENTE");
 
     if (doacoesFiltradas.length === 0) {
