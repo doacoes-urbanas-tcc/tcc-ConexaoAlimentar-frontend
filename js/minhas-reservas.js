@@ -121,13 +121,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       </div>
       <div class="flex flex-wrap gap-2 mt-2">
         ${podeVerQRCode 
-          ? `<a href="/pages/reserva/qrcode.html?id=${reserva.id}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
+          ? `<a href="/pages/reserva/qrcode.html?id=${reserva.id}" class="flex-1 bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition text-center">
               Ver QR Code
             </a>`
           : `<span class="flex-1 text-sm text-red-600 font-semibold text-center">QR Code expirado</span>`
         }
         <a href="/pages/administrador/perfil-usuario.html?id=${reserva.doadorId}&tipo=${reserva.doadorTipo}" 
-           claslass="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
+           class="flex-1 bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition text-center">
           Ver Perfil do doador
         </a>
       </div>
