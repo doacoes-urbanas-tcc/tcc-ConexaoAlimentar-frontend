@@ -3,10 +3,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const avaliadoId = urlParams.get("avaliadoId");
   const token = localStorage.getItem("token");
+  const usuarioIdLogado = localStorage.getItem("usuarioId");
 
-  if (!avaliadoId) {
-    lista.innerHTML = "<p class='text-gray-700'>ID do usuário não especificado.</p>";
-    return;
+   if (!avaliadoId) {
+    if (!usuarioIdLogado) {
+      lista.innerHTML = "<p class='text-gray-700'>ID do usuário não encontrado para carregar avaliações.</p>";
+      return;
+    }
+    avaliadoId = usuarioIdLogado;
   }
 
   try {
