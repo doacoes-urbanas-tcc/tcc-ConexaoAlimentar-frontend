@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let idUsuarioParaAcao = null;
   let tipoAcao = ""; 
   if (!id || !tipo) {
-    showError("Dados inválidos na URL", )
+    showError("Dados inválidos na URL");
     return;
   }
 
@@ -99,50 +99,55 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
     }
 
-        if (isAdmin) {
-          const botoesDiv = document.getElementById("botoesAdmin");
-          botoesDiv.classList.remove("hidden");
+    const verAvaliacoesDiv = document.getElementById("verAvaliacoes");
+    verAvaliacoesDiv.classList.remove("hidden");
+    const btnAvaliacoes = document.getElementById("btnAvaliacoes");
+    btnAvaliacoes.onclick = () => {
+      window.location.href = `avaliacoes.html?id=${id}&tipo=${tipo}`;
+    };
 
-          const btnAprovar = document.getElementById("btnAprovar");
-          const btnReprovar = document.getElementById("btnReprovar");
-          const btnDesativar = document.getElementById("btnDesativar");
+    if (isAdmin) {
+      const botoesDiv = document.getElementById("botoesAdmin");
+      botoesDiv.classList.remove("hidden");
 
-          btnAprovar.classList.add("hidden");
-          btnReprovar.classList.add("hidden");
-          btnDesativar.classList.add("hidden");
+      const btnAprovar = document.getElementById("btnAprovar");
+      const btnReprovar = document.getElementById("btnReprovar");
+      const btnDesativar = document.getElementById("btnDesativar");
 
-          if (dados.status === "ATIVO") {
-            btnDesativar.classList.remove("hidden");
-            btnDesativar.onclick = () => {
-            tipoAcao = "desativar";
-            idUsuarioParaAcao = dados.id;
-            document.getElementById("inputJustificativa").value = "";
-            document.getElementById("modalJustificativa").classList.remove("hidden");
-         };
-         } else {
-            btnAprovar.classList.remove("hidden");
-            btnReprovar.classList.remove("hidden");
+      btnAprovar.classList.add("hidden");
+      btnReprovar.classList.add("hidden");
+      btnDesativar.classList.add("hidden");
 
-            btnAprovar.onclick = () => atualizarStatus("aprovar");
-
-            btnReprovar.onclick = () => {
-            tipoAcao = "reprovar";
-            idUsuarioParaAcao = dados.id;
-            document.getElementById("inputJustificativa").value = "";
-            document.getElementById("modalJustificativa").classList.remove("hidden");
+      if (dados.status === "ATIVO") {
+        btnDesativar.classList.remove("hidden");
+        btnDesativar.onclick = () => {
+          tipoAcao = "desativar";
+          idUsuarioParaAcao = dados.id;
+          document.getElementById("inputJustificativa").value = "";
+          document.getElementById("modalJustificativa").classList.remove("hidden");
         };
-       }
-       }
-        const btnVoltar = document.getElementById("btnVoltar");
-       if (btnVoltar) {
+      } else {
+        btnAprovar.classList.remove("hidden");
+        btnReprovar.classList.remove("hidden");
+
+        btnAprovar.onclick = () => atualizarStatus("aprovar");
+
+        btnReprovar.onclick = () => {
+          tipoAcao = "reprovar";
+          idUsuarioParaAcao = dados.id;
+          document.getElementById("inputJustificativa").value = "";
+          document.getElementById("modalJustificativa").classList.remove("hidden");
+        };
+      }
+    }
+
+    const btnVoltar = document.getElementById("btnVoltar");
+    if (btnVoltar) {
       btnVoltar.addEventListener("click", () => {
         window.location.href = `usuarios-${origem}.html?page=${pagina}`;
       });
     }
   }
-
-      
-      
 
   function atualizarStatus(acao) {
     fetch(`https://conexao-alimentar.onrender.com/admin/usuarios/${acao}/${id}`, {
@@ -166,48 +171,47 @@ document.addEventListener("DOMContentLoaded", () => {
     idUsuarioParaAcao = null;
     tipoAcao = "";
   });
-document.getElementById("btnConfirmarReprovar").addEventListener("click", () => {
-  const justificativa = document.getElementById("inputJustificativa").value.trim();
-  if (!justificativa) {
-    showError("Por favor, insira a justificativa.");
-    return;
-  }
+  document.getElementById("btnConfirmarReprovar").addEventListener("click", () => {
+    const justificativa = document.getElementById("inputJustificativa").value.trim();
+    if (!justificativa) {
+      showError("Por favor, insira a justificativa.");
+      return;
+    }
 
-  if (!tipoAcao || !idUsuarioParaAcao) {
-    showError("Ação inválida.");
-    return;
-  }
+    if (!tipoAcao || !idUsuarioParaAcao) {
+      showError("Ação inválida.");
+      return;
+    }
 
-  const url = `https://conexao-alimentar.onrender.com/admin/usuarios/${tipoAcao}/${idUsuarioParaAcao}`;
-  const payload = { motivo: justificativa };
+    const url = `https://conexao-alimentar.onrender.com/admin/usuarios/${tipoAcao}/${idUsuarioParaAcao}`;
+    const payload = { motivo: justificativa };
 
-
-  fetch(url, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify(payload)
-  })
-    .then(async res => {
-      if (res.ok) {
-        showSuccess(`Usuário ${tipoAcao} com sucesso.`);
-        window.location.href = tipoAcao === "reprovar" ? "usuarios-pendentes.html" : "usuarios-ativos.html";
-      } else {
-        const msg = await res.text();
-        showError(`Erro ao atualizar status.\nCódigo: ${res.status}\n${msg}`);
-      }
+    fetch(url, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(payload)
     })
-    .catch(err => {
-      showError("Erro ao se comunicar com o servidor.");
-    })
-    .finally(() => {
-      document.getElementById("modalJustificativa").classList.add("hidden");
-      tipoAcao = "";
-      idUsuarioParaAcao = null;
-    });
-});
+      .then(async res => {
+        if (res.ok) {
+          showSuccess(`Usuário ${tipoAcao} com sucesso.`);
+          window.location.href = tipoAcao === "reprovar" ? "usuarios-pendentes.html" : "usuarios-ativos.html";
+        } else {
+          const msg = await res.text();
+          showError(`Erro ao atualizar status.\nCódigo: ${res.status}\n${msg}`);
+        }
+      })
+      .catch(() => {
+        showError("Erro ao se comunicar com o servidor.");
+      })
+      .finally(() => {
+        document.getElementById("modalJustificativa").classList.add("hidden");
+        tipoAcao = "";
+        idUsuarioParaAcao = null;
+      });
+  });
 });
 
 function showSuccess(message, onOk = null) {
@@ -257,7 +261,3 @@ function showError(message, onOk = null) {
   okBtn.addEventListener('click', closeHandler);
   closeBtn.addEventListener('click', closeHandler);
 }
-
-
-
-
