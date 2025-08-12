@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("token");
 
   const podeContinuar = await verificarAvaliacoesPendentes(token);
-
   if (!podeContinuar) return;
 
   const lista = document.getElementById("lista-doacoes");
@@ -15,9 +14,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
 
+    if (!response.ok) {
+      showError(`Erro ao carregar doações: ${response.status}`);
+      return;
+    }
+
     const doacoes = await response.json();
     console.log("Doações recebidas:", doacoes);
-    const doacoesFiltradas = doacoes.filter(d => d.status === "PENDENTE");
+
+    const doacoesFiltradas = doacoes.filter(d => d.status?.toUpperCase() === "PENDENTE");
 
     if (doacoesFiltradas.length === 0) {
       lista.innerHTML = "<p class='text-gray-600'>Nenhuma doação aguardando retirada no momento.</p>";
@@ -37,7 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           <div class="text-sm text-gray-600 space-y-1 mt-2">
             <p><strong>Categoria:</strong> ${doacao.categoria}</p>
-            <p><strong>Quantidade:</strong> ${doacao.quantidade} ${doacao.unidadeMedida.toLowerCase()}</p>
+            <p><strong>Quantidade:</strong> ${doacao.quantidade} ${doacao.unidadeMedida?.toLowerCase()}</p>
             <p><strong>Validade:</strong> ${formatarData(doacao.dataValidade)}</p>
             <p><strong>Doador:</strong> ${doacao.doadorNome}</p>
             <p><strong>Status:</strong> ${doacao.status.replace("_", " ")}</p>
@@ -60,7 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   } catch (err) {
     console.error("Erro ao carregar doações:", err);
-    document.getElementById("lista-doacoes").innerHTML = "<p class='text-red-600'>Erro ao carregar doações.</p>";
+    lista.innerHTML = "<p class='text-red-600'>Erro ao carregar doações.</p>";
   }
 });
 
@@ -77,16 +82,17 @@ async function verificarAvaliacoesPendentes(token) {
     const reservasPendentes = await response.json();
 
     if (reservasPendentes.length > 0) {
-      const reserva = reservasPendentes[0]; 
-      showError("Você precisa concluir suas avaliações antes de continuar.");
-      window.location.href = `/pages/avaliacao/avaliacao.html?idReserva=${reserva.id}`;
+      const reserva = reservasPendentes[0];
+      showError("Você precisa concluir suas avaliações antes de continuar.", () => {
+        window.location.href = `/pages/avaliacao/avaliacao.html?idReserva=${reserva.id}`;
+      });
       return false;
     }
 
     return true;
   } catch (err) {
-    showError("Erro ao verificar avaliações pendentes:", err);
-    return true; 
+    showError("Erro ao verificar avaliações pendentes");
+    return true;
   }
 }
 
@@ -100,53 +106,42 @@ function formatarDataHora(dataHora) {
 
 function showSuccess(message, onOk = null) {
   const modal = document.getElementById('modalSuccess');
+  if (!modal) {
+    alert(message);
+    if (typeof onOk === 'function') onOk();
+    return;
+  }
+
   const msgEl = document.getElementById('mensagem-sucesso');
   msgEl.textContent = message;
   modal.classList.remove('hidden');
 
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
+  const okBtn = document.getElementById('fechar-modal-sucesso');
+  if (okBtn) {
+    okBtn.onclick = () => {
+      modal.classList.add('hidden');
+      if (typeof onOk === 'function') onOk();
+    };
   }
-
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-green-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
 }
 
 function showError(message, onOk = null) {
   const modal = document.getElementById('modalError');
+  if (!modal) {
+    alert(message);
+    if (typeof onOk === 'function') onOk();
+    return;
+  }
+
   const msgEl = document.getElementById('mensagem-erro');
   msgEl.textContent = message;
   modal.classList.remove('hidden');
 
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
+  const okBtn = document.getElementById('fechar-modal-erro');
+  if (okBtn) {
+    okBtn.onclick = () => {
+      modal.classList.add('hidden');
+      if (typeof onOk === 'function') onOk();
+    };
   }
-
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-red-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
 }
-
-
-
-
-
