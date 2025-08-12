@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
     verAvaliacoesDiv.classList.remove("hidden");
     const btnAvaliacoes = document.getElementById("btnAvaliacoes");
     btnAvaliacoes.onclick = () => {
-      window.location.href = `avaliacao/avaliacoes-usuario.html?id=${id}&tipo=${tipo}`;
+      window.location.href = `../avaliacao/avaliacoes-usuario.html?id=${id}&tipo=${tipo}`;
     };
 
     if (isAdmin) {
