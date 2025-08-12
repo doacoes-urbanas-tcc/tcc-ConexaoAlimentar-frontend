@@ -143,6 +143,15 @@ form.addEventListener('submit', async (e) => {
   erros.innerHTML = "";
   const tipoUsuario = document.getElementById("tipoUsuario").value;
 
+   if (tipoUsuario === "ong" || tipoUsuario === "comercio") {
+    if (!termoAceito) {
+      e.preventDefault();
+      modalTermo.classList.remove('hidden');
+      return;
+    }
+  }
+
+
   const senha = document.getElementById("password").value;
   const confirmar = document.getElementById("confirmPassword").value;
   if (senha !== confirmar) {
@@ -270,6 +279,12 @@ form.addEventListener('submit', async (e) => {
       if (contentType.includes("application/json")) {
         resBody = await response.json();
       }
+      form.addEventListener('submit', (e) => {
+      if (!termoAceito) {
+      e.preventDefault();
+      modalTermo.classList.remove('hidden');
+      }
+      }, true);
       localStorage.setItem("usuarioId", resBody?.id);
       showSuccess("Cadastro realizado com sucesso!", () => {
         if (dados.setorAtuacao === "TI") {
@@ -349,5 +364,28 @@ closeBtn.addEventListener('click', closeHandler);
 function closeModal(modalId) {
 document.getElementById(modalId).classList.add('hidden');
 }
+const modalTermo = document.getElementById('modalTermo');
+const btnFecharTermo = document.getElementById('fecharTermo');
+const btnConfirmarTermo = document.getElementById('confirmarTermo');
+const checkAceiteTermo = document.getElementById('aceiteTermo');
+
+let termoAceito = false;
+
+btnFecharTermo.addEventListener('click', () => {
+  modalTermo.classList.add('hidden');
+});
+
+btnConfirmarTermo.addEventListener('click', () => {
+  if (!checkAceiteTermo.checked) {
+    alert('Você deve aceitar os termos para continuar.');
+    return;
+  }
+  termoAceito = true;
+  modalTermo.classList.add('hidden');
+  form.submit(); 
+});
+
+
+
 
 

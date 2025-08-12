@@ -307,6 +307,45 @@
   </div>
   </div>
 
+<button type="button" onclick="openModal()" class="text-blue-600 underline">
+  Ler Termo de Aceite
+</button>
+
+<div id="modalTermo" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-lg w-11/12 md:w-2/3 lg:w-1/2 p-6 relative max-h-[90vh] overflow-y-auto">
+    <button onclick="closeModal()" class="absolute top-3 right-3 text-gray-500 hover:text-black text-2xl">&times;</button>
+
+    <h2 class="text-2xl font-bold mb-4">Termo de Aceite para Doação de Alimentos</h2>
+    <p class="text-justify whitespace-pre-line">
+O(a) Doador(a) ou a ONG declara ter lido, compreendido e concordado com as disposições da Lei nº 14.016, de 23 de junho de 2020, que dispõe sobre o combate ao desperdício de alimentos e a doação de excedentes para o consumo humano, bem como com as orientações da ANVISA contidas no Guia para Doação de Alimentos com Segurança Sanitária.
+
+1. Das Condições de Doação
+- Estarem dentro do prazo de validade e em condições de conservação conforme instruções do fabricante;
+- Não ter comprometida a integridade e segurança sanitária, mesmo que a embalagem esteja danificada;
+- Manter as propriedades nutricionais e sanitárias do alimento, ainda que esteticamente comprometido.
+
+2. Da Gratuidade e Alcance da Lei
+A doação será realizada de modo gratuito e desinteressado, sem nenhum tipo de contrapartida financeira.
+A Lei 14.016/2020 aplica-se a empresas, supermercados, cooperativas, restaurantes, lanchonetes, hospitais e similares que fornecem alimentos prontos.
+
+3. Da Responsabilidade Civil, Administrativa e Penal
+O(a) Doador(a) ou a ONG não será responsabilizado(a) nas esferas civil ou administrativa por eventual dano causado pelos alimentos doados, desde que não haja dolo.
+Na esfera penal, somente responderá se houver intenção específica de causar dano à saúde, identificada no momento da entrega ao intermediário ou beneficiário final.
+
+4. Das Boas Práticas Sanitárias
+Compromete-se a Parte a seguir as orientações do Guia da ANVISA para Doação de Alimentos com Segurança Sanitária, incluindo armazenamento, transporte, condições higiênicas e registro dos itens doados.
+
+5. Disposições Finais
+Este termo visa assegurar transparência e conformidade legal, colaborando para o combate ao desperdício e para a doação de alimentos aptos ao consumo humano. Ao marcar a caixa de aceite no sistema, a Parte afirma estar ciente e de acordo com todas as condições acima.
+    </p>
+  </div>
+</div>
+
+<label class="flex items-center space-x-2 mt-4">
+  <input type="checkbox" required name="aceiteTermo" class="w-4 h-4">
+  <span>Li e concordo com o Termo de Aceite</span>
+</label>
+
 
     <script src="https://unpkg.com/vanilla-masker/build/vanilla-masker.min.js"></script>
     <script src="/js/cadastro.js" defer></script>
