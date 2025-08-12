@@ -7,45 +7,44 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
-<body class="flex h-screen bg-gray-100 text-gray-900">
 
+<body class="flex h-screen text-gray-900">
 
-  <aside class="fixed top-0 left-0 h-screen w-64 bg-white shadow flex flex-col z-20">
-  <div class="p-6 border-b">
-    <img src="/assets/Conexão Alimentar Logo PNG (1).png" class="w-40 mx-auto mb-4" alt="Logo" />
-    <h1 class="text-center text-xl font-bold text-red-600">Administrador</h1>
-  </div>
-  <nav class="flex-1 p-4 space-y-1 text-sm overflow-y-auto">
-    <a href="dashboard-administrador.html" class="flex items-center p-2 rounded hover:bg-red-100 font-medium text-gray-800 hover:text-red-600 transition">
-      <span class="material-symbols-outlined mr-2 text-gray-800 hover:text-red-600">dashboard</span> Dashboard
-    </a>
-    <a href="usuarios-ativos.html" class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700 hover:text-red-600 transition">
-      <span class="material-symbols-outlined mr-2 text-gray-700 hover:text-red-600">verified</span> Ativos
-    </a>
-    <a href="usuarios-pendentes.html" class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700 hover:text-red-600 transition">
-      <span class="material-symbols-outlined mr-2 text-gray-700 hover:text-red-600">schedule</span> Pendentes
-    </a>
-    <a href="usuarios-reprovados.html" class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700 hover:text-red-600 transition">
-      <span class="material-symbols-outlined mr-2 text-gray-700 hover:text-red-600">block</span> Reprovados
-    </a>
-    <a href="cadastrar-task.html" class="flex items-center p-2 rounded bg-red-100 font-semibold text-red-700 cursor-default">
-      <span class="material-symbols-outlined mr-2 text-red-700">task_alt</span> Task TI
-    </a>
-    <a href="listar-tasks.html" class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700 hover:text-red-600 transition">
-    <span class="material-symbols-outlined mr-2">assignment</span> Tasks Abertas
-    </a>
-    <a href="relatorio-admin.html" class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700 hover:text-red-600 transition">
-      <span class="material-symbols-outlined mr-2 text-gray-700 hover:text-red-600">analytics</span> Relatórios
-    </a>
-  </nav>
-  <div class="p-4 border-t">
-    <button onclick="logout()" class="w-full text-left text-red-600 hover:underline font-semibold">Sair</button>
-  </div>
-</aside>
+  <aside class="w-64 bg-white shadow h-full flex flex-col">
+    <div class="p-6 border-b">
+      <img src="/assets/Conexão Alimentar Logo PNG (1).png" class="w-40 mx-auto mb-4" alt="Logo" />
+      <h1 class="text-center text-xl font-bold text-red-600">Administrador</h1>
+    </div>
+    <nav class="flex-1 p-4 space-y-1 text-sm">
+      <a href="dashboard-administrador.html" class="flex items-center p-2 rounded hover:bg-red-100 font-medium text-red-600">
+        <span class="material-symbols-outlined mr-2">dashboard</span> Dashboard
+      </a>
+      <a href="usuarios-ativos.html" class="flex items-center p-2 rounded hover:bg-gray-100">
+        <span class="material-symbols-outlined mr-2">verified</span> Ativos
+      </a>
+      <a href="usuarios-pendentes.html" class="flex items-center p-2 rounded hover:bg-gray-100">
+        <span class="material-symbols-outlined mr-2">schedule</span> Pendentes
+      </a>
+      <a href="usuarios-reprovados.html" class="flex items-center p-2 rounded hover:bg-gray-100">
+        <span class="material-symbols-outlined mr-2">block</span> Reprovados
+      </a>
+      <a href="cadastrar-task.html" class="flex items-center p-2 rounded hover:bg-gray-100">
+        <span class="material-symbols-outlined mr-2">task_alt</span> Task TI
+      </a>
+      <a href="listar-tasks.html" class="flex items-center p-2 rounded hover:bg-gray-100">
+      <span class="material-symbols-outlined mr-2">assignment</span> Tasks Abertas
+      </a>
+      <a href="relatorio-admin.html" class="flex items-center p-2 rounded hover:bg-gray-100">
+        <span class="material-symbols-outlined mr-2">analytics</span> Relatórios
+      </a>
+    </nav>
+    <div class="p-4 border-t">
+      <button onclick="logout()" class="w-full text-left text-red-600 hover:underline font-semibold">Sair</button>
+    </div>
+  </aside>
 
-
-    <div class="flex flex-col flex-1 ml-64 min-h-screen">
-    <main lass="flex-grow bg-white rounded-lg shadow p-6 sm:p-8 m-4">
+  <div class="flex flex-col flex-1 min-h-screen">
+    <main class="flex-grow bg-gray-100 p-6 overflow-auto">
       <h2 class="text-3xl font-bold mb-6 text-gray-800">Cadastrar Task de TI</h2>
       <form id="form-task" class="space-y-6 flex flex-col flex-grow">
         <div>
@@ -80,7 +79,7 @@
       </form>
     </main>
 
-     <footer class="border-t text-gray-800 py-6">
+    <footer class="text-gray-800 py-6">
       <div class="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
         <span class="font-semibold">&copy; 2025 Conexão Alimentar</span>
         <div class="flex space-x-4 mt-2 md:mt-0">
@@ -90,32 +89,6 @@
         </div>
       </div>
     </footer>
-
-  </div>
-  <div id="modalError" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-      <div class="bg-white rounded-xl shadow-lg w-80 p-6 text-center">
-      <div class="text-red-500 mb-3">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93" />
-      </svg>
-    </div>
-    <h2 class="text-xl font-bold text-gray-800 mb-2">Erro</h2>
-    <p id="mensagem-erro" class="text-gray-600 mb-4"></p>
-    <button id="fechar-modal-erro" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all">Fechar</button>
-  </div>
-  </div>
-
-    <div id="modalSuccess" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-  <div class="bg-white rounded-xl shadow-lg w-80 p-6 text-center">
-    <div class="text-green-500 mb-3">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-      </svg>
-    </div>
-    <h2 class="text-xl font-bold text-gray-800 mb-2">Sucesso</h2>
-    <p id="mensagem-sucesso" class="text-gray-600 mb-4"></p>
-    <button id="fechar-modal-sucesso" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-all">Fechar</button>
-  </div>
   </div>
 
 

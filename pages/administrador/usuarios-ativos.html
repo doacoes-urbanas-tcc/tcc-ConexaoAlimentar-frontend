@@ -9,18 +9,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
 
-<body class="bg-gray-100 min-h-screen flex flex-col">
-  <div class="flex flex-1">
+
+<body class="flex h-screen text-gray-900">
+
   <aside class="w-64 bg-white shadow h-full flex flex-col">
     <div class="p-6 border-b">
       <img src="/assets/Conexão Alimentar Logo PNG (1).png" class="w-40 mx-auto mb-4" alt="Logo" />
       <h1 class="text-center text-xl font-bold text-red-600">Administrador</h1>
     </div>
     <nav class="flex-1 p-4 space-y-1 text-sm">
-      <a href="dashboard-administrador.html" class="flex items-center p-2 rounded hover:bg-red-100 font-medium">
+      <a href="dashboard-administrador.html" class="flex items-center p-2 rounded hover:bg-red-100">
         <span class="material-symbols-outlined mr-2">dashboard</span> Dashboard
       </a>
-      <a href="usuarios-ativos.html" class="flex items-center p-2 rounded bg-red-100 font-semibold text-red-700">
+      <a href="usuarios-ativos.html" class="flex items-center p-2 rounded hover:bg-gray-100 font-medium text-red-600">
         <span class="material-symbols-outlined mr-2">verified</span> Ativos
       </a>
       <a href="usuarios-pendentes.html" class="flex items-center p-2 rounded hover:bg-gray-100">
@@ -33,7 +34,7 @@
         <span class="material-symbols-outlined mr-2">task_alt</span> Task TI
       </a>
       <a href="listar-tasks.html" class="flex items-center p-2 rounded hover:bg-gray-100">
-        <span class="material-symbols-outlined mr-2">assignment</span> Tasks Abertas
+      <span class="material-symbols-outlined mr-2">assignment</span> Tasks Abertas
       </a>
       <a href="relatorio-admin.html" class="flex items-center p-2 rounded hover:bg-gray-100">
         <span class="material-symbols-outlined mr-2">analytics</span> Relatórios
@@ -44,8 +45,9 @@
     </div>
   </aside>
 
-  <main class="flex-1 pt-10 px-4 sm:px-6 md:px-8">
-    <div class="bg-white py-8 px-6 shadow-xl rounded-xl border border-gray-200 max-w-7xl mx-auto">
+  <div class="flex flex-col flex-1 min-h-screen">
+    <main class="flex-grow bg-gray-100 p-6 overflow-auto">
+       <div class="bg-white py-8 px-6 shadow-xl rounded-xl border border-gray-200 max-w-7xl mx-auto">
       <span class="text-red-600 text-sm font-semibold cursor-pointer hover:underline"
         onclick="window.location.href='administrador.html'">&larr; Voltar</span>
 
@@ -80,9 +82,10 @@
         </table>
       </div>
     </div>
-  </main>
-</div>
-  <footer class="bg-white border-t text-gray-800 py-6">
+
+    </main>
+
+    <footer class="text-gray-800 py-6">
       <div class="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
         <span class="font-semibold">&copy; 2025 Conexão Alimentar</span>
         <div class="flex space-x-4 mt-2 md:mt-0">
@@ -92,8 +95,9 @@
         </div>
       </div>
     </footer>
+  </div>
 
   <script src="/js/usuarios-ativos.js"></script>
 </body>
-
 </html>
+

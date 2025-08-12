@@ -44,7 +44,7 @@ document.getElementById("form-alterar-senha").addEventListener("submit", async (
 
 function showSuccess(message, onOk = null) {
   const modal = document.getElementById('modalSuccess');
-  const msgEl = document.getElementById('modalSuccessMessage');
+  const msgEl = document.getElementById('mensagem-sucesso');
   msgEl.textContent = message;
   modal.classList.remove('hidden');
 
@@ -68,7 +68,7 @@ function showSuccess(message, onOk = null) {
 
 function showError(message, onOk = null) {
   const modal = document.getElementById('modalError');
-  const msgEl = document.getElementById('modalErrorMessage');
+  const msgEl = document.getElementById('mensagem-erro');
   msgEl.textContent = message;
   modal.classList.remove('hidden');
 
