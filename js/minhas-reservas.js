@@ -104,29 +104,33 @@ document.addEventListener("DOMContentLoaded", async () => {
       const unidade = reserva.unidadeMedida ? reserva.unidadeMedida.toLowerCase() : "";
 
       card.innerHTML = `
-        <img src="${reserva.urlImagem || ''}" alt="${reserva.nomeAlimento || 'Imagem'}" class="w-full md:w-48 h-48 object-cover rounded-lg">
-        <div class="flex-1">
-          <h3 class="text-xl font-semibold text-red-600">${reserva.nomeAlimento || 'Item'}</h3>
-          <p class="text-gray-700 mb-2">${reserva.descricao || "Sem descrição."}</p>
-          <div class="text-sm text-gray-600 space-y-1 mb-3">
-            <p><strong>Categoria:</strong> ${reserva.categoria || "-"}</p>
-            <p><strong>Quantidade:</strong> ${reserva.quantidade ?? '-'} ${unidade}</p>
-            <p><strong>Validade:</strong> ${validadeFormatada}</p>
-            <p><strong>Doador:</strong> ${reserva.doadorNome || "-"}</p>
-            <p><strong>Status:</strong> ${status}</p>
-            <p><strong>Expira em:</strong> ${expiraEmExibicao}</p>
-          </div>
-          <div class="flex flex-col md:flex-row gap-2 mt-2">
-            ${podeVerQRCode 
-              ? `<a href="/pages/reserva/qrcode.html?id=${reserva.id}" class="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-center">Ver QR Code</a>`
-              : `<span class="text-sm text-red-600 font-semibold">QR Code expirado</span>`
-            }
-            <a href="/pages/administrador/perfil-usuario.html?id=${reserva.doadorId}&tipo=${reserva.doadorTipo}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
-              Ver Perfil do doador
-            </a>
-          </div>
+  <div class="flex flex-col md:flex-row gap-4">
+    <img src="${reserva.urlImagem || ''}" alt="${reserva.nomeAlimento || 'Imagem'}" class="w-full md:w-48 h-48 object-cover rounded-lg flex-shrink-0">
+    <div class="flex flex-col justify-between flex-1">
+      <div>
+        <h3 class="text-xl font-semibold text-red-600">${reserva.nomeAlimento || 'Item'}</h3>
+        <p class="text-gray-700 mb-3">${reserva.descricao || "Sem descrição."}</p>
+        <div class="text-sm text-gray-600 space-y-1">
+          <p><strong>Categoria:</strong> ${reserva.categoria || "-"}</p>
+          <p><strong>Quantidade:</strong> ${reserva.quantidade ?? '-'} ${unidade}</p>
+          <p><strong>Validade:</strong> ${validadeFormatada}</p>
+          <p><strong>Doador:</strong> ${reserva.doadorNome || "-"}</p>
+          <p><strong>Status:</strong> ${status}</p>
+          <p><strong>Expira em:</strong> ${expiraEmExibicao}</p>
         </div>
-      `;
+      </div>
+      <div class="mt-4 flex flex-col md:flex-row gap-3">
+        ${podeVerQRCode 
+          ? `<a href="/pages/reserva/qrcode.html?id=${reserva.id}" class="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-center">Ver QR Code</a>`
+          : `<span class="text-sm text-red-600 font-semibold self-center md:self-start">QR Code expirado</span>`
+        }
+        <a href="/pages/administrador/perfil-usuario.html?id=${reserva.doadorId}&tipo=${reserva.doadorTipo}" class="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-center">
+          Ver Perfil do doador
+        </a>
+      </div>
+    </div>
+  </div>
+`;
 
       lista.appendChild(card);
     });

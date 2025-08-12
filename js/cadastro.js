@@ -364,28 +364,5 @@ closeBtn.addEventListener('click', closeHandler);
 function closeModal(modalId) {
 document.getElementById(modalId).classList.add('hidden');
 }
-const modalTermo = document.getElementById('modalTermo');
-const btnFecharTermo = document.getElementById('fecharTermo');
-const btnConfirmarTermo = document.getElementById('confirmarTermo');
-const checkAceiteTermo = document.getElementById('aceiteTermo');
-
-let termoAceito = false;
-
-btnFecharTermo.addEventListener('click', () => {
-  modalTermo.classList.add('hidden');
-});
-
-btnConfirmarTermo.addEventListener('click', () => {
-  if (!checkAceiteTermo.checked) {
-    alert('Você deve aceitar os termos para continuar.');
-    return;
-  }
-  termoAceito = true;
-  modalTermo.classList.add('hidden');
-  form.submit(); 
-});
-
-
-
 
 
