@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               ? `<a href="/pages/reserva/qrcode.html?id=${reserva.id}" class="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-center">Ver QR Code</a>`
               : `<span class="text-sm text-red-600 font-semibold">QR Code expirado</span>`
             }
-            <a href="/pages/administrador/perfil-usuario.html?id=${reserva.doadorId}&tipo=${reserva.doadorTipo}" class="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-center">
+            <a href="/pages/administrador/perfil-usuario.html?id=${reserva.doadorId}&tipo=${reserva.doadorTipo}"  class="flex-1 bg-red-500 text-white px-4 py-3 rounded hover:bg-red-600 transition text-center whitespace-nowrap">
               Ver Perfil do doador
             </a>
           </div>
