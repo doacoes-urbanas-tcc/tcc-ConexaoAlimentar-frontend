@@ -103,9 +103,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       const expiraEmExibicao = dataExpiracaoMs ? formatarDataHora(dataExpiracaoMs) : "Não disponível";
       const unidade = reserva.unidadeMedida ? reserva.unidadeMedida.toLowerCase() : "";
 
-      card.innerHTML = `
-  <div class="flex flex-col md:flex-row gap-4">
-    <img src="${reserva.urlImagem || ''}" alt="${reserva.nomeAlimento || 'Imagem'}" class="w-full md:w-48 h-48 object-cover rounded-lg flex-shrink-0">
+       card.innerHTML = `
+  <div class="flex flex-col md:flex-row gap-4 bg-white rounded-lg shadow-md p-4">
+    <img src="${reserva.urlImagem || ''}" alt="${reserva.nomeAlimento || 'Imagem'}" class="w-full md:w-40 h-40 object-cover rounded-lg flex-shrink-0">
     <div class="flex flex-col justify-between flex-1">
       <div>
         <h3 class="text-xl font-semibold text-red-600">${reserva.nomeAlimento || 'Item'}</h3>
@@ -120,21 +120,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         </div>
       </div>
       <div class="mt-4 flex flex-col md:flex-row gap-3 items-center">
-  ${podeVerQRCode 
-    ? `<a href="/pages/reserva/qrcode.html?id=${reserva.id}" class="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-center">
-        Ver QR Code
-      </a>`
-    : `<span class="text-sm text-red-600 font-semibold mr-auto">QR Code expirado</span>`
-  }
-  <a href="/pages/administrador/perfil-usuario.html?id=${reserva.doadorId}&tipo=${reserva.doadorTipo}" 
-     class="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-center">
-    Ver Perfil do doador
-  </a>
+        ${podeVerQRCode 
+          ? `<a href="/pages/reserva/qrcode.html?id=${reserva.id}" class="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-center">
+              Ver QR Code
+            </a>`
+          : `<span class="flex-1 text-sm text-red-600 font-semibold text-center">QR Code expirado</span>`
+        }
+        <a href="/pages/administrador/perfil-usuario.html?id=${reserva.doadorId}&tipo=${reserva.doadorTipo}" 
+           class="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-center">
+          Ver Perfil do doador
+        </a>
       </div>
     </div>
   </div>
 `;
-
       lista.appendChild(card);
     });
 
