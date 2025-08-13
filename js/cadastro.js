@@ -9,6 +9,7 @@ function mostrarDescricaoECampos() {
     const descricao = document.getElementById('descricaoUsuario');
     const container = document.getElementById('descricaoContainer');
 
+
     document.getElementById('campoCPF').classList.add('hidden');
     document.getElementById('campoCNPJ').classList.add('hidden');
     document.getElementById('campoDescricaoONG').classList.add('hidden');
@@ -18,15 +19,8 @@ function mostrarDescricaoECampos() {
     document.getElementById('campoNomeFantasia').classList.add('hidden');
     document.getElementById('campoTipoComercio').classList.add('hidden');
 
-    const tiposComTermo = ['ong', 'comercio', 'rural', 'pf'];
-    if (tiposComTermo.includes(valorSelecionado)) {
-        document.getElementById('btnLerTermo').classList.remove('hidden');
-        document.getElementById('labelAceite').classList.remove('hidden');
-    } else {
-        document.getElementById('btnLerTermo').classList.add('hidden');
-        document.getElementById('labelAceite').classList.add('hidden');
-        document.getElementById('aceiteTermo').checked = false;
-    }
+
+
     const descricoes = {
         pf: "Pessoa comum que deseja doar alimentos ou produtos como indivíduo.",
         comercio: "Estabelecimentos comerciais ou empresas que fazem doações como pessoa jurídica.",
@@ -68,6 +62,8 @@ function mostrarDescricaoECampos() {
         container.classList.add("hidden");
     }
 }
+document.getElementById('aceiteTermo').addEventListener('change', mostrarDescricaoECampos);
+
 
 function limparFormulario() {
     document.getElementById('endereco').value = '';
@@ -151,15 +147,6 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
   erros.innerHTML = "";
   const tipoUsuario = document.getElementById("tipoUsuario").value;
-
-    const tiposComTermo = ['ong', 'comercio', 'rural', 'pf'];
-    if (tiposComTermo.includes(tipoUsuario)) {
-        const aceiteTermo = document.getElementById('aceiteTermo').checked;
-        if (!aceiteTermo) {
-            erros.innerHTML = '<p class="text-red-600 text-sm">Você deve aceitar o termo para continuar.</p>';
-            return;
-        }
-    }
 
 
   const senha = document.getElementById("password").value;
@@ -381,5 +368,85 @@ function closeModal(id) {
   modal.classList.add('hidden');
   modal.classList.remove('flex');
 }
+document.addEventListener('DOMContentLoaded', function () {
+  const TIPOS_COM_TERMO = ['ong', 'comercio', 'rural', "pf"];
 
+  const selectTipo   = document.getElementById('tipoUsuario');
+  const btnLerTermo  = document.getElementById('btnLerTermo');
+  const btnCadastro  = document.getElementById('btnCadastro');
+  const modal        = document.getElementById('modalTermo');
+  const fecharModal  = document.getElementById('fecharModal');
+  const conteudo     = document.getElementById('conteudoTermo');
+  const labelAceite  = document.getElementById('labelAceite');
+  const aceite       = document.getElementById('aceiteTermo');
 
+  if (!selectTipo || !btnLerTermo || !btnCadastro || !modal || !fecharModal || !conteudo || !labelAceite || !aceite) {
+    console.warn('[Termos] Algum elemento obrigatório não foi encontrado. Verifique os IDs no HTML.');
+    return;
+  }
+
+  function enableSubmit() {
+    btnCadastro.disabled = false;
+    btnCadastro.classList.remove('bg-red-300', 'cursor-not-allowed');
+    btnCadastro.classList.add('bg-red-700', 'hover:bg-red-800');
+  }
+  function disableSubmit() {
+    btnCadastro.disabled = true;
+    btnCadastro.classList.add('bg-red-300', 'cursor-not-allowed');
+    btnCadastro.classList.remove('bg-red-700', 'hover:bg-red-800');
+  }
+
+  function resetModal() {
+    conteudo.scrollTop = 0;
+    aceite.checked = false;
+    labelAceite.classList.add('hidden');
+  }
+
+  function openModal() {
+    resetModal();
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+
+    if (TIPOS_COM_TERMO.includes((selectTipo.value || '').toLowerCase().trim())) {
+      disableSubmit();
+    }
+  }
+  function closeModal() {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+
+  function aplicarRegraTipo() {
+    const valor = (selectTipo.value || '').toLowerCase().trim();
+
+    if (TIPOS_COM_TERMO.includes(valor)) {
+      btnLerTermo.classList.remove('hidden'); 
+      disableSubmit();                         
+      resetModal();                           
+    } else {
+      btnLerTermo.classList.add('hidden');    
+      enableSubmit();                           
+      resetModal();
+      closeModal();
+    }
+  }
+
+  btnLerTermo.addEventListener('click', openModal);
+  fecharModal.addEventListener('click', closeModal);
+
+  conteudo.addEventListener('scroll', function () {
+    const chegouNoFim = this.scrollTop + this.clientHeight >= this.scrollHeight - 10;
+    if (chegouNoFim) {
+      labelAceite.classList.remove('hidden');
+    }
+  });
+
+  aceite.addEventListener('change', function () {
+    if (this.checked) enableSubmit();
+    else disableSubmit();
+  });
+
+  selectTipo.addEventListener('change', aplicarRegraTipo);
+
+  aplicarRegraTipo();
+});
