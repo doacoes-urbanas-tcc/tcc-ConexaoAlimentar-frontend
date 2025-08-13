@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       window.location.href = `/pages/reserva/qrcode.html?id=${idDoacao}`;
     } catch {
       showError("Erro ao tentar reservar a doação.");
+      return;
     }
   });
 });
