@@ -306,11 +306,13 @@ form.addEventListener('submit', async (e) => {
       }
       console.error("Erro ao cadastrar:", mensagem);
       showError("Erro ao cadastrar usuário: " + (mensagem || "tente novamente."));
+      return;
     }
 
   } catch (err) {
     console.error("Falha no envio:", err);
     showError("Erro inesperado no envio do formulário. " + (err?.message || ""));
+    return;
   }
 });
 
