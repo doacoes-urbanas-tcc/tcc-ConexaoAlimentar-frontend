@@ -7,39 +7,37 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
 
   <nav class="bg-red-500 shadow text-white">
-  <div class="container mx-auto px-4 py-5 flex justify-between items-center flex-wrap">
-    <div class="flex items-center gap-2">
-      <img class="h-10" src="/assets/conexão (1).png" alt="Logo" />
-      <span class="font-bold text-lg">Conexão Alimentar</span>
+    <div class="container mx-auto px-4 py-5 flex justify-between items-center flex-wrap">
+      <div class="flex items-center gap-2">
+        <img class="h-10" src="/assets/conexão (1).png" alt="Logo" />
+        <span class="font-bold text-lg">Conexão Alimentar</span>
+      </div>
+
+      <div class="md:hidden text-3xl">
+        <ion-icon name="menu-outline" onclick="Menu(this)"></ion-icon>
+      </div>
+
+      <ul id="menu" class="hidden w-full md:flex md:items-center md:space-x-6 md:w-auto mt-4 md:mt-0 flex-col md:flex-row space-y-4 md:space-y-0">
+        <li><a href="/pages/doador/home-page-voluntario.html" class="text-xl block hover:text-white">Início</a></li>
+        <li class="mt-2 md:mt-0">
+          <button id="btnLogout" class="bg-white text-red-500 px-4 py-1 rounded-full font-semibold hover:bg-red-100 transition-colors">
+            Sair
+          </button>
+        </li>
+      </ul>
     </div>
+  </nav>
 
-    <div class="md:hidden text-3xl">
-      <ion-icon name="menu-outline" onclick="Menu(this)"></ion-icon>
-    </div>
+  <main class="container mx-auto px-4 py-8 flex-grow">
+    <h1 class="text-3xl font-bold text-gray-800 mb-4">
+      Olá, <span id="nome" class="text-red-600 font-semibold"></span> 👋
+    </h1>
 
-    <ul id="menu" class="hidden w-full md:flex md:items-center md:space-x-6 md:w-auto mt-4 md:mt-0">
-      <li><a href="/pages/doador/home-page-voluntario.html" class="text-xl block hover:text-white">Início</a></li>
-
-      <li class="relative group">
-
-      <li class="mt-2 md:mt-0">
-        <button id="btnLogout" class="bg-white text-red-500 px-4 py-1 rounded-full font-semibold hover:bg-red-100 transition-colors">
-        Sair
-      </button>
-
-      </li>
-    </ul>
-  </div>
-</nav>
-<main class="container mx-auto px-4 py-8 flex-grow">
-  <h1 class="text-3xl font-bold text-gray-800 mb-4">Olá, <span id="nome" class="text-red-600 font-semibold"></span> 👋</h1>
-
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
   <div class="bg-white shadow p-4 rounded-lg text-center">
     <h2 class="text-xl font-bold text-red-600" id="totalDoacoes">--</h2>
     <p class="text-gray-600">Doações Realizadas</p>
@@ -54,46 +52,36 @@
   </div>
 </div>
 
- <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-  <a href="/pages/doacao/cadastro-doacao.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
-    <ion-icon name="add-circle-outline" class="text-3xl mb-2"></ion-icon>
-    <h2 class="text-xl font-bold">Cadastrar Doação</h2>
-    <p class="mt-1 text-sm">Registre uma nova doação de alimentos</p>
-  </a>
-
-  <a href="/pages/doacao/minhas-doacoes.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
-    <ion-icon name="clipboard-outline" class="text-3xl mb-2"></ion-icon>
-    <h2 class="text-xl font-bold">Minhas Doações</h2>
-    <p class="mt-1 text-sm">Acompanhe todas as doações realizadas</p>
-  </a>
-
-  <a href="/pages/avaliacao/avaliacoes-usuario.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
-    <ion-icon name="star-outline" class="text-3xl mb-2"></ion-icon>
-    <h2 class="text-xl font-bold">Avaliações Recebidas</h2>
-    <p class="mt-1 text-sm">Veja o que as ONGs dizem sobre você</p>
-  </a>
-
-  <a href="/pages/reserva/validar-qr.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
-    <ion-icon name="qr-code-outline" class="text-3xl mb-2"></ion-icon>
-    <h2 class="text-xl font-bold">Validar QR Code</h2>
-    <p class="mt-1 text-sm">Escaneie o QR Code da ONG para confirmar a retirada</p>
-  </a>
-</div>
 
 
-<div class="mt-12">
-  <div class="bg-white text-gray-800 border border-gray-300 p-6 rounded-xl shadow text-center transition">
-    <ion-icon name="cube-outline" class="text-3xl mb-2"></ion-icon>
-    <h3 class="text-xl font-bold mb-2">Última Doação</h3>
-    <p class="text-sm" id="dataUltimaDoacao">Data: </p>
-    <p class="text-sm" id="itensUltimaDoacao">Itens: </p>
-    <p class="text-sm" id="destinoUltimaDoacao">Destino: </p>
-    <p class="text-sm" id="statusUltimaDoacao">Status: </p>
-  </div>
-</div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <a href="/pages/doacao/cadastro-doacao.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
+        <ion-icon name="add-circle-outline" class="text-3xl mb-2"></ion-icon>
+        <h2 class="text-xl font-bold">Cadastrar Doação</h2>
+        <p class="mt-1 text-sm">Registre uma nova doação de alimentos</p>
+      </a>
 
-</main>
+      <a href="/pages/doacao/minhas-doacoes.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
+        <ion-icon name="clipboard-outline" class="text-3xl mb-2"></ion-icon>
+        <h2 class="text-xl font-bold">Minhas Doações</h2>
+        <p class="mt-1 text-sm">Acompanhe todas as doações realizadas</p>
+      </a>
 
+      <a href="/pages/avaliacao/avaliacoes-usuario.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
+        <ion-icon name="star-outline" class="text-3xl mb-2"></ion-icon>
+        <h2 class="text-xl font-bold">Avaliações Recebidas</h2>
+        <p class="mt-1 text-sm">Veja o que as ONGs dizem sobre você</p>
+      </a>
+
+      <a href="/pages/reserva/validar-qr.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
+        <ion-icon name="qr-code-outline" class="text-3xl mb-2"></ion-icon>
+        <h2 class="text-xl font-bold">Validar QR Code</h2>
+        <p class="mt-1 text-sm">Escaneie o QR Code da ONG para confirmar a retirada</p>
+      </a>
+    </div>
+
+
+  </main>
 
   <footer class="text-gray-800 mt-16 py-6">
     <div class="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
@@ -105,31 +93,21 @@
       </div>
     </div>
   </footer>
-  <div id="modalError" class="fixed inset-0 flex  bg-opacity-50 hidden items-center justify-center z-50">
-      <div class="bg-white rounded-xl shadow-lg w-80 p-6 text-center">
-      <div class="text-red-500 mb-3">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93" />
-      </svg>
-    </div>
-    <h2 class="text-xl font-bold text-gray-800 mb-2">Erro</h2>
-    <p id="mensagem-erro" class="text-gray-600 mb-4"></p>
-    <button id="fechar-modal-erro" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all">Fechar</button>
-  </div>
-  </div>
 
-    <div id="modalSuccess" class="fixed inset-0 flex bg-black bg-opacity-50 hidden items-center justify-center z-50">
-  <div class="bg-white rounded-xl shadow-lg w-80 p-6 text-center">
-    <div class="text-green-500 mb-3">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-      </svg>
-    </div>
-    <h2 class="text-xl font-bold text-gray-800 mb-2">Sucesso</h2>
-    <p id="mensagem-sucesso" class="text-gray-600 mb-4"></p>
-    <button id="fechar-modal-sucesso" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-all">Fechar</button>
-  </div>
-  </div>
+  <script>
+    function Menu(e) {
+      const menu = document.getElementById("menu");
+      if (menu.classList.contains("hidden")) {
+        e.name = "close-outline";
+        menu.classList.remove("hidden");
+        menu.classList.add("flex");
+      } else {
+        e.name = "menu-outline";
+        menu.classList.remove("flex");
+        menu.classList.add("hidden");
+      }
+    }
+  </script>
   <script src="/js/home-page-doador.js"></script>
 </body>
 </html>

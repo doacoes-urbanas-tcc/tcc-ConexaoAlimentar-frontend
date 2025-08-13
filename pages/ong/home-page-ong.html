@@ -17,12 +17,24 @@
         <span class="font-bold text-lg">Conexão Alimentar</span>
       </div>
 
-      <div class="md:hidden text-3xl">
+      <div class="md:hidden text-3xl cursor-pointer">
         <ion-icon name="menu-outline" onclick="Menu(this)"></ion-icon>
       </div>
 
       <ul id="menu" class="hidden w-full md:flex md:items-center md:space-x-6 md:w-auto mt-4 md:mt-0">
-        <li><a href="#" class="text-xl block hover:text-white">Início</a></li>
+        <li><a href="#" class="text-xl block hover:text-gray-200">Início</a></li>
+
+        <li class="relative group">
+          <button onclick="toggleDropdown()" class="text-xl block hover:text-gray-200 focus:outline-none">
+            Doações
+          </button>
+          <ul id="dropdownDoacao" class="absolute z-10 hidden bg-white text-black rounded shadow-lg mt-2 w-48">
+            <li><a href="/pages/doacao/lista-doacoes.html" class="block px-4 py-2 hover:bg-red-100">Listar Doações</a></li>
+            <li><a href="/pages/reserva/minhas-reservas.html" class="block px-4 py-2 hover:bg-red-100">Minhas Reservas</a></li>
+            <li><a href="/pages/avaliacao/avaliacoes-usuario.html" class="block px-4 py-2 hover:bg-red-100">Avaliações Recebidas</a></li>
+          </ul>
+        </li>
+
         <li class="mt-2 md:mt-0">
           <button id="btnLogout" class="bg-white text-red-500 px-4 py-1 rounded-full font-semibold hover:bg-red-100 transition-colors">
             Sair
@@ -36,8 +48,7 @@
     <h1 class="text-3xl font-bold text-gray-800 mb-4">
       Olá, <span id="nome" class="text-red-600 font-semibold"></span> 👋
     </h1>
-
-    <div class="max-w-xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+      <div class="max-w-xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
   <div class="bg-white shadow p-6 rounded-xl text-center">
     <h2 class="text-3xl font-bold text-red-600" id="totalDoacoesRecebidas">--</h2>
     <p class="text-gray-700 mt-2">Doações Recebidas</p>
@@ -48,28 +59,25 @@
   </div>
    </div>
 
-
     <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-       <a href="/pages/doacao/lista-doacoes.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
-         <ion-icon name="list-outline" class="text-4xl mb-3"></ion-icon>
-         <h2 class="text-xl font-bold">Listar Doações Disponíveis</h2>
-         <p class="mt-2 text-sm">Veja as doações aguardando retirada</p>
-        </a>
+      <a href="/pages/doacao/lista-doacoes.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
+        <ion-icon name="list-outline" class="text-4xl mb-3"></ion-icon>
+        <h2 class="text-xl font-bold">Listar Doações Disponíveis</h2>
+        <p class="mt-2 text-sm">Veja as doações aguardando retirada</p>
+      </a>
 
-        <a href="/pages/reserva/minhas-reservas.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
-           <ion-icon name="basket-outline" class="text-4xl mb-3"></ion-icon>
-           <h2 class="text-xl font-bold">Minhas Reservas</h2>
-           <p class="mt-2 text-sm">Acompanhe suas reservas confirmadas</p>
-        </a>
+      <a href="/pages/reserva/minhas-reservas.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
+        <ion-icon name="basket-outline" class="text-4xl mb-3"></ion-icon>
+        <h2 class="text-xl font-bold">Minhas Reservas</h2>
+        <p class="mt-2 text-sm">Acompanhe suas reservas confirmadas</p>
+      </a>
 
-        <a href="/pages/avaliacao/avaliacoes-usuario.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
-          <ion-icon name="star-outline" class="text-4xl mb-3"></ion-icon>
-          <h2 class="text-xl font-bold">Avaliações Recebidas</h2>
-          <p class="mt-2 text-sm">Veja o que os doadores dizem sobre sua ONG</p>
-        </a>
+      <a href="/pages/avaliacao/avaliacoes-usuario.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
+        <ion-icon name="star-outline" class="text-4xl mb-3"></ion-icon>
+        <h2 class="text-xl font-bold">Avaliações Recebidas</h2>
+        <p class="mt-2 text-sm">Veja o que os doadores dizem sobre sua ONG</p>
+      </a>
     </div>
-
-
   </main>
 
   <footer class="text-gray-800 mt-16 py-6">
@@ -82,6 +90,16 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    function Menu(e) {
+      const menu = document.getElementById("menu");
+      menu.classList.toggle("hidden");
+    }
+    function toggleDropdown() {
+      document.getElementById("dropdownDoacao").classList.toggle("hidden");
+    }
+  </script>
 
   <script src="/js/home-page-ong.js"></script>
 </body>

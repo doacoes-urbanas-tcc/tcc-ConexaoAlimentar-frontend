@@ -16,17 +16,13 @@
         <img class="h-10" src="/assets/conexão (1).png" alt="Logo" />
         <span class="font-bold text-lg">Conexão Alimentar</span>
       </div>
-
       <div class="md:hidden text-3xl">
         <ion-icon name="menu-outline" onclick="Menu(this)"></ion-icon>
       </div>
-
       <ul id="menu" class="hidden w-full md:flex md:items-center md:space-x-6 md:w-auto mt-4 md:mt-0">
         <li><a href="/pages/voluntario/home-page-voluntario.html" class="text-xl block hover:text-white">Início</a></li>
         <li class="mt-2 md:mt-0">
-          <button id="btnLogout" class="bg-white text-red-500 px-4 py-1 rounded-full font-semibold hover:bg-red-100 transition-colors">
-            Sair
-          </button>
+          <button id="btnLogout" class="bg-white text-red-500 px-4 py-1 rounded-full font-semibold hover:bg-red-100 transition-colors">Sair</button>
         </li>
       </ul>
     </div>
@@ -36,7 +32,6 @@
     <h1 class="text-2xl font-semibold text-gray-800 mb-6">
       Bem-vindo(a), <span id="nomeUsuario" class="text-red-600"></span>!
     </h1>
-
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
       <div class="bg-white shadow p-6 rounded-lg text-center">
         <ion-icon name="checkmark-done-circle" class="text-red-500 text-4xl mb-2"></ion-icon>
@@ -54,24 +49,20 @@
         <p class="text-gray-600">Média de Avaliações</p>
       </div>
     </div>
-       <div class="flex justify-center">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-             <a href="/pages/voluntario/listar-tasks-recomendadas.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
-               <ion-icon name="add-circle-outline" class="text-3xl mb-2"></ion-icon>
-               <h2 class="text-xl font-bold">Tasks Recomendadas</h2>
-                <p class="mt-1 text-sm">Lista das tasks de acordo com sua stack</p>
-            </a>
-
-            <a href="/pages/voluntario/minhas-respostas.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
-                <ion-icon name="clipboard-outline" class="text-3xl mb-2"></ion-icon>
-                <h2 class="text-xl font-bold">Minhas Respostas</h2>
-            <p class="mt-1 text-sm">Acompanhe todas as tasks já respondidas por você</p>
-          </a>
-     </div>
-     </div>
-
-
-
+    <div class="flex justify-center">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+        <a href="/pages/voluntario/listar-tasks-recomendadas.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
+          <ion-icon name="add-circle-outline" class="text-3xl mb-2"></ion-icon>
+          <h2 class="text-xl font-bold">Tasks Recomendadas</h2>
+          <p class="mt-1 text-sm">Lista das tasks de acordo com sua stack</p>
+        </a>
+        <a href="/pages/voluntario/minhas-respostas.html" class="bg-red-600 hover:bg-red-500 text-white p-6 rounded-xl shadow-lg text-center transition">
+          <ion-icon name="clipboard-outline" class="text-3xl mb-2"></ion-icon>
+          <h2 class="text-xl font-bold">Minhas Respostas</h2>
+          <p class="mt-1 text-sm">Acompanhe todas as tasks já respondidas por você</p>
+        </a>
+      </div>
+    </div>
   </main>
 
   <footer class="text-gray-800 mt-16 py-6">
@@ -84,30 +75,31 @@
       </div>
     </div>
   </footer>
+
   <div id="modalError" class="fixed inset-0 flex bg-opacity-50 hidden items-center justify-center z-50">
-      <div class="bg-white rounded-xl shadow-lg w-80 p-6 text-center">
+    <div class="bg-white rounded-xl shadow-lg w-80 p-6 text-center">
       <div class="text-red-500 mb-3">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93" />
-      </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93" />
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold text-gray-800 mb-2">Erro</h2>
+      <p id="mensagem-erro" class="text-gray-600 mb-4"></p>
+      <button id="fechar-modal-erro" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all">Fechar</button>
     </div>
-    <h2 class="text-xl font-bold text-gray-800 mb-2">Erro</h2>
-    <p id="mensagem-erro" class="text-gray-600 mb-4"></p>
-    <button id="fechar-modal-erro" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all">Fechar</button>
-  </div>
   </div>
 
-    <div id="modalSuccess" class="fixed inset-0 flex bg-opacity-50 hidden items-center justify-center z-50">
-  <div class="bg-white rounded-xl shadow-lg w-80 p-6 text-center">
-    <div class="text-green-500 mb-3">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-      </svg>
+  <div id="modalSuccess" class="fixed inset-0 flex bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-lg w-80 p-6 text-center">
+      <div class="text-green-500 mb-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold text-gray-800 mb-2">Sucesso</h2>
+      <p id="mensagem-sucesso" class="text-gray-600 mb-4"></p>
+      <button id="fechar-modal-sucesso" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-all">Fechar</button>
     </div>
-    <h2 class="text-xl font-bold text-gray-800 mb-2">Sucesso</h2>
-    <p id="mensagem-sucesso" class="text-gray-600 mb-4"></p>
-    <button id="fechar-modal-sucesso" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-all">Fechar</button>
-  </div>
   </div>
 
   <script src="/js/home-page-voluntario.js"></script>

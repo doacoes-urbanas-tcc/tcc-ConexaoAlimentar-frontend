@@ -64,19 +64,22 @@ document.addEventListener("DOMContentLoaded", async () => {
       const tipoUsuario = localStorage.getItem("tipoUsuario")?.toLowerCase();
 
       switch (tipoUsuario) {
-        case "ong":
+        case "ONG":
         window.location.href = "/pages/ong/home-page-ong.html";
         break;
-      case "comercio":
+      case "COMERCIO":
         window.location.href = "/pages/doador/home-page-doador.html";
         break;
-      case "voluntario":
+      case "VOLUNTARIO":
         window.location.href = "/pages/voluntario/home-page-voluntario.html";
         break;
-      case "admin":
+      case "ADMIN":
         window.location.href = "/pages/administrador/dashboard-administrador.html";
         break;
-      case "produtor-rural":
+      case "PRODUTOR_RURAL":
+        window.location.href = "/pages/doador/home-page-doador.html";
+        break;
+      case "PESSOA_FISICA":
         window.location.href = "/pages/doador/home-page-doador.html";
         break;
 

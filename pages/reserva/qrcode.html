@@ -16,15 +16,28 @@
         <img class="h-10" src="/assets/conexão (1).png" alt="Logo" />
         <span class="font-bold text-lg">Conexão Alimentar</span>
       </div>
+
       <div class="md:hidden text-3xl">
         <ion-icon name="menu-outline" onclick="Menu(this)"></ion-icon>
       </div>
+
       <ul id="menu" class="hidden flex-col w-full md:flex md:flex-row md:items-center md:space-x-6 md:w-auto mt-4 md:mt-0 space-y-4 md:space-y-0">
         <li><a href="#" class="text-xl block hover:text-white">Início</a></li>
-        <li><a href="/pages/doacao/lista-doacoes.html" class="text-xl block hover:text-white">Lista de Doações</a></li>
-        <li><a href="/pages/reserva/minhas-reservas.html" class="text-xl block hover:text-white">Minhas Reservas</a></li>
+
+        <li class="relative group">
+          <button onclick="toggleDropdown()" class="text-xl block hover:text-gray-200 focus:outline-none">
+            Doações
+          </button>
+          <ul id="dropdownDoacao" class="absolute z-10 hidden bg-white text-black rounded shadow-lg mt-2 w-48">
+            <li><a href="/pages/doacao/lista-doacoes.html" class="block px-4 py-2 hover:bg-red-100">Lista de Doações</a></li>
+            <li><a href="/pages/reserva/minhas-reservas.html" class="block px-4 py-2 hover:bg-red-100">Minhas Reservas</a></li>
+          </ul>
+        </li>
+
         <li>
-          <button onclick="logout()" class="bg-white text-red-500 px-4 py-1 rounded-full font-semibold hover:bg-red-100 transition-colors">Sair</button>
+          <button onclick="logout()" class="bg-white text-red-500 px-4 py-1 rounded-full font-semibold hover:bg-red-100 transition-colors">
+            Sair
+          </button>
         </li>
       </ul>
     </div>
@@ -37,7 +50,7 @@
       Expira em: <span id="tempo-expiracao" class="font-semibold">--:--</span>
     </div>
     <div class="w-full bg-gray-300 rounded-full h-3">
-      <div id="progress-bar"  class="bg-red-500 h-3 rounded-full transition-all duration-1000" style="width: 100%"></div>
+      <div id="progress-bar" class="bg-red-500 h-3 rounded-full transition-all duration-1000" style="width: 100%"></div>
     </div>
   </div>
 
@@ -66,36 +79,48 @@
       }
     }
 
+    function toggleDropdown() {
+      document.getElementById("dropdownDoacao").classList.toggle("hidden");
+    }
+
+    window.addEventListener("click", function(e) {
+      if (!e.target.closest(".relative")) {
+        document.getElementById("dropdownDoacao").classList.add("hidden");
+      }
+    });
+
     function logout() {
       localStorage.removeItem("token");
       window.location.href = "/pages/cadastrologin/login.html";
     }
   </script>
+
   <div id="modalError" class="fixed inset-0 flex bg-black bg-opacity-50 hidden items-center justify-center z-50">
-      <div class="bg-white rounded-xl shadow-lg w-80 p-6 text-center">
+    <div class="bg-white rounded-xl shadow-lg w-80 p-6 text-center">
       <div class="text-red-500 mb-3">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93" />
-      </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93" />
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold text-gray-800 mb-2">Erro</h2>
+      <p id="mensagem-erro" class="text-gray-600 mb-4"></p>
+      <button id="fechar-modal-erro" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all">Fechar</button>
     </div>
-    <h2 class="text-xl font-bold text-gray-800 mb-2">Erro</h2>
-    <p id="mensagem-erro" class="text-gray-600 mb-4"></p>
-    <button id="fechar-modal-erro" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all">Fechar</button>
-  </div>
   </div>
 
-    <div id="modalSuccess" class="fixed inset-0 flex bg-black bg-opacity-50 hidden items-center justify-center z-50">
-  <div class="bg-white rounded-xl shadow-lg w-80 p-6 text-center">
-    <div class="text-green-500 mb-3">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-      </svg>
+  <div id="modalSuccess" class="fixed inset-0 flex bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-lg w-80 p-6 text-center">
+      <div class="text-green-500 mb-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold text-gray-800 mb-2">Sucesso</h2>
+      <p id="mensagem-sucesso" class="text-gray-600 mb-4"></p>
+      <button id="fechar-modal-sucesso" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-all">Fechar</button>
     </div>
-    <h2 class="text-xl font-bold text-gray-800 mb-2">Sucesso</h2>
-    <p id="mensagem-sucesso" class="text-gray-600 mb-4"></p>
-    <button id="fechar-modal-sucesso" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-all">Fechar</button>
   </div>
-  </div>
+
   <script src="/js/qrcode.js"></script>
 </body>
 </html>

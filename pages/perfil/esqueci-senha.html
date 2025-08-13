@@ -6,7 +6,7 @@
   <title>Esqueci minha senha</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen px-4">
   <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
     <h2 class="text-2xl font-bold mb-4 text-red-600 text-center">Esqueci minha senha</h2>
     <p class="text-gray-600 text-center mb-6">Informe seu e-mail para receber um link de redefinição de senha.</p>
@@ -18,31 +18,33 @@
     </form>
     <p id="mensagem" class="mt-4 text-sm text-center text-gray-600"></p>
   </div>
-</body>
-<div id="modalError" class="fixed inset-0 flex bg-black bg-opacity-50 hidden items-center justify-center z-50">
-      <div class="bg-white rounded-xl shadow-lg w-80 p-6 text-center">
+
+  <div id="modalError" class="fixed inset-0 flex bg-black bg-opacity-50 hidden items-center justify-center z-50 px-4">
+    <div class="bg-white rounded-xl shadow-lg w-full max-w-xs p-6 text-center">
       <div class="text-red-500 mb-3">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93" />
-      </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93" />
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold text-gray-800 mb-2">Erro</h2>
+      <p id="mensagem-erro" class="text-gray-600 mb-4"></p>
+      <button id="fechar-modal-erro" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg w-full transition">Fechar</button>
     </div>
-    <h2 class="text-xl font-bold text-gray-800 mb-2">Erro</h2>
-    <p id="mensagem-erro" class="text-gray-600 mb-4"></p>
-    <button id="fechar-modal-erro" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all">Fechar</button>
-  </div>
   </div>
 
-    <div id="modalSuccess" class="fixed inset-0 flex bg-black bg-opacity-50 hidden items-center justify-center z-50">
-  <div class="bg-white rounded-xl shadow-lg w-80 p-6 text-center">
-    <div class="text-green-500 mb-3">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-      </svg>
+  <div id="modalSuccess" class="fixed inset-0 flex bg-black bg-opacity-50 hidden items-center justify-center z-50 px-4">
+    <div class="bg-white rounded-xl shadow-lg w-full max-w-xs p-6 text-center">
+      <div class="text-green-500 mb-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold text-gray-800 mb-2">Sucesso</h2>
+      <p id="mensagem-sucesso" class="text-gray-600 mb-4"></p>
+      <button id="fechar-modal-sucesso" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg w-full transition">Fechar</button>
     </div>
-    <h2 class="text-xl font-bold text-gray-800 mb-2">Sucesso</h2>
-    <p id="mensagem-sucesso" class="text-gray-600 mb-4"></p>
-    <button id="fechar-modal-sucesso" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-all">Fechar</button>
   </div>
-  </div>
-<script src="/js/esqueci-senha.js"></script>
+
+  <script src="/js/esqueci-senha.js"></script>
+</body>
 </html>
