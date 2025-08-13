@@ -224,4 +224,83 @@ document.addEventListener('DOMContentLoaded', () => {
       getEl('longitude').value = pos.coords.longitude;
     }, () => console.warn("Permissão de localização negada."));
   }
+
+  const endpointMap = {
+    pf: "pessoafisica/cadastrar",
+    comercio: "comercio/cadastrar",
+    ong: "ong/cadastrar",
+    rural: "produtor/cadastrar",
+    voluntario: "voluntario/cadastrar",
+    admin: "admin/cadastrar"
+  };
+
+  const form = document.querySelector("form");
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const tipo = getVal("tipoUsuario").toLowerCase();
+    const endpoint = endpointMap[tipo];
+
+    if (!endpoint) {
+      showError("Tipo de usuário inválido ou não selecionado.");
+      return;
+    }
+
+    const dto = {
+      nome: getVal("nome"),
+      email: getVal("email"),
+      senha: getVal("senha"),
+      telefone: getVal("telefone"),
+      cep: getVal("cep"),
+      endereco: getVal("endereco"),
+      bairro: getVal("bairro"),
+      cidade: getVal("cidade"),
+      estado: getVal("estado"),
+      latitude: getVal("latitude"),
+      longitude: getVal("longitude"),
+      tipoUsuario: tipo,
+      cpf: getVal("cpf"),
+      cnpj: getVal("cnpj"),
+      registroRural: getVal("registroRural"),
+      descricaoONG: getVal("descricaoONG"),
+      setorAtuacao: getVal("setorAtuacao"),
+      nomeFantasia: getVal("nomeFantasia"),
+      tipoComercio: getVal("tipoComercio")
+    };
+
+    const formData = new FormData();
+    formData.append("dto", new Blob([JSON.stringify(dto)], { type: "application/json" }));
+
+    const file = safeFile("documentoComprovante");
+    if (file) {
+      formData.append("file", file);
+    }
+
+    const btn = form.querySelector("button[type=submit]");
+    btn.disabled = true;
+    btn.textContent = "Enviando...";
+
+    try {
+      const res = await fetch(`https://conexao-alimentar.onrender.com/${endpoint}`, {
+        method: "POST",
+        body: formData
+      });
+
+      const text = await res.text();
+
+      if (res.ok) {
+        showSuccess("Cadastro realizado com sucesso!", () => {
+          window.location.href = "/pages/login.html";
+        });
+      } else {
+        showError("Erro ao cadastrar: " + text);
+      }
+    } catch (err) {
+      console.error(err);
+      showError("Erro ao cadastrar usuário. Verifique sua conexão.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Cadastrar";
+    }
+  });
 });
