@@ -1,3 +1,7 @@
+const filtroTipo = document.getElementById("filtroTipo");
+const tabela = document.getElementById("tabelaUsuarios");
+const token = localStorage.getItem("token");
+
 const tiposMap = {
   "comercios": "COMERCIO",
   "ongs": "ONG",
@@ -17,186 +21,134 @@ function formatarTipo(tipo) {
   return formatado[tipo] || tipo || "Não informado";
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const filtro = document.getElementById("filtroTipo");
-  const tabela = document.getElementById("tabelaUsuarios");
-  const token = localStorage.getItem("token");
-  let idUsuarioParaReprovar = null;
+filtroTipo.addEventListener("change", carregarUsuariosPendentes);
+document.addEventListener("DOMContentLoaded", carregarUsuariosPendentes);
 
-  filtro.addEventListener("change", () => carregarUsuarios(filtro.value));
+async function carregarUsuariosPendentes() {
+  const tipo = filtroTipo.value;
+  let endpoint = "https://conexao-alimentar.onrender.com/admin/usuarios/pendentes";
 
-  function carregarUsuarios(tipo) {
-    let endpoint = tipo === "todos"
-      ? "/admin/usuarios/pendentes"
-      : `/admin/usuarios/pendentes/${tipo}`;
-
-    fetch(`https://conexao-alimentar.onrender.com${endpoint}`, {
-      headers: { 
-        Authorization: `Bearer ${token}` },
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Erro ao carregar usuários");
-        return res.json();
-      })
-      .then((dados) => preencherTabela(dados))
-      .catch((err) => console.error(err));
+  if (tipo !== "todos") {
+    endpoint += `/${tipo}`;
   }
 
-  function preencherTabela(usuarios) {
-    tabela.innerHTML = "";
-    usuarios.forEach((usuario) => {
-      const tr = document.createElement("tr");
+  console.log("Carregando pendentes de:", tipo, "Endpoint:", endpoint);
 
-      const tdNome = document.createElement("td");
-      tdNome.textContent = usuario.nome || usuario.nomeFantasia || "-";
-      tdNome.className = "px-4 py-2";
-
-      const tdTipo = document.createElement("td");
-      tdTipo.textContent = formatarTipo(usuario.tipoUsuario);
-      tdTipo.className = "px-4 py-2";
-
-      const tdEmail = document.createElement("td");
-      tdEmail.textContent = usuario.email || "-";
-      tdEmail.className = "px-4 py-2";
-
-      const tdAcoes = document.createElement("td");
-      tdAcoes.className = "px-4 py-2 flex flex-wrap gap-2";
-
-      const btnVer = document.createElement("button");
-      btnVer.textContent = "Visualizar";
-      btnVer.className = "bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full text-sm";
-      btnVer.onclick = () => {
-        window.location.href = `/pages/administrador/perfil-usuario.html?id=${usuario.id}&tipo=${usuario.tipoUsuario}`;
-      };
-
-      const btnAprovar = document.createElement("button");
-      btnAprovar.textContent = "Aprovar";
-      btnAprovar.className = "bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-full text-sm";
-      btnAprovar.onclick = () => aprovarUsuario(usuario.id);
-
-      const btnReprovar = document.createElement("button");
-      btnReprovar.textContent = "Reprovar";
-      btnReprovar.className = "bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-full text-sm";
-      btnReprovar.onclick = () => abrirModalReprovacao(usuario.id);
-
-      tdAcoes.append(btnVer, btnAprovar, btnReprovar);
-      tr.append(tdNome, tdTipo, tdEmail, tdAcoes);
-      tabela.appendChild(tr);
+  try {
+    const resposta = await fetch(endpoint, {
+      headers: { Authorization: `Bearer ${token}` }
     });
-  }
 
-  function aprovarUsuario(id) {
-    fetch(`https://conexao-alimentar.onrender.com/admin/usuarios/aprovar/${id}`, {
-      method: "PATCH",
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => {
-        if (res.ok) carregarUsuarios(filtro.value);
-        else showError("Erro ao aprovar usuário");
-      });
-  }
-
-  function abrirModalReprovacao(id) {
-    idUsuarioParaReprovar = id;
-    document.getElementById("inputJustificativa").value = "";
-    document.getElementById("modalJustificativa").classList.remove("hidden");
-  }
-
-  function fecharModal() {
-    document.getElementById("modalJustificativa").classList.add("hidden");
-    idUsuarioParaReprovar = null;
-  }
-
-  document.getElementById("btnConfirmarReprovar").addEventListener("click", () => {
-    const justificativa = document.getElementById("inputJustificativa").value;
-
-    if (!justificativa.trim()) {
-      showError("Por favor, informe a justificativa.");
+    if (!resposta.ok) {
+      console.error("Erro ao carregar usuários pendentes:", resposta.status);
+      tabela.innerHTML = `<tr><td colspan="4" class="px-4 py-4 text-center text-red-500">Erro ao carregar dados.</td></tr>`;
       return;
     }
 
-    fetch(`https://conexao-alimentar.onrender.com/admin/usuarios/reprovar/${idUsuarioParaReprovar}`, {
+    const usuarios = await resposta.json();
+    tabela.innerHTML = "";
+
+    if (usuarios.length === 0) {
+      tabela.innerHTML = `<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Nenhum usuário pendente encontrado.</td></tr>`;
+      return;
+    }
+
+    usuarios.forEach(usuario => {
+      const linha = document.createElement("tr");
+
+      linha.innerHTML = `
+        <td class="px-4 py-3">${usuario.nome || usuario.nomeFantasia || "-"}</td>
+        <td class="px-4 py-3">${formatarTipo(usuario.tipoUsuario)}</td>
+        <td class="px-4 py-3">${usuario.email || "-"}</td>
+        <td class="px-4 py-3 flex flex-wrap gap-2">
+          <button onclick="verPerfil(${usuario.id}, '${usuario.tipoUsuario}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full text-sm">
+            Visualizar
+          </button>
+          <button onclick="aprovarUsuario(${usuario.id})" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-full text-sm">
+            Aprovar
+          </button>
+          <button onclick="abrirModalReprovacao(${usuario.id})" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-full text-sm">
+            Reprovar
+          </button>
+        </td>
+      `;
+
+      tabela.appendChild(linha);
+    });
+
+  } catch (erro) {
+    console.error("Erro:", erro);
+    tabela.innerHTML = `<tr><td colspan="4" class="px-4 py-4 text-center text-red-500">Erro ao carregar dados.</td></tr>`;
+  }
+}
+
+
+function verPerfil(id, tipo) {
+  window.location.href = `/pages/administrador/perfil-usuario.html?id=${id}&tipo=${tipo}`;
+}
+
+async function aprovarUsuario(id) {
+  try {
+    const resposta = await fetch(`https://conexao-alimentar.onrender.com/admin/usuarios/aprovar/${id}`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    if (resposta.ok) {
+      carregarUsuariosPendentes();
+    } else {
+      showError("Erro ao aprovar usuário");
+    }
+  } catch (erro) {
+    console.error("Erro:", erro);
+    showError("Erro ao aprovar usuário");
+  }
+}
+
+let idUsuarioParaReprovar = null;
+
+function abrirModalReprovacao(id) {
+  idUsuarioParaReprovar = id;
+  document.getElementById("inputJustificativa").value = "";
+  document.getElementById("modalJustificativa")?.classList.remove("hidden");
+}
+
+function fecharModal() {
+  document.getElementById("modalJustificativa")?.classList.add("hidden");
+  idUsuarioParaReprovar = null;
+}
+
+document.getElementById("btnConfirmarReprovar")?.addEventListener("click", async () => {
+  const justificativa = document.getElementById("inputJustificativa").value;
+
+  if (!justificativa.trim()) {
+    showError("Por favor, informe a justificativa.");
+    return;
+  }
+
+  try {
+    const resposta = await fetch(`https://conexao-alimentar.onrender.com/admin/usuarios/reprovar/${idUsuarioParaReprovar}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ motivo: justificativa })
-    })
-      .then(res => {
-        if (res.ok) {
-          showSuccess("Usuário reprovado com sucesso!", () => {
-            window.location.href = "/pages/administrador/usuarios-reprovados.html";
-          });
-        } else {
-          return res.text().then(msg => {
-            console.error("Erro:", msg);
-            showError("Erro ao reprovar usuário.");
-          });
-        }
-      })
-      .catch(err => {
-        console.error("Erro de rede:", err);
-        showError("Erro ao se comunicar com o servidor.");
-      })
-      .finally(() => fecharModal());
-  });
+    });
 
-  document.getElementById("btnCancelarReprovar").addEventListener("click", fecharModal);
-
-  carregarUsuarios("todos");
+    if (resposta.ok) {
+      showSuccess("Usuário reprovado com sucesso!", () => {
+        window.location.href = "/pages/administrador/usuarios-reprovados.html";
+      });
+    } else {
+      showError("Erro ao reprovar usuário.");
+    }
+  } catch (erro) {
+    console.error("Erro:", erro);
+    showError("Erro ao se comunicar com o servidor.");
+  } finally {
+    fecharModal();
+  }
 });
 
-
-function showSuccess(message, onOk = null) {
-  const modal = document.getElementById('modalSuccess');
-  const msgEl = document.getElementById('mensagem-sucesso');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
-
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
-
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-green-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
-}
-
-function showError(message, onOk = null) {
-  const modal = document.getElementById('modalError');
-  const msgEl = document.getElementById('mensagem-erro');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
-
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
-
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-red-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
-}
-
-
-
-
-
+document.getElementById("btnCancelarReprovar")?.addEventListener("click", fecharModal);
