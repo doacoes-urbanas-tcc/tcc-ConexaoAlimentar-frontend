@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const infoDoacao = document.getElementById("info-doacao");
   const btnConfirmar = document.getElementById("btnConfirmar");
   const token = localStorage.getItem("token");
-  let doacao = null; // variável para guardar os dados
+  let doacao = null;
 
   if (!idDoacao || !token) {
     showError("ID de doação inválido ou usuário não está logado.");
@@ -14,15 +14,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     const response = await fetch(`https://conexao-alimentar.onrender.com/doacoes/${idDoacao}`, {
-      headers: {
-        "Authorization": "Bearer " + token
-      }
+      headers: { "Authorization": "Bearer " + token }
     });
 
-    if (!response.ok) {
-      throw new Error("Erro ao buscar dados da doação.");
-    }
-
+    if (!response.ok) throw new Error("Erro ao buscar dados da doação.");
     doacao = await response.json();
 
     infoDoacao.innerHTML = `
@@ -39,11 +34,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   btnConfirmar.addEventListener("click", async () => {
-    if (localStorage.getItem("dadosDoacaoParaGeo")) {
-      window.location.href = `/pages/reserva/qrcode.html?id=${idDoacao}`;
-      return;
-    }
-
     try {
       const response = await fetch("https://conexao-alimentar.onrender.com/reservas", {
         method: "POST",
@@ -60,15 +50,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      localStorage.setItem("idDoacaoParaGeo", idDoacao);
-
-
+      localStorage.setItem("dadosDoacao", JSON.stringify(doacao));
       window.location.href = `/pages/reserva/qrcode.html?id=${idDoacao}`;
-    } catch (err) {
+    } catch {
       showError("Erro ao tentar reservar a doação.");
     }
   });
-
 });
 
 function formatarData(data) {
@@ -77,52 +64,4 @@ function formatarData(data) {
 
 function formatarDataHora(dataHora) {
   return new Date(dataHora).toLocaleString("pt-BR");
-}
-
-function showSuccess(message, onOk = null) {
-  const modal = document.getElementById('modalSuccess');
-  const msgEl = document.getElementById('mensagem-sucesso');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
-
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
-
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-green-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
-}
-
-function showError(message, onOk = null) {
-  const modal = document.getElementById('modalError');
-  const msgEl = document.getElementById('mensagem-erro');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
-
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
-
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-red-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
 }

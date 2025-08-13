@@ -18,11 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const res = await fetch(url, opts);
     const text = await res.text();
     let body;
-    try {
-      body = JSON.parse(text);
-    } catch {
-      body = text;
-    }
+    try { body = JSON.parse(text); } catch { body = text; }
     if (!res.ok) throw new Error(body?.msg || res.statusText || "Erro na requisição");
     return body;
   }
@@ -63,9 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           clearInterval(intervaloCountdown);
           redirecionarParaAvaliacao(novaData.reservaId);
         }
-      } catch (e) {
-        console.error(e);
-      }
+      } catch (e) { console.error(e); }
     }, 5000);
 
     intervaloCountdown = setInterval(() => {
@@ -97,30 +91,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error(err);
     qrContainer.innerHTML = `<p class="text-red-600">${err.message}</p>`;
   }
-   const btnVerLocalizacao = document.getElementById("btnVerLocalizacao");
 
-if (btnVerLocalizacao) {
-  btnVerLocalizacao.addEventListener("click", () => {
-    const dados = {
-      nomeAlimento: doacao.nomeAlimento,
-      doadorNome: doacao.doadorNome,
-      endereco: doacao.endereco,
-      quantidade: doacao.quantidade,
-      unidadeMedida: doacao.unidadeMedida,
-      categoria: doacao.categoria,
-      dataValidade: doacao.dataValidade,
-      contato: doacao.contato,
-      descricao: doacao.descricao,
-      lat: doacao.lat,
-      lng: doacao.lng,
-      urlImagem: doacao.urlImagem
-    };
-
-    localStorage.setItem("dadosDoacao", JSON.stringify(dados));
-    window.location.href = "/pages/reserva/geolocalizacao.html";
-  });
-}
-
-
+  const btnVerLocalizacao = document.getElementById("btnVerLocalizacao");
+  if (btnVerLocalizacao) {
+    btnVerLocalizacao.addEventListener("click", () => {
+      const doacao = JSON.parse(localStorage.getItem("dadosDoacao"));
+      if (!doacao) {
+        showError("Não foi possível carregar os dados da doação.");
+        return;
+      }
+      window.location.href = "/pages/reserva/geolocalizacao.html";
+    });
+  }
 });
-
