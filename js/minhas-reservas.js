@@ -81,68 +81,92 @@ document.addEventListener("DOMContentLoaded", async () => {
     lista.innerHTML = "";
 
     reservas.forEach(reserva => {
-      console.log("Reserva recebida:", reserva);
+  console.log("Reserva recebida:", reserva);
 
-      const card = document.createElement("div");
-      card.className = "bg-white rounded-lg shadow p-4 flex flex-col md:flex-row gap-4";
+  const card = document.createElement("div");
+  card.className = "bg-white rounded-lg shadow p-4 flex flex-col md:flex-row gap-4";
 
-      const status = (reserva.status || "").replace(/_/g, " ");
-      const dataExpiracaoMs = reserva.dataExpiracao
-        ? parseDateTimeToMs(reserva.dataExpiracao)
-        : (reserva.dataReserva && reserva.segundosTotais ? (parseDateTimeToMs(reserva.dataReserva) + (reserva.segundosTotais * 1000)) : null);
+  const status = (reserva.status || "").replace(/_/g, " ");
+  const dataExpiracaoMs = reserva.dataExpiracao
+    ? parseDateTimeToMs(reserva.dataExpiracao)
+    : (reserva.dataReserva && reserva.segundosTotais ? (parseDateTimeToMs(reserva.dataReserva) + (reserva.segundosTotais * 1000)) : null);
 
-      const agoraMs = Date.now();
+  const agoraMs = Date.now();
 
-      const podeVerPeloBackend = typeof reserva.qrCodeAtivo === "boolean" ? reserva.qrCodeAtivo : null;
+  const podeVerPeloBackend = typeof reserva.qrCodeAtivo === "boolean" ? reserva.qrCodeAtivo : null;
 
-      const podeVerQRCode = (podeVerPeloBackend !== null)
-        ? (reserva.status === "RESERVADA" && podeVerPeloBackend)
-        : (reserva.status === "RESERVADA" && dataExpiracaoMs !== null && agoraMs < dataExpiracaoMs);
+  const podeVerQRCode = (podeVerPeloBackend !== null)
+    ? (reserva.status === "RESERVADA" && podeVerPeloBackend)
+    : (reserva.status === "RESERVADA" && dataExpiracaoMs !== null && agoraMs < dataExpiracaoMs);
 
-      const validadeFormatada = reserva.dataValidade ? formatarData(reserva.dataValidade) : "Não disponível";
-      const expiraEmExibicao = dataExpiracaoMs ? formatarDataHora(dataExpiracaoMs) : "Não disponível";
-      const unidade = reserva.unidadeMedida ? reserva.unidadeMedida.toLowerCase() : "";
+  const validadeFormatada = reserva.dataValidade ? formatarData(reserva.dataValidade) : "Não disponível";
+  const expiraEmExibicao = dataExpiracaoMs ? formatarDataHora(dataExpiracaoMs) : "Não disponível";
+  const unidade = reserva.unidadeMedida ? reserva.unidadeMedida.toLowerCase() : "";
 
-        card.innerHTML = `
-  <div class="flex flex-col h-full bg-white rounded-lg shadow p-4">
-    <img src="${reserva.urlImagem || ''}" alt="${reserva.nomeAlimento || 'Imagem'}" 
-         class="w-full h-40 object-contain rounded-md mb-3">
+  const idDoacao = reserva.doacaoId ?? reserva.idDoacao ?? reserva.doacao?.id;
 
-    <div class="flex flex-col flex-grow justify-between">
-      <div>
-        <h3 class="text-lg font-semibold text-red-600 mb-1">${reserva.nomeAlimento || 'Item'}</h3>
-        <p class="text-gray-700 text-sm mb-3">${reserva.descricao || "Sem descrição."}</p>
-        
-        <div class="text-sm text-gray-600 space-y-1">
-          <p><strong>Categoria:</strong> ${reserva.categoria || "-"}</p>
-          <p><strong>Quantidade:</strong> ${reserva.quantidade ?? '-'} ${unidade}</p>
-          <p><strong>Validade:</strong> ${validadeFormatada}</p>
-          <p><strong>Doador:</strong> ${reserva.doadorNome || "-"}</p>
-          <p><strong>Status:</strong> ${status}</p>
-          <p><strong>Expira em:</strong> ${expiraEmExibicao}</p>
+  card.innerHTML = `
+    <div class="flex flex-col h-full bg-white rounded-lg shadow p-4">
+      <img src="${reserva.urlImagem || ''}" alt="${reserva.nomeAlimento || 'Imagem'}" 
+          class="w-full h-40 object-contain rounded-md mb-3">
+
+      <div class="flex flex-col flex-grow justify-between">
+        <div>
+          <h3 class="text-lg font-semibold text-red-600 mb-1">${reserva.nomeAlimento || 'Item'}</h3>
+          <p class="text-gray-700 text-sm mb-3">${reserva.descricao || "Sem descrição."}</p>
+          
+          <div class="text-sm text-gray-600 space-y-1">
+            <p><strong>Categoria:</strong> ${reserva.categoria || "-"}</p>
+            <p><strong>Quantidade:</strong> ${reserva.quantidade ?? '-'} ${unidade}</p>
+            <p><strong>Validade:</strong> ${validadeFormatada}</p>
+            <p><strong>Doador:</strong> ${reserva.doadorNome || "-"}</p>
+            <p><strong>Status:</strong> ${status}</p>
+            <p><strong>Expira em:</strong> ${expiraEmExibicao}</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2 mt-4">
+          ${podeVerQRCode && idDoacao
+            ? `<a data-acao="ver-qrcode" 
+                 href="/pages/reserva/qrcode.html?id=${idDoacao}" 
+                 class="flex-1 bg-red-600 text-white px-3 py-2 rounded-md hover:bg-red-700 transition text-sm text-center">
+                 Ver QR Code
+               </a>`
+            : `<span class="flex-1 text-xs text-red-500 font-medium text-center">QR Code expirado</span>`
+          }
+          <a href="/pages/administrador/perfil-usuario.html?id=${reserva.doadorId}&tipo=${reserva.doadorTipo}" 
+             class="flex-1 bg-red-600 text-white px-3 py-2 rounded-md hover:bg-red-700 transition text-sm text-center">
+            Ver Perfil
+          </a>
         </div>
       </div>
-
-      <div class="flex flex-wrap gap-2 mt-4">
-        ${podeVerQRCode 
-          ? `<a href="/pages/reserva/qrcode.html?id=${reserva.id}" 
-               class="flex-1 bg-red-600 text-white px-3 py-2 rounded-md hover:bg-red-700 transition text-sm text-center">
-              Ver QR Code
-            </a>`
-          : `<span class="flex-1 text-xs text-red-500 font-medium text-center">QR Code expirado</span>`
-        }
-        <a href="/pages/administrador/perfil-usuario.html?id=${reserva.doadorId}&tipo=${reserva.doadorTipo}" 
-           class="flex-1 bg-red-600 text-white px-3 py-2 rounded-md hover:bg-red-700 transition text-sm text-center">
-          Ver Perfil
-        </a>
-      </div>
     </div>
-  </div>
-`;
+  `;
 
+  lista.appendChild(card);
 
-      lista.appendChild(card);
+  const linkQr = card.querySelector('a[data-acao="ver-qrcode"]');
+  if (linkQr && idDoacao) {
+    linkQr.addEventListener('click', () => {
+      localStorage.setItem("dadosDoacao", JSON.stringify({
+        id: idDoacao,
+        nomeAlimento: reserva.nomeAlimento,
+        doadorNome: reserva.doadorNome,
+        endereco: reserva.endereco,
+        quantidade: reserva.quantidade,
+        unidadeMedida: reserva.unidadeMedida,
+        categoria: reserva.categoria,
+        dataValidade: reserva.dataValidade,
+        contato: reserva.contato,
+        descricao: reserva.descricao,
+        lat: reserva.latitude ?? reserva.lat,
+        lng: reserva.longitude ?? reserva.lng,
+        urlImagem: reserva.urlImagem
+      }));
     });
+  }
+});
+
 
   } catch (err) {
     console.error("Erro ao buscar reservas:", err);
