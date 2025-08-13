@@ -60,20 +60,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      localStorage.setItem("dadosDoacaoParaGeo", JSON.stringify({
-        nomeAlimento: doacao.nomeAlimento,
-        doadorNome: doacao.usuario?.nome || "Doador",
-        endereco: doacao.endereco,
-        latitude: doacao.latitude,
-        longitude: doacao.longitude,
-        quantidade: doacao.quantidade,
-        unidadeMedida: doacao.unidadeMedida,
-        categoria: doacao.categoria,
-        dataValidade: doacao.dataValidade,
-        descricao: doacao.descricao,
-        contato: doacao.contato,
-        urlImagem: doacao.urlImagem
-      }));
+      localStorage.setItem("idDoacaoParaGeo", idDoacao);
+
 
       window.location.href = `/pages/reserva/qrcode.html?id=${idDoacao}`;
     } catch (err) {
