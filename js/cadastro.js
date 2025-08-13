@@ -274,6 +274,15 @@ form.addEventListener('submit', async (e) => {
       showError("Tipo de usuário inválido.");
       return;
     }
+    function hideError() {
+    const errorModal = document.querySelector("#errorModal");
+    if (errorModal) errorModal.style.display = "none";
+    }
+
+   function hideSuccess() {
+  const successModal = document.querySelector("#successModal"); 
+  if (successModal) successModal.style.display = "none";
+   }
     const endpoint = `https://conexao-alimentar.onrender.com/${caminho}/cadastrar`;
 
     const response = await fetch(endpoint, { method: "POST", body: formData });
@@ -456,3 +465,56 @@ document.addEventListener('DOMContentLoaded', function () {
 
   aplicarRegraTipo();
 });
+function showSuccess(message, onOk = null) {
+  const modalError = document.getElementById('modalError');
+  if (modalError) modalError.classList.add('hidden'); // Fecha o de erro
+
+  const modal = document.getElementById('modalSuccess');
+  const msgEl = document.getElementById('mensagem-sucesso');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-green-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
+}
+
+function showError(message, onOk = null) {
+  const modalSuccess = document.getElementById('modalSuccess');
+  if (modalSuccess) modalSuccess.classList.add('hidden'); 
+
+  const modal = document.getElementById('modalError');
+  const msgEl = document.getElementById('mensagem-erro');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-red-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
+}
