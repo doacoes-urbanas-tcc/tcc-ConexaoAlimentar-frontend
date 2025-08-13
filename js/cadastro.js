@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (res.ok) {
         showSuccess("Cadastro realizado com sucesso!", () => {
-          window.location.href = "/pages/login.html";
+          window.location.href = "/pages/cadastrologin/login.html";
         });
       } else {
         showError("Erro ao cadastrar: " + text);
