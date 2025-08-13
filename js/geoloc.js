@@ -3,6 +3,7 @@ let donationTitle = document.getElementById('donationTitle');
 let donationDetails = document.getElementById('donationDetails');
 let calculateBtn = document.getElementById('calculateRoute');
 let clearBtn = document.getElementById('clearRoute');
+let routeInfo = document.getElementById('routeInfo');
 
 let map, currentRoute, ongLocation, donationData = null;
 
@@ -106,12 +107,22 @@ function calculateRoute() {
             <strong>Distância:</strong> ${distanciaKm} km<br>
             <strong>Tempo estimado:</strong> ${tempoMin} minutos
         `;
+        routeInfo.classList.remove('hidden');
     }).addTo(map);
 }
 
+function clearRoute() {
+    if (currentRoute) {
+        map.removeControl(currentRoute);
+        currentRoute = null;
+    }
+    routeInfo.innerHTML = "";
+    routeInfo.classList.add('hidden');
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     if (!displayDonationInfo()) return;
+
     calculateBtn.addEventListener('click', calculateRoute);
     clearBtn.addEventListener('click', clearRoute);
 
