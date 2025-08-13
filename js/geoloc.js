@@ -10,23 +10,27 @@ var currentRoute;
 var ongLocation;
 var donationData = null;
 
-function getUrlParams() {
-    const urlParams = new URLSearchParams(window.location.search);
-    return {
-        nomeAlimento: urlParams.get('nomeAlimento'),
-        doadorNome: urlParams.get('doadorNome'),
-        endereco: urlParams.get('endereco'),
-        lat: parseFloat(urlParams.get('lat')),
-        lng: parseFloat(urlParams.get('lng')),
-        quantidade: urlParams.get('quantidade'),
-        unidadeMedida: urlParams.get('unidadeMedida'),
-        categoria: urlParams.get('categoria'),
-        dataValidade: urlParams.get('dataValidade'),
-        descricao: urlParams.get('descricao'),
-        contato: urlParams.get('contato'),
-        urlImagem: urlParams.get('urlImagem')
-    };
-}
+const dadosDoacao = {
+    nomeAlimento: "Arroz",
+    doadorNome: "Maria Silva",
+    endereco: "Rua das Flores, 123",
+    lat: -23.55052,
+    lng: -46.633308,
+    quantidade: 5,
+    unidadeMedida: "kg",
+    categoria: "Grãos",
+    dataValidade: "2025-08-20",
+    descricao: "Arroz branco tipo 1",
+    contato: "(11) 99999-9999",
+    urlImagem: "https://meusite.com/imagem.jpg"
+};
+
+// Salvar no localStorage
+localStorage.setItem("dadosDoacao", JSON.stringify(dadosDoacao));
+
+// Gerar link simples para o mapa
+const linkMapa = "geoloc.html";
+
 
 function displayDonationInfo() {
     donationData = getUrlParams();

@@ -44,15 +44,23 @@
   </nav>
 
   <div class="container mx-auto mt-10 bg-white p-8 rounded-lg shadow max-w-xl flex-grow text-center">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">QR Code da Reserva</h2>
-    <div id="qr-container" class="mb-6 text-center">Carregando QR Code...</div>
-    <div class="mb-4 text-gray-700">
-      Expira em: <span id="tempo-expiracao" class="font-semibold">--:--</span>
-    </div>
-    <div class="w-full bg-gray-300 rounded-full h-3">
-      <div id="progress-bar" class="bg-red-500 h-3 rounded-full transition-all duration-1000" style="width: 100%"></div>
-    </div>
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">QR Code da Reserva</h2>
+  
+  <div id="qr-container" class="mb-6 text-center">Carregando QR Code...</div>
+  
+  <div class="mb-4 text-gray-700">
+    Expira em: <span id="tempo-expiracao" class="font-semibold">--:--</span>
   </div>
+  
+  <div class="w-full bg-gray-300 rounded-full h-3 mb-6">
+    <div id="progress-bar" class="bg-red-500 h-3 rounded-full transition-all duration-1000" style="width: 100%"></div>
+  </div>
+
+  <button id="btnVerLocalizacao" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-all">
+    Ver Localização do Doador
+  </button>
+</div>
+
 
   <footer class="text-gray-800 mt-16 py-6">
     <div class="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">

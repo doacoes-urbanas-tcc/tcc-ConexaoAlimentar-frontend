@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
   const idDoacao = params.get("id");
@@ -21,25 +20,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     let body;
     try {
       body = JSON.parse(text);
-    } catch (e) {
+    } catch {
       body = text;
     }
-
-    if (!res.ok) {
-      const msg = (body && body.msg) || res.statusText || "Erro na requisição";
-      const err = new Error(msg);
-      err.status = res.status;
-      err.body = body;
-      throw err;
-    }
-
-    if (body && typeof body === "object" && body.code && body.code === 403) {
-      const err = new Error(body.msg || "permission error");
-      err.status = 403;
-      err.body = body;
-      throw err;
-    }
-
+    if (!res.ok) throw new Error(body?.msg || res.statusText || "Erro na requisição");
     return body;
   }
 
@@ -50,10 +34,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function redirecionarParaAvaliacao(reservaId) {
-    showSuccess("A doação foi retirada! Você será direcionado para avaliar o doador.", () =>{
+    showSuccess("A doação foi retirada! Você será direcionado para avaliar o doador.", () => {
       window.location.href = `../avaliacao/avaliacao.html?idReserva=${reservaId}`;
     });
-   
   }
 
   let intervaloStatus = null;
@@ -62,57 +45,26 @@ document.addEventListener("DOMContentLoaded", async () => {
   function iniciarContagemRegressiva(segundosRestantes, totalOriginal) {
     let segundos = Number(segundosRestantes);
 
-    if (intervaloStatus) clearInterval(intervaloStatus);
-    if (intervaloCountdown) clearInterval(intervaloCountdown);
-
     if (data.statusReserva === "RETIRADA") {
       redirecionarParaAvaliacao(data.reservaId);
       return;
     }
 
     if (segundos <= 0) {
-      tempoExpiracao.textContent = "Verificando validade...";
-      setTimeout(async () => {
-        try {
-          const novaData = await safeFetch(`https://conexao-alimentar.onrender.com/qr-code/url/${idDoacao}`, { method: "GET" });
-          if (novaData.segundosRestantes > 0) {
-            iniciarContagemRegressiva(novaData.segundosRestantes, novaData.segundosTotais);
-          } else {
-            mostrarQRCodeExpirado();
-          }
-        } catch {
-          mostrarQRCodeExpirado();
-        }
-      }, 3000);
+      mostrarQRCodeExpirado();
       return;
     }
 
     intervaloStatus = setInterval(async () => {
       try {
-        const novaData = await safeFetch(`https://conexao-alimentar.onrender.com/qr-code/url/${idDoacao}`, { method: "GET" });
-        console.log("Status atual:", novaData.statusReserva);
-
+        const novaData = await safeFetch(`https://conexao-alimentar.onrender.com/qr-code/url/${idDoacao}`);
         if (novaData.statusReserva === "RETIRADA") {
           clearInterval(intervaloStatus);
           clearInterval(intervaloCountdown);
           redirecionarParaAvaliacao(novaData.reservaId);
-        } else {
-          if (typeof novaData.segundosRestantes === "number") {
-            segundos = novaData.segundosRestantes;
-            totalOriginal = novaData.segundosTotais ?? totalOriginal;
-          }
         }
       } catch (e) {
-        console.error("Erro ao verificar status da reserva:", e);
-        if (e.status === 403) {
-          clearInterval(intervaloStatus);
-          clearInterval(intervaloCountdown);
-          localStorage.removeItem("token");
-          qrContainer.innerHTML = `<p class="text-red-600">Permissão negada. Faça login novamente.</p>`;
-          setTimeout(() => {
-            window.location.href = "/pages/cadastrologin/login.html";
-          }, 3000);
-        }
+        console.error(e);
       }
     }, 5000);
 
@@ -123,94 +75,52 @@ document.addEventListener("DOMContentLoaded", async () => {
         mostrarQRCodeExpirado();
         return;
       }
-
       const minutos = Math.floor(segundos / 60);
       const restoSegundos = segundos % 60;
       tempoExpiracao.textContent = `${minutos}m ${restoSegundos}s`;
-
       const porcentagem = (segundos / totalOriginal) * 100;
       if (progressBar) progressBar.style.width = `${porcentagem}%`;
-
       segundos--;
     }, 1000);
   }
 
   let data = null;
-
   try {
-    data = await safeFetch(`https://conexao-alimentar.onrender.com/qr-code/url/${idDoacao}`, { method: "GET" });
-
+    data = await safeFetch(`https://conexao-alimentar.onrender.com/qr-code/url/${idDoacao}`);
     if (!data.url) {
       qrContainer.innerHTML = `<p class="text-red-600">QR Code não encontrado.</p>`;
       return;
     }
-
     qrContainer.innerHTML = `<img src="${data.url}" alt="QR Code" class="h-64 mx-auto">`;
-
     iniciarContagemRegressiva(data.segundosRestantes ?? 0, data.segundosTotais ?? 7200);
   } catch (err) {
-    console.error("Erro ao carregar QR:", err);
-    if (err.status === 403) {
-      localStorage.removeItem("token");
-      qrContainer.innerHTML = `<p class="text-red-600">Permissão negada. Faça login com conta ONG.</p>`;
-      setTimeout(() => {
-        window.location.href = "/pages/cadastrologin/login.html";
-      }, 3000);
-    } else {
-      qrContainer.innerHTML = `<p class="text-red-600">${err.message}</p>`;
-    }
+    console.error(err);
+    qrContainer.innerHTML = `<p class="text-red-600">${err.message}</p>`;
+  }
+
+  const btnVerLocalizacao = document.getElementById("btnVerLocalizacao");
+  if (btnVerLocalizacao) {
+    btnVerLocalizacao.addEventListener("click", () => {
+      const doacao = JSON.parse(localStorage.getItem("dadosDoacaoParaGeo"));
+      if (!doacao) {
+        showError("Não foi possível carregar a localização da doação.");
+        return;
+      }
+      const params = new URLSearchParams({
+        nomeAlimento: doacao.nomeAlimento,
+        doadorNome: doacao.doadorNome,
+        endereco: doacao.endereco,
+        lat: doacao.latitude,
+        lng: doacao.longitude,
+        quantidade: doacao.quantidade,
+        unidadeMedida: doacao.unidadeMedida,
+        categoria: doacao.categoria,
+        dataValidade: doacao.dataValidade,
+        descricao: doacao.descricao,
+        contato: doacao.contato,
+        urlImagem: doacao.urlImagem
+      });
+      window.location.href = `/pages/reserva/geolocalizacao.html?${params.toString()}`;
+    });
   }
 });
-
-
-function showSuccess(message, onOk = null) {
-  const modal = document.getElementById('modalSuccess');
-  const msgEl = document.getElementById('mensagem-sucesso');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
-
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
-
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-green-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
-}
-
-function showError(message, onOk = null) {
-  const modal = document.getElementById('modalError');
-  const msgEl = document.getElementById('mensagem-erro');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
-
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
-
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-red-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
-}
-
-
-
-
