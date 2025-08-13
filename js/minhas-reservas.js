@@ -103,14 +103,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       const expiraEmExibicao = dataExpiracaoMs ? formatarDataHora(dataExpiracaoMs) : "Não disponível";
       const unidade = reserva.unidadeMedida ? reserva.unidadeMedida.toLowerCase() : "";
 
-       card.innerHTML = `
-  <div class="flex flex-col h-full">
+        card.innerHTML = `
+  <div class="flex flex-col h-full bg-white rounded-lg shadow p-4">
     <img src="${reserva.urlImagem || ''}" alt="${reserva.nomeAlimento || 'Imagem'}" 
-         class="w-full h-40 object-cover rounded-lg mb-4">
+         class="w-full h-40 object-contain rounded-md mb-3">
+
     <div class="flex flex-col flex-grow justify-between">
       <div>
-        <h3 class="text-xl font-semibold text-red-600">${reserva.nomeAlimento || 'Item'}</h3>
-        <p class="text-gray-700 mb-3">${reserva.descricao || "Sem descrição."}</p>
+        <h3 class="text-lg font-semibold text-red-600 mb-1">${reserva.nomeAlimento || 'Item'}</h3>
+        <p class="text-gray-700 text-sm mb-3">${reserva.descricao || "Sem descrição."}</p>
+        
         <div class="text-sm text-gray-600 space-y-1">
           <p><strong>Categoria:</strong> ${reserva.categoria || "-"}</p>
           <p><strong>Quantidade:</strong> ${reserva.quantidade ?? '-'} ${unidade}</p>
@@ -120,22 +122,24 @@ document.addEventListener("DOMContentLoaded", async () => {
           <p><strong>Expira em:</strong> ${expiraEmExibicao}</p>
         </div>
       </div>
+
       <div class="flex flex-wrap gap-2 mt-4">
         ${podeVerQRCode 
           ? `<a href="/pages/reserva/qrcode.html?id=${reserva.id}" 
-               class="flex-1 bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition text-center">
+               class="flex-1 bg-red-600 text-white px-3 py-2 rounded-md hover:bg-red-700 transition text-sm text-center">
               Ver QR Code
             </a>`
-          : `<span class="flex-1 text-sm text-red-600 font-semibold text-center">QR Code expirado</span>`
+          : `<span class="flex-1 text-xs text-red-500 font-medium text-center">QR Code expirado</span>`
         }
         <a href="/pages/administrador/perfil-usuario.html?id=${reserva.doadorId}&tipo=${reserva.doadorTipo}" 
-           class="flex-1 bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition text-center">
-          Ver Perfil do doador
+           class="flex-1 bg-red-600 text-white px-3 py-2 rounded-md hover:bg-red-700 transition text-sm text-center">
+          Ver Perfil
         </a>
       </div>
     </div>
   </div>
 `;
+
 
       lista.appendChild(card);
     });
