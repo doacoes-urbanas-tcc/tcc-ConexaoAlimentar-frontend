@@ -2,24 +2,27 @@
 
 let latitude = "";
 let longitude = "";
-
 function mostrarDescricaoECampos() {
     const select = document.getElementById('tipoUsuario');
-    const valorSelecionado = select.value;
+    const valorSelecionado = (select?.value || '').toLowerCase();
     const descricao = document.getElementById('descricaoUsuario');
     const container = document.getElementById('descricaoContainer');
 
+    const campos = [
+        'campoCPF',
+        'campoCNPJ',
+        'campoDescricaoONG',
+        'campoRegistroRural',
+        'campoSetorAtuacao',
+        'campoDocumentoComprovante',
+        'campoNomeFantasia',
+        'campoTipoComercio'
+    ];
 
-    document.getElementById('campoCPF').classList.add('hidden');
-    document.getElementById('campoCNPJ').classList.add('hidden');
-    document.getElementById('campoDescricaoONG').classList.add('hidden');
-    document.getElementById('campoRegistroRural').classList.add('hidden');
-    document.getElementById('campoSetorAtuacao').classList.add('hidden');
-    document.getElementById('campoDocumentoComprovante').classList.add('hidden');
-    document.getElementById('campoNomeFantasia').classList.add('hidden');
-    document.getElementById('campoTipoComercio').classList.add('hidden');
-
-
+    campos.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+    });
 
     const descricoes = {
         pf: "Pessoa comum que deseja doar alimentos ou produtos como indivíduo.",
@@ -29,40 +32,43 @@ function mostrarDescricaoECampos() {
         voluntario: "Pessoas que ajudam em áreas como Transporte e TI.",
         admin: "Equipe de gestão ou desenvolvimento do sistema com acesso administrativo."
     };
-    
 
     if (descricoes[valorSelecionado]) {
         descricao.textContent = descricoes[valorSelecionado];
-        container.classList.remove("hidden");
+        container?.classList.remove("hidden");
+
         switch (valorSelecionado) {
             case 'pf':
-                document.getElementById('campoCPF').classList.remove('hidden');
-                document.getElementById('campoDocumentoComprovante').classList.remove('hidden');
+                document.getElementById('campoCPF')?.classList.remove('hidden');
+                document.getElementById('campoDocumentoComprovante')?.classList.remove('hidden');
                 break;
             case 'comercio':
-                document.getElementById('campoCNPJ').classList.remove('hidden');
-                document.getElementById('campoNomeFantasia').classList.remove('hidden');
-                document.getElementById('campoTipoComercio').classList.remove('hidden');
+                document.getElementById('campoCNPJ')?.classList.remove('hidden');
+                document.getElementById('campoNomeFantasia')?.classList.remove('hidden');
+                document.getElementById('campoTipoComercio')?.classList.remove('hidden');
                 break;
             case 'ong':
-                document.getElementById('campoCNPJ').classList.remove('hidden');
-                document.getElementById('campoDescricaoONG').classList.remove('hidden');
+                document.getElementById('campoCNPJ')?.classList.remove('hidden');
+                document.getElementById('campoDescricaoONG')?.classList.remove('hidden');
                 break;
             case 'rural':
-                document.getElementById('campoRegistroRural').classList.remove('hidden');
+                document.getElementById('campoRegistroRural')?.classList.remove('hidden');
                 break;
             case 'voluntario':
-                document.getElementById('campoCPF').classList.remove('hidden');
-                document.getElementById('campoSetorAtuacao').classList.remove('hidden');
-                document.getElementById('campoDocumentoComprovante').classList.remove('hidden');
+                document.getElementById('campoCPF')?.classList.remove('hidden');
+                document.getElementById('campoSetorAtuacao')?.classList.remove('hidden');
+                document.getElementById('campoDocumentoComprovante')?.classList.remove('hidden');
                 break;
         }
     } else {
         descricao.textContent = "";
-        container.classList.add("hidden");
+        container?.classList.add("hidden");
     }
 }
-document.getElementById('aceiteTermo').addEventListener('change', mostrarDescricaoECampos);
+
+document.getElementById('tipoUsuario')?.addEventListener('change', mostrarDescricaoECampos);
+document.getElementById('aceiteTermo')?.addEventListener('change', mostrarDescricaoECampos);
+
 
 
 function limparFormulario() {
