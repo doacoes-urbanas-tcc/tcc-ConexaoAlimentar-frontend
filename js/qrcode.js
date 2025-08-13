@@ -95,12 +95,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   const btnVerLocalizacao = document.getElementById("btnVerLocalizacao");
   if (btnVerLocalizacao) {
     btnVerLocalizacao.addEventListener("click", () => {
-      const doacao = JSON.parse(localStorage.getItem("dadosDoacao"));
-      if (!doacao) {
-        showError("Não foi possível carregar os dados da doação.");
-        return;
-      }
-      window.location.href = "/pages/geolocalizacao/geoloc.html";
-    });
+   const doacao = {
+    nomeAlimento: data.nomeAlimento,
+    doadorNome: data.doadorNome,
+    quantidade: data.quantidade,
+    unidadeMedida: data.unidadeMedida,
+    categoria: data.categoria,
+    dataValidade: data.dataValidade,
+    descricao: data.descricao,
+    urlImagem: data.urlImagem,
+    latitude: data.latitude,
+    longitude: data.longgitude
+  };
+  localStorage.setItem("dadosDoacao", JSON.stringify(doacao));
+  window.location.href = "/pages/geolocalizacao/geoloc.html";
+});
+
   }
 });
