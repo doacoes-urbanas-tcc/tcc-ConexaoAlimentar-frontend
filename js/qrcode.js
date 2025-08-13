@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         showError("Não foi possível carregar os dados da doação.");
         return;
       }
-      window.location.href = "/pages/reserva/geolocalizacao.html";
+      window.location.href = "/pages/geolocalizacao/geoloc.html";
     });
   }
 });
