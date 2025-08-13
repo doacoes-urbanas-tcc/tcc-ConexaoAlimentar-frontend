@@ -1,19 +1,28 @@
 const starContainer = document.getElementById("star-rating");
 const hiddenInput = document.getElementById("nota");
-const starTemplate = document.getElementById("star-template").content;
-
-let currentRating = 0;
 
 for (let i = 1; i <= 5; i++) {
-  const star = starTemplate.cloneNode(true).querySelector("svg");
+  const star = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  star.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+  star.setAttribute("viewBox", "0 0 20 20");
+  star.setAttribute("fill", "currentColor");
+  star.classList.add("w-8", "h-8", "text-gray-300", "cursor-pointer");
+
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path.setAttribute("d", "M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.007 3.09a1 1 0 00.95.69h3.252c.969 0 1.371 1.24.588 1.81l-2.63 1.91a1 1 0 00-.364 1.118l1.007 3.09c.3.921-.755 1.688-1.54 1.118l-2.63-1.91a1 1 0 00-1.175 0l-2.63 1.91c-.784.57-1.838-.197-1.539-1.118l1.006-3.09a1 1 0 00-.364-1.118l-2.63-1.91c-.783-.57-.38-1.81.588-1.81h3.252a1 1 0 00.95-.69l1.007-3.09z");
+
+  star.appendChild(path);
   star.dataset.value = i;
+
   star.addEventListener("click", () => {
     currentRating = i;
     hiddenInput.value = i;
     updateStars();
   });
+
   starContainer.appendChild(star);
 }
+
 
 function updateStars() {
   const stars = starContainer.querySelectorAll("svg");
