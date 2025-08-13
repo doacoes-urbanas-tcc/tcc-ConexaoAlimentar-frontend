@@ -104,9 +104,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       const unidade = reserva.unidadeMedida ? reserva.unidadeMedida.toLowerCase() : "";
 
        card.innerHTML = `
-  <div class="flex flex-col md:flex-row gap-4 bg-white rounded-lg shadow-md p-4">
-    <img src="${reserva.urlImagem || ''}" alt="${reserva.nomeAlimento || 'Imagem'}" class="w-full md:w-40 h-40 object-cover rounded-lg flex-shrink-0">
-    <div class="flex flex-col justify-between flex-1">
+  <div class="flex flex-col h-full">
+    <img src="${reserva.urlImagem || ''}" alt="${reserva.nomeAlimento || 'Imagem'}" 
+         class="w-full h-40 object-cover rounded-lg mb-4">
+    <div class="flex flex-col flex-grow justify-between">
       <div>
         <h3 class="text-xl font-semibold text-red-600">${reserva.nomeAlimento || 'Item'}</h3>
         <p class="text-gray-700 mb-3">${reserva.descricao || "Sem descrição."}</p>
@@ -119,9 +120,10 @@ document.addEventListener("DOMContentLoaded", async () => {
           <p><strong>Expira em:</strong> ${expiraEmExibicao}</p>
         </div>
       </div>
-      <div class="flex flex-wrap gap-2 mt-2">
+      <div class="flex flex-wrap gap-2 mt-4">
         ${podeVerQRCode 
-          ? `<a href="/pages/reserva/qrcode.html?id=${reserva.id}" class="flex-1 bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition text-center">
+          ? `<a href="/pages/reserva/qrcode.html?id=${reserva.id}" 
+               class="flex-1 bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition text-center">
               Ver QR Code
             </a>`
           : `<span class="flex-1 text-sm text-red-600 font-semibold text-center">QR Code expirado</span>`
@@ -134,6 +136,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     </div>
   </div>
 `;
+
       lista.appendChild(card);
     });
 
