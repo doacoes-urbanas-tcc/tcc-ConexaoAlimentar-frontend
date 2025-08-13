@@ -8,9 +8,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
 
-<body class="flex h-screen text-gray-900">
+<body class="flex text-gray-900">
 
-  <aside class="w-64 bg-white shadow h-screen flex flex-col overflow-y-auto">
+  <aside id="sidebar" class="w-64 bg-white shadow h-screen flex flex-col overflow-y-auto fixed md:static top-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-40">
     <div class="p-6 border-b">
       <img src="/assets/Conexão Alimentar Logo PNG (1).png" class="w-40 mx-auto mb-4" alt="Logo" />
       <h1 class="text-center text-xl font-bold text-red-600">Administrador</h1>
@@ -32,7 +32,7 @@
         <span class="material-symbols-outlined mr-2">task_alt</span> Task TI
       </a>
       <a href="listar-tasks.html" class="flex items-center p-2 rounded hover:bg-gray-100">
-      <span class="material-symbols-outlined mr-2">assignment</span> Tasks Abertas
+        <span class="material-symbols-outlined mr-2">assignment</span> Tasks Abertas
       </a>
       <a href="relatorio-admin.html" class="flex items-center p-2 rounded hover:bg-gray-100">
         <span class="material-symbols-outlined mr-2">analytics</span> Relatórios
@@ -43,9 +43,16 @@
     </div>
   </aside>
 
-  <div class="flex flex-col flex-1 min-h-screen">
-    <main class="flex-grow bg-gray-100 p-6 overflow-auto">
-      <h2 class="text-3xl font-bold mb-6 text-gray-800">Cadastrar Task de TI</h2>
+  <div class="flex flex-col flex-1">
+    <main  class="bg-gray-100 p-6 overflow-auto relative">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-3xl font-bold text-gray-800">Cadastrar Task de TI</h2>
+
+        <button id="menu-btn" class="md:hidden border rounded-md p-1 text-red-500 hover:bg-red-100 transition">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+      </div>
+
       <form id="form-task" class="space-y-6 flex flex-col flex-grow">
         <div>
           <label for="titulo" class="block font-semibold mb-2 text-gray-700">Título</label>
@@ -73,25 +80,33 @@
         </div>
 
         <button type="submit" 
-          class="bg-red-600 text-white font-semibold px-8 py-3 rounded-md hover:bg-red-700 transition self-start">
+          class="bg-red-600 text-white font-semibold px-8 py-3 rounded-md hover:bg-red-700 transition self-center md:self-start">
           Cadastrar
         </button>
       </form>
     </main>
 
     <footer class="text-gray-800 py-6">
-      <div class="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
-        <span class="font-semibold">&copy; 2025 Conexão Alimentar</span>
-        <div class="flex space-x-4 mt-2 md:mt-0">
-          <a href="#" class="hover:underline">Sobre</a>
-          <a href="#" class="hover:underline">Contato</a>
-          <a href="#" class="hover:underline">Privacidade</a>
-        </div>
+    <div class="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
+      <span class="font-semibold">&copy; 2025 Conexão Alimentar</span>
+      <div class="flex space-x-4 mt-2 md:mt-0">
+        <a href="#" class="hover:underline">Sobre</a>
+        <a href="#" class="hover:underline">Contato</a>
+        <a href="#" class="hover:underline">Privacidade</a>
       </div>
-    </footer>
+    </div>
+  </footer>
   </div>
 
+  <script>
+    const menuBtn = document.getElementById('menu-btn');
+    const sidebar = document.getElementById('sidebar');
 
-  <script src="/js/cadastrar-task.js"> </script>
+    menuBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('-translate-x-full');
+    });
+  </script>
+
+  <script src="/js/cadastrar-task.js"></script>
 </body>
 </html>

@@ -9,10 +9,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
 
+<body class="text-gray-900 flex flex-col min-h-screen">
 
-<body class="flex h-screen text-gray-900">
-
-  <aside class="w-64 bg-white shadow h-screen flex flex-col">
+  <aside id="sidebar" class="w-64 bg-white shadow flex flex-col fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-200 z-50">
     <div class="p-6 border-b">
       <img src="/assets/Conexão Alimentar Logo PNG (1).png" class="w-40 mx-auto mb-4" alt="Logo" />
       <h1 class="text-center text-xl font-bold text-red-600">Administrador</h1>
@@ -34,7 +33,7 @@
         <span class="material-symbols-outlined mr-2">task_alt</span> Task TI
       </a>
       <a href="listar-tasks.html" class="flex items-center p-2 rounded hover:bg-gray-100">
-      <span class="material-symbols-outlined mr-2">assignment</span> Tasks Abertas
+        <span class="material-symbols-outlined mr-2">assignment</span> Tasks Abertas
       </a>
       <a href="relatorio-admin.html" class="flex items-center p-2 rounded hover:bg-gray-100">
         <span class="material-symbols-outlined mr-2">analytics</span> Relatórios
@@ -45,47 +44,53 @@
     </div>
   </aside>
 
-  <div class="flex flex-col flex-1 min-h-screen">
-    <main class="flex-grow bg-gray-100 p-6 overflow-auto">
-       <div class="bg-white py-8 px-6 shadow-xl rounded-xl border border-gray-200 max-w-7xl mx-auto">
-      <span class="text-red-600 text-sm font-semibold cursor-pointer hover:underline"
-        onclick="window.location.href='administrador.html'">&larr; Voltar</span>
+  <header class="bg-white shadow p-4 flex items-center justify-between md:hidden">
+    <h1 class="text-lg font-bold text-gray-800">Título da Página</h1>
+    <button id="menu-btn" class="p-2 border rounded-md text-red-500 hover:bg-red-50">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+  </header>
 
-      <div class="text-center mt-4 mb-8">
-        <label class="block text-3xl font-extrabold text-gray-800 tracking-wide">Usuários Ativos</label>
+  <div class="flex flex-col flex-1 md:ml-64">
+    <main class="p-6 bg-gray-100 flex-1">
+      <div class="bg-white py-8 px-6 shadow-xl rounded-xl border border-gray-200 max-w-7xl mx-auto">
+        <span class="text-red-600 text-sm font-semibold cursor-pointer hover:underline"
+          onclick="window.location.href='administrador.html'">&larr; Voltar</span>
+
+        <div class="text-center mt-4 mb-8">
+          <label class="block text-3xl font-extrabold text-gray-800 tracking-wide">Usuários Ativos</label>
+        </div>
+
+        <div class="text-right mb-6">
+          <select id="filtroTipoAtivo"
+            class="bg-gray-100 text-gray-800 border border-red-400 rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:outline-none">
+            <option value="todos">Todos</option>
+            <option value="comercios">Comércios</option>
+            <option value="ongs">ONGs</option>
+            <option value="pessoas-fisicas">Pessoas Físicas</option>
+            <option value="produtores-rurais">Produtores Rurais</option>
+            <option value="voluntarios">Voluntários</option>
+          </select>
+        </div>
+
+        <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wide">Nome</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wide">Tipo</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wide">Email</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wide">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tabelaAtivos" class="text-sm divide-y divide-gray-100">
+            </tbody>
+          </table>
+        </div>
       </div>
-
-      <div class="text-right mb-6">
-        <select id="filtroTipoAtivo"
-          class="bg-gray-100 text-gray-800 border border-red-400 rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:outline-none">
-          <option value="todos">Todos</option>
-          <option value="comercios">Comércios</option>
-          <option value="ongs">ONGs</option>
-          <option value="pessoas-fisicas">Pessoas Físicas</option>
-          <option value="produtores-rurais">Produtores Rurais</option>
-          <option value="voluntarios">Voluntários</option>
-        </select>
-      </div>
-
-      <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wide">Nome</th>
-              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wide">Tipo</th>
-              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wide">Email</th>
-              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wide">Ações</th>
-            </tr>
-          </thead>
-          <tbody id="tabelaAtivos" class="text-sm divide-y divide-gray-100">
-          </tbody>
-        </table>
-      </div>
-    </div>
-
     </main>
 
-    <footer class="text-gray-800 py-6">
+    <footer class="bg-white shadow-inner py-4 mt-auto">
       <div class="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
         <span class="font-semibold">&copy; 2025 Conexão Alimentar</span>
         <div class="flex space-x-4 mt-2 md:mt-0">
@@ -97,7 +102,14 @@
     </footer>
   </div>
 
+  <script>
+    const btn = document.getElementById('menu-btn');
+    const sidebar = document.getElementById('sidebar');
+    btn.addEventListener('click', () => {
+      sidebar.classList.toggle('-translate-x-full');
+    });
+  </script>
+
   <script src="/js/usuarios-ativos.js"></script>
 </body>
 </html>
-

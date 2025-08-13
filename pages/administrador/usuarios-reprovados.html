@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,10 +8,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
 
+<body class="text-gray-900">
 
-<body class="flex h-screen text-gray-900">
-
-  <aside class="w-64 bg-white shadow h-screen flex flex-col">
+  <aside id="sidebar" class="w-64 bg-white shadow flex flex-col fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-200 z-50">
     <div class="p-6 border-b">
       <img src="/assets/Conexão Alimentar Logo PNG (1).png" class="w-40 mx-auto mb-4" alt="Logo" />
       <h1 class="text-center text-xl font-bold text-red-600">Administrador</h1>
@@ -34,7 +32,7 @@
         <span class="material-symbols-outlined mr-2">task_alt</span> Task TI
       </a>
       <a href="listar-tasks.html" class="flex items-center p-2 rounded hover:bg-gray-100">
-      <span class="material-symbols-outlined mr-2">assignment</span> Tasks Abertas
+        <span class="material-symbols-outlined mr-2">assignment</span> Tasks Abertas
       </a>
       <a href="relatorio-admin.html" class="flex items-center p-2 rounded hover:bg-gray-100">
         <span class="material-symbols-outlined mr-2">analytics</span> Relatórios
@@ -45,7 +43,14 @@
     </div>
   </aside>
 
-  <div class="flex flex-col flex-1 min-h-screen">
+  <header class="bg-white shadow p-4 flex items-center justify-between md:hidden">
+    <h1 class="text-lg font-bold text-gray-800">Usuários Reprovados</h1>
+    <button id="menu-btn" class="p-2 border rounded-md text-red-500 hover:bg-red-50">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+  </header>
+
+  <div class="flex flex-col md:ml-64 min-h-screen">
     <main class="flex-grow bg-gray-100 p-6 overflow-auto">
       <div class="bg-white py-8 px-6 shadow-xl rounded-xl border border-gray-200 max-w-7xl mx-auto">
         <span class="text-red-600 text-sm font-semibold cursor-pointer hover:underline"
@@ -82,7 +87,7 @@
       </div>
     </main>
 
-    <footer class="text-gray-800 py-6">
+    <footer class="bg-white shadow-inner py-4 mt-auto">
       <div class="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
         <span class="font-semibold">&copy; 2025 Conexão Alimentar</span>
         <div class="flex space-x-4 mt-2 md:mt-0">
@@ -93,30 +98,40 @@
       </div>
     </footer>
   </div>
-   <div id="modalError" class="fixed inset-0 flex bg-black bg-opacity-50 hidden items-center justify-center z-50">
-      <div class="bg-white rounded-xl shadow-lg w-80 p-6 text-center">
+
+  <div id="modalError" class="fixed inset-0 flex bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-lg w-80 p-6 text-center">
       <div class="text-red-500 mb-3">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93" />
-      </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93" />
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold text-gray-800 mb-2">Erro</h2>
+      <p id="mensagem-erro" class="text-gray-600 mb-4"></p>
+      <button id="fechar-modal-erro" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all">Fechar</button>
     </div>
-    <h2 class="text-xl font-bold text-gray-800 mb-2">Erro</h2>
-    <p id="mensagem-erro" class="text-gray-600 mb-4"></p>
-    <button id="fechar-modal-erro" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all">Fechar</button>
-  </div>
   </div>
 
-    <div id="modalSuccess" class="fixed inset-0 flex bg-black bg-opacity-50 hidden items-center justify-center z-50">
-  <div class="bg-white rounded-xl shadow-lg w-80 p-6 text-center">
-    <div class="text-green-500 mb-3">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-      </svg>
+  <div id="modalSuccess" class="fixed inset-0 flex bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-lg w-80 p-6 text-center">
+      <div class="text-green-500 mb-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold text-gray-800 mb-2">Sucesso</h2>
+      <p id="mensagem-sucesso" class="text-gray-600 mb-4"></p>
+      <button id="fechar-modal-sucesso" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-all">Fechar</button>
     </div>
-    <h2 class="text-xl font-bold text-gray-800 mb-2">Sucesso</h2>
-    <p id="mensagem-sucesso" class="text-gray-600 mb-4"></p>
-    <button id="fechar-modal-sucesso" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-all">Fechar</button>
   </div>
+
+  <script>
+    const btn = document.getElementById('menu-btn');
+    const sidebar = document.getElementById('sidebar');
+    btn.addEventListener('click', () => {
+      sidebar.classList.toggle('-translate-x-full');
+    });
+  </script>
 
   <script src="/js/usuarios-reprovados.js"></script>
 </body>
