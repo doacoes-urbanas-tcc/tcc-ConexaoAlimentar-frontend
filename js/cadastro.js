@@ -467,7 +467,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 function showSuccess(message, onOk = null) {
   const modalError = document.getElementById('modalError');
-  if (modalError) modalError.classList.add('hidden'); // Fecha o de erro
+  if (modalError) modalError.classList.add('hidden'); 
 
   const modal = document.getElementById('modalSuccess');
   const msgEl = document.getElementById('mensagem-sucesso');
