@@ -23,16 +23,12 @@ function displayDonationInfo() {
 
     let detailsHTML = `
         <strong>Doador:</strong> ${donationData.doadorNome || 'Não informado'}<br>
-        <strong>Endereço:</strong> ${donationData.endereco || 'Não informado'}<br>
         <strong>Quantidade:</strong> ${donationData.quantidade || ''} ${donationData.unidadeMedida || ''}<br>
         <strong>Categoria:</strong> ${donationData.categoria || ''}<br>
     `;
 
     if (donationData.dataValidade) {
         detailsHTML += `<strong>Validade:</strong> ${new Date(donationData.dataValidade).toLocaleDateString('pt-BR')}<br>`;
-    }
-    if (donationData.contato) {
-        detailsHTML += `<strong>Contato:</strong> ${donationData.contato}<br>`;
     }
     if (donationData.descricao) {
         detailsHTML += `<strong>Descrição:</strong> ${donationData.descricao}`;
@@ -58,19 +54,7 @@ function addDonationMarker() {
         })
     }).addTo(map);
 
-    let popupContent = `<b>${donationData.nomeAlimento}</b><br>${donationData.endereco}<br><hr>`;
-    if (donationData.quantidade && donationData.unidadeMedida) {
-        popupContent += `<b>Quantidade:</b> ${donationData.quantidade} ${donationData.unidadeMedida}<br>`;
-    }
-    if (donationData.categoria) {
-        popupContent += `<b>Categoria:</b> ${donationData.categoria}<br>`;
-    }
-    if (donationData.dataValidade) {
-        popupContent += `<b>Validade:</b> ${new Date(donationData.dataValidade).toLocaleDateString('pt-BR')}<br>`;
-    }
-    if (donationData.contato) {
-        popupContent += `<b>Contato:</b> ${donationData.contato}`;
-    }
+    let popupContent = `<b>${donationData.nomeAlimento}</b>`;
     marker.bindPopup(popupContent);
 }
 
@@ -78,7 +62,6 @@ function success(pos) {
     ongLocation = [pos.coords.latitude, pos.coords.longitude];
     h2.textContent = `ONG localizada: Lat ${pos.coords.latitude.toFixed(6)}, Lng ${pos.coords.longitude.toFixed(6)}`;
     h2.classList.remove('loading');
-    h2.classList.add('text-gray-600', 'italic');
 
     if (map !== undefined) {
         map.remove();
@@ -107,28 +90,6 @@ function success(pos) {
 
 function error(err) {
     h2.textContent = 'Erro ao obter localização: ' + err.message;
-    h2.classList.remove('loading');
-    h2.classList.add('text-red-600', 'font-bold', 'bg-red-50');
-
-    if (map === undefined) {
-        ongLocation = [-23.5505, -46.6333];
-        map = L.map('mapid').setView(ongLocation, 12);
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-        L.marker(ongLocation, {
-            icon: L.icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
-            })
-        }).addTo(map).bindPopup('🏢 ONG - São Paulo (localização padrão)').openPopup();
-        addDonationMarker();
-        if (donationData && !isNaN(donationData.lat) && !isNaN(donationData.lng)) {
-            calculateBtn.disabled = false;
-        }
-    }
 }
 
 function calculateRoute() {
@@ -148,40 +109,12 @@ function calculateRoute() {
         lineOptions: { styles: [{ color: '#dc2626', weight: 5, opacity: 0.8 }] },
         router: L.Routing.osrmv1({ serviceUrl: 'https://router.project-osrm.org/route/v1', language: 'pt' })
     }).addTo(map);
-
-    currentRoute.on('routesfound', function (e) {
-        const summary = e.routes[0].summary;
-        const distance = (summary.totalDistance / 1000).toFixed(2);
-        const time = Math.round(summary.totalTime / 60);
-
-        routeInfo.innerHTML = `
-            <h3>Informações do Trajeto</h3>
-            <p><b>Destino:</b> ${donationData.nomeAlimento}</p>
-            <p><b>Doador:</b> ${donationData.doadorNome || 'Não informado'}</p>
-            <p><b>Distância:</b> ${distance} km</p>
-            <p><b>Tempo estimado:</b> ${time} minutos</p>
-            <p><b>Quantidade:</b> ${donationData.quantidade || ''} ${donationData.unidadeMedida || ''}</p>
-        `;
-        routeInfo.style.display = 'block';
-        routeInfo.classList.remove('hidden');
-    });
-
-    const group = new L.featureGroup([
-        L.marker(ongLocation),
-        L.marker([donationData.lat, donationData.lng])
-    ]);
-    map.fitBounds(group.getBounds().pad(0.1));
 }
 
 function clearRoute() {
     if (currentRoute) {
         map.removeControl(currentRoute);
         currentRoute = null;
-    }
-    routeInfo.style.display = 'none';
-    routeInfo.classList.add('hidden');
-    if (ongLocation) {
-        map.setView(ongLocation, 13);
     }
 }
 
@@ -194,8 +127,6 @@ document.addEventListener('DOMContentLoaded', function () {
         navigator.geolocation.getCurrentPosition(success, error, { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 });
     } else {
         h2.textContent = 'Geolocalização não está disponível neste navegador';
-        h2.classList.remove('loading');
-        h2.classList.add('text-red-600', 'font-bold');
         error({ message: 'Geolocalização não suportada' });
     }
 });

@@ -92,24 +92,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     qrContainer.innerHTML = `<p class="text-red-600">${err.message}</p>`;
   }
 
-  const btnVerLocalizacao = document.getElementById("btnVerLocalizacao");
-  if (btnVerLocalizacao) {
-    btnVerLocalizacao.addEventListener("click", () => {
-   const doacao = {
-    nomeAlimento: data.nomeAlimento,
-    doadorNome: data.doadorNome,
-    quantidade: data.quantidade,
-    unidadeMedida: data.unidadeMedida,
-    categoria: data.categoria,
-    dataValidade: data.dataValidade,
-    descricao: data.descricao,
-    urlImagem: data.urlImagem,
-    latitude: data.latitude,
-    longitude: data.longgitude
-  };
-  localStorage.setItem("dadosDoacao", JSON.stringify(doacao));
-  window.location.href = "/pages/geolocalizacao/geoloc.html";
-});
+const btnVerLocalizacao = document.getElementById("btnVerLocalizacao");
+if (btnVerLocalizacao) {
+  btnVerLocalizacao.addEventListener("click", () => {
+    fetch(`/api/doacoes/${idDoacao}`)
+      .then(response => response.json())
+      .then(data => {
+        const doacao = {
+          nomeAlimento: data.nomeAlimento,
+          doadorNome: data.doadorNome,
+          quantidade: data.quantidade,
+          unidadeMedida: data.unidadeMedida,
+          categoria: data.categoria,
+          dataValidade: data.dataValidade,
+          descricao: data.descricao,
+          urlImagem: data.urlImagem,
+          lat: data.latitude,
+          lng: data.longitude
+        };
 
-  }
-});
+        localStorage.setItem("dadosDoacao", JSON.stringify(doacao));
+        window.location.href = `/pages/reserva/geolocalizacao.html`;
+      })
+      .catch(error => {
+        console.error("Erro ao buscar dados da doação:", error);
+      });
+  });
+}
+
+  });
+
+
