@@ -92,34 +92,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     qrContainer.innerHTML = `<p class="text-red-600">${err.message}</p>`;
   }
 
-const btnVerLocalizacao = document.getElementById("btnVerLocalizacao");
+  const btnVerLocalizacao = document.getElementById("btnVerLocalizacao");
 if (btnVerLocalizacao) {
-  btnVerLocalizacao.addEventListener("click", () => {
-    fetch(`/api/doacoes/${idDoacao}`)
-      .then(response => response.json())
-      .then(data => {
-        const doacao = {
-          nomeAlimento: data.nomeAlimento,
-          doadorNome: data.doadorNome,
-          quantidade: data.quantidade,
-          unidadeMedida: data.unidadeMedida,
-          categoria: data.categoria,
-          dataValidade: data.dataValidade,
-          descricao: data.descricao,
-          urlImagem: data.urlImagem,
-          lat: data.latitude,
-          lng: data.longitude
-        };
+  btnVerLocalizacao.addEventListener("click", async () => {
+    try {
+      const dataDoacao = await safeFetch(`https://conexao-alimentar.onrender.com/doacoes/${idDoacao}`);
+      
+      const doacao = {
+        nomeAlimento: dataDoacao.nomeAlimento,
+        doadorNome: dataDoacao.doadorNome,
+        quantidade: dataDoacao.quantidade,
+        unidadeMedida: dataDoacao.unidadeMedida,
+        categoria: dataDoacao.categoria,
+        dataValidade: dataDoacao.dataValidade,
+        descricao: dataDoacao.descricao,
+        urlImagem: dataDoacao.urlImagem,
+        lat: dataDoacao.latitude,
+        lng: dataDoacao.longitude
+      };
 
-        localStorage.setItem("dadosDoacao", JSON.stringify(doacao));
-        window.location.href = `/pages/reserva/geolocalizacao.html`;
-      })
-      .catch(error => {
-        console.error("Erro ao buscar dados da doação:", error);
-      });
+      localStorage.setItem("dadosDoacao", JSON.stringify(doacao));
+      window.location.href = `/pages/geolocalizacao/geoloc.html`;
+    } catch (error) {
+      console.error("Erro ao buscar dados da doação:", error);
+    }
   });
 }
 
   });
+
 
 
