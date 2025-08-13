@@ -1,9 +1,10 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
-  const idDoacao = params.get("id"); 
+  const idDoacao = params.get("id");
   const infoDoacao = document.getElementById("info-doacao");
   const btnConfirmar = document.getElementById("btnConfirmar");
   const token = localStorage.getItem("token");
+  let doacao = null; // variável para guardar os dados
 
   if (!idDoacao || !token) {
     showError("ID de doação inválido ou usuário não está logado.");
@@ -22,7 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       throw new Error("Erro ao buscar dados da doação.");
     }
 
-    const doacao = await response.json();
+    doacao = await response.json();
 
     infoDoacao.innerHTML = `
       <h3 class="text-xl font-semibold text-red-600">${doacao.nomeAlimento}</h3>
@@ -37,43 +38,48 @@ document.addEventListener("DOMContentLoaded", async () => {
     infoDoacao.innerHTML = "<p class='text-red-600'>Erro ao carregar dados da doação.</p>";
   }
 
-btnConfirmar.addEventListener("click", async () => {
-  try {
-    const response = await fetch("https://conexao-alimentar.onrender.com/reservas", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + token
-      },
-      body: JSON.stringify({ doacaoId: idDoacao })
-    });
-
-    if (!response.ok) {
-      const erro = await response.text();
-      showError("Erro ao reservar: " + erro);
+  btnConfirmar.addEventListener("click", async () => {
+    if (localStorage.getItem("dadosDoacaoParaGeo")) {
+      window.location.href = `/pages/reserva/qrcode.html?id=${idDoacao}`;
       return;
     }
 
-    localStorage.setItem("dadosDoacaoParaGeo", JSON.stringify({
-      nomeAlimento: doacao.nomeAlimento,
-      doadorNome: doacao.usuario?.nome || "Doador",
-      endereco: doacao.endereco,
-      latitude: doacao.latitude,
-      longitude: doacao.longitude,
-      quantidade: doacao.quantidade,
-      unidadeMedida: doacao.unidadeMedida,
-      categoria: doacao.categoria,
-      dataValidade: doacao.dataValidade,
-      descricao: doacao.descricao,
-      contato: doacao.contato,
-      urlImagem: doacao.urlImagem
-    }));
+    try {
+      const response = await fetch("https://conexao-alimentar.onrender.com/reservas", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({ doacaoId: idDoacao })
+      });
 
-    window.location.href = `/pages/reserva/qrcode.html?id=${idDoacao}`;
-  } catch (err) {
-    showError("Erro ao tentar reservar a doação.");
-  }
-});
+      if (!response.ok) {
+        const erro = await response.text();
+        showError("Erro ao reservar: " + erro);
+        return;
+      }
+
+      localStorage.setItem("dadosDoacaoParaGeo", JSON.stringify({
+        nomeAlimento: doacao.nomeAlimento,
+        doadorNome: doacao.usuario?.nome || "Doador",
+        endereco: doacao.endereco,
+        latitude: doacao.latitude,
+        longitude: doacao.longitude,
+        quantidade: doacao.quantidade,
+        unidadeMedida: doacao.unidadeMedida,
+        categoria: doacao.categoria,
+        dataValidade: doacao.dataValidade,
+        descricao: doacao.descricao,
+        contato: doacao.contato,
+        urlImagem: doacao.urlImagem
+      }));
+
+      window.location.href = `/pages/reserva/qrcode.html?id=${idDoacao}`;
+    } catch (err) {
+      showError("Erro ao tentar reservar a doação.");
+    }
+  });
 
 });
 
@@ -84,7 +90,6 @@ function formatarData(data) {
 function formatarDataHora(dataHora) {
   return new Date(dataHora).toLocaleString("pt-BR");
 }
-
 
 function showSuccess(message, onOk = null) {
   const modal = document.getElementById('modalSuccess');
@@ -133,7 +138,3 @@ function showError(message, onOk = null) {
   okBtn.addEventListener('click', closeHandler);
   closeBtn.addEventListener('click', closeHandler);
 }
-
-
-
-
