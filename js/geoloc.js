@@ -88,28 +88,27 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   function initMap(doadorCoords, ongCoords) {
-    const map = new google.maps.Map(document.getElementById("map"), {
-      center: doadorCoords,
-      zoom: 12
-    });
+    const map = L.map("map").setView([doadorCoords.lat, doadorCoords.lng], 12);
 
-    new google.maps.Marker({
-      position: doadorCoords,
-      map: map,
-      label: "D",
-      title: "Local do Doador"
-    });
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
 
-    new google.maps.Marker({
-      position: ongCoords,
-      map: map,
-      label: "O",
-      title: "Local da ONG"
-    });
+    L.marker([doadorCoords.lat, doadorCoords.lng])
+        .addTo(map)
+        .bindPopup("Local do Doador")
+        .openPopup();
 
-    const bounds = new google.maps.LatLngBounds();
-    bounds.extend(doadorCoords);
-    bounds.extend(ongCoords);
+    L.marker([ongCoords.lat, ongCoords.lng])
+        .addTo(map)
+        .bindPopup("Local da ONG");
+
+    const bounds = L.latLngBounds(
+        [doadorCoords.lat, doadorCoords.lng],
+        [ongCoords.lat, ongCoords.lng]
+    );
     map.fitBounds(bounds);
-  }
+}
+
 });
