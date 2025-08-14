@@ -1,22 +1,42 @@
 const API_BASE = "https://conexao-alimentar.onrender.com";
 
+// Valida e converte coordenadas para número
 function validarCoords(lat, lng) {
   if (lat == null || lng == null || isNaN(lat) || isNaN(lng)) {
-    return null; // Retorna null para ignorar pontos inexistentes
+    return null; // Não quebra se estiver ausente
   }
   return { lat: parseFloat(lat), lng: parseFloat(lng) };
 }
 
+// Faz requisições enviando o token JWT
 async function safeFetch(url, options = {}) {
-  const resp = await fetch(url, options);
+  const token = localStorage.getItem("token"); // Recupera token salvo no login
+
+  const headers = {
+    "Content-Type": "application/json",
+    ...options.headers
+  };
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  const resp = await fetch(url, {
+    ...options,
+    headers,
+    credentials: "include" // Caso o back-end use cookies também
+  });
+
   if (!resp.ok) throw new Error(`Erro HTTP: ${resp.status}`);
   return await resp.json();
 }
 
+// Busca a doação pelo ID
 async function getDoacaoById(idDoacao) {
   return await safeFetch(`${API_BASE}/doacoes/${idDoacao}`);
 }
 
+// Inicializa o mapa com os pontos
 async function initMap(doadorCoords, ongCoords) {
   const centerCoords = doadorCoords || ongCoords;
   if (!centerCoords) {
@@ -29,17 +49,20 @@ async function initMap(doadorCoords, ongCoords) {
     attribution: "&copy; OpenStreetMap contributors"
   }).addTo(map);
 
+  // Marca local do doador
   if (doadorCoords) {
     L.marker([doadorCoords.lat, doadorCoords.lng])
       .addTo(map)
       .bindPopup("Local do Doador");
   }
 
+  // Marca local da ONG
   if (ongCoords) {
     L.marker([ongCoords.lat, ongCoords.lng])
       .addTo(map)
       .bindPopup("Local da ONG");
 
+    // Desenha rota se houver os dois pontos
     if (doadorCoords) {
       const bounds = L.latLngBounds(
         [doadorCoords.lat, doadorCoords.lng],
@@ -58,6 +81,7 @@ async function initMap(doadorCoords, ongCoords) {
   }
 }
 
+// Execução principal
 (async function () {
   const params = new URLSearchParams(window.location.search);
   const idDoacao = params.get("idDoacao");
@@ -82,6 +106,11 @@ async function initMap(doadorCoords, ongCoords) {
 
   } catch (err) {
     console.error("Erro ao carregar mapa:", err);
-    alert("Não foi possível carregar a geolocalização.");
+    if (err.message.includes("403")) {
+      alert("Sua sessão expirou. Faça login novamente.");
+      window.location.href = "/login.html";
+    } else {
+      alert("Não foi possível carregar a geolocalização.");
+    }
   }
 })();
