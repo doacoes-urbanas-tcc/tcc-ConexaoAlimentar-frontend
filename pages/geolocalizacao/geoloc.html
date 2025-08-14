@@ -65,15 +65,24 @@
 
   <script src="/js/geoloc.js"></script>
   <style>
-  .leaflet-routing-container {
-    position: absolute !important;
-    top: 260px; 
-    right: 16px;
-    background-color: white;
-    border: 2px solid #dc2626;
-    border-radius: 8px;
-    z-index: 9;
-  }
+  .info-card {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 999;
+}
+
+.leaflet-routing-container {
+  position: absolute !important;
+  top: calc(20px + 220px); 
+  right: 20px;
+  width: 300px;
+  z-index: 998;
+  background-color: white;
+  border: 2px solid #dc2626;
+  border-radius: 8px;
+}
+
 </style>
 
 </body>
