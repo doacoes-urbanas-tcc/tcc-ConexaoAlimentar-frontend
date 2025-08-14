@@ -80,8 +80,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             window.location.href = "/pages/ong/home-page-ong.html";
             break;
           case "comercio":
-          case "rural":
-          case "pf":
+          case "produtor_rural":
+          case "pessoa_fisica":
             window.location.href = "/pages/doador/home-page-doador.html";
             break;
           case "voluntario":
