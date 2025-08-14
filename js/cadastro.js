@@ -114,13 +114,7 @@ function hideToast(toast) {
   mask('cnpj', /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
 
   const limparFormulario = () => ['endereco','bairro','cidade','estado'].forEach(id => getEl(id).value = '');
-  const preencherFormulario = e => {
-  getEl('endereco').value = e.logradouro;
-  getEl('bairro').value = e.bairro;
-  getEl('cidade').value = e.localidade;
-  getEl('estado').value = e.uf;
-  buscarLatLngPorEndereco(); 
-  };
+  
 
   const cepValido = cep => cep.length === 8 && /^[0-9]+$/.test(cep);
   getEl('cep')?.addEventListener('focusout', async () => {
@@ -134,8 +128,8 @@ function hideToast(toast) {
       getEl('endereco').value = 'CEP incorreto!';
     }
   });
-
-  async function buscarLatLngPorEndereco() {
+  
+async function buscarLatLngPorEndereco() {
   const enderecoCompleto = `${getVal('endereco')} ${getVal('numero')}, ${getVal('bairro')}, ${getVal('cidade')}, ${getVal('estado')}, Brasil`;
 
   if (!getVal('endereco') || !getVal('cidade') || !getVal('estado') || !getVal('numero')) return;
@@ -158,6 +152,14 @@ function hideToast(toast) {
 }
 
 getEl('numero')?.addEventListener('focusout', buscarLatLngPorEndereco);
+
+const preencherFormulario = e => {
+  getEl('endereco').value = e.logradouro;
+  getEl('bairro').value = e.bairro;
+  getEl('cidade').value = e.localidade;
+  getEl('estado').value = e.uf;
+  buscarLatLngPorEndereco();
+};
 
 
   const TIPOS_COM_TERMO = ['ong', 'comercio', 'rural', 'pf'];
