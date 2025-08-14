@@ -1,5 +1,6 @@
 'use strict';
 
+// ===== TOASTS (igual ao modelo) =====
 function toastSuccess(message) {
   showToast(message, "bg-green-500");
 }
@@ -32,34 +33,26 @@ const filtroTipo = document.getElementById("filtroTipoAtivo");
 const tabela = document.getElementById("tabelaAtivos");
 const token = localStorage.getItem("token");
 
-const tiposMap = {
-  "comercios": "COMERCIO",
-  "ongs": "ONG",
-  "pessoas-fisicas": "PESSOA_FISICA",
-  "produtores-rurais": "PRODUTOR_RURAL",
-  "voluntarios": "VOLUNTARIO"
-};
-
 function formatarTipo(tipo) {
-  const formatado = {
+  const map = {
     COMERCIO: "Comércio",
     ONG: "ONG",
     PESSOA_FISICA: "Pessoa Física",
     PRODUTOR_RURAL: "Produtor Rural",
     VOLUNTARIO: "Voluntário"
   };
-  return formatado[tipo] || tipo || "Não informado";
+  return map[tipo] || tipo || "Não informado";
 }
 
 filtroTipo.addEventListener("change", carregarUsuariosAtivos);
 document.addEventListener("DOMContentLoaded", carregarUsuariosAtivos);
 
 async function carregarUsuariosAtivos() {
-  const tipo = filtroTipo.value;
+  const tipo = filtroTipo.value; 
   let endpoint = "https://conexao-alimentar.onrender.com/admin/usuarios/ativos";
 
   if (tipo !== "todos") {
-    endpoint += `/${tiposMap[tipo]}`;
+    endpoint += `/${tipo}`; 
   }
 
   console.log("Carregando ativos de:", tipo, "Endpoint:", endpoint);
@@ -72,14 +65,14 @@ async function carregarUsuariosAtivos() {
     if (!resposta.ok) {
       console.error("Erro ao carregar usuários ativos:", resposta.status);
       tabela.innerHTML = `<tr><td colspan="4" class="px-4 py-4 text-center text-red-500">Erro ao carregar dados.</td></tr>`;
-      toastError("Erro ao carregar usuários ativos.");
+      toastError(resposta.status === 403 ? "Acesso negado aos dados (403)." : "Erro ao carregar usuários ativos.");
       return;
     }
 
     const usuarios = await resposta.json();
     tabela.innerHTML = "";
 
-    if (usuarios.length === 0) {
+    if (!Array.isArray(usuarios) || usuarios.length === 0) {
       tabela.innerHTML = `<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Nenhum usuário ativo encontrado.</td></tr>`;
       toastInfo("Nenhum usuário ativo encontrado.");
       return;
@@ -87,7 +80,6 @@ async function carregarUsuariosAtivos() {
 
     usuarios.forEach(usuario => {
       const linha = document.createElement("tr");
-
       linha.innerHTML = `
         <td class="px-4 py-3">${usuario.nome || usuario.nomeFantasia || "-"}</td>
         <td class="px-4 py-3">${formatarTipo(usuario.tipoUsuario)}</td>
@@ -98,7 +90,6 @@ async function carregarUsuariosAtivos() {
           </button>
         </td>
       `;
-
       tabela.appendChild(linha);
     });
 
