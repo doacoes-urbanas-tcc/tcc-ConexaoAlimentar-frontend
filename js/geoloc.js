@@ -2,7 +2,7 @@ const API_BASE = "https://conexao-alimentar.onrender.com";
 
 function validarCoords(lat, lng) {
   if (lat == null || lng == null || isNaN(lat) || isNaN(lng)) {
-    throw new Error("Parâmetros inválidos para geolocalização");
+    return null; // Retorna null para ignorar pontos inexistentes
   }
   return { lat: parseFloat(lat), lng: parseFloat(lng) };
 }
@@ -18,34 +18,43 @@ async function getDoacaoById(idDoacao) {
 }
 
 async function initMap(doadorCoords, ongCoords) {
-  const map = L.map("mapid").setView([doadorCoords.lat, doadorCoords.lng], 13);
+  const centerCoords = doadorCoords || ongCoords;
+  if (!centerCoords) {
+    throw new Error("Nenhuma coordenada disponível para exibir no mapa.");
+  }
+
+  const map = L.map("map").setView([centerCoords.lat, centerCoords.lng], 13);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "&copy; OpenStreetMap contributors"
   }).addTo(map);
 
-  L.marker([doadorCoords.lat, doadorCoords.lng])
-    .addTo(map)
-    .bindPopup("Local do Doador");
+  if (doadorCoords) {
+    L.marker([doadorCoords.lat, doadorCoords.lng])
+      .addTo(map)
+      .bindPopup("Local do Doador");
+  }
 
   if (ongCoords) {
     L.marker([ongCoords.lat, ongCoords.lng])
       .addTo(map)
       .bindPopup("Local da ONG");
 
-    const bounds = L.latLngBounds(
-      [doadorCoords.lat, doadorCoords.lng],
-      [ongCoords.lat, ongCoords.lng]
-    );
-    map.fitBounds(bounds);
+    if (doadorCoords) {
+      const bounds = L.latLngBounds(
+        [doadorCoords.lat, doadorCoords.lng],
+        [ongCoords.lat, ongCoords.lng]
+      );
+      map.fitBounds(bounds);
 
-    L.Routing.control({
-      waypoints: [
-        L.latLng(doadorCoords.lat, doadorCoords.lng),
-        L.latLng(ongCoords.lat, ongCoords.lng)
-      ],
-      createMarker: () => null
-    }).addTo(map);
+      L.Routing.control({
+        waypoints: [
+          L.latLng(doadorCoords.lat, doadorCoords.lng),
+          L.latLng(ongCoords.lat, ongCoords.lng)
+        ],
+        createMarker: () => null
+      }).addTo(map);
+    }
   }
 }
 
