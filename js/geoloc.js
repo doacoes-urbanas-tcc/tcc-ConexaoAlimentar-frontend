@@ -9,9 +9,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     try {
+        console.log("Buscando localização do doador para reserva:", idReserva);
         const doadorCoords = await getLocalizacaoDoador(idReserva);
+
+        console.log("Buscando localização da ONG...");
         const ongCoords = await getOngLocation();
 
+        console.log("Inicializando mapa...");
         initMap(doadorCoords, ongCoords);
     } catch (error) {
         console.error("Erro ao carregar mapa:", error);
@@ -20,9 +24,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 });
 
 async function getLocalizacaoDoador(idReserva) {
-    const res = await fetch(`/api/reservas/${idReserva}/localizacao`);
+    const res = await fetch(`https://conexao-alimentar.onrender.com/reservas/${idReserva}/localizacao`);
     if (!res.ok) throw new Error("Erro ao buscar localização do doador");
+
     const data = await res.json();
+    console.log("Localização do doador recebida:", data);
 
     if (!data.latitude || !data.longitude) {
         throw new Error("Localização do doador não disponível");
@@ -34,7 +40,9 @@ async function getLocalizacaoDoador(idReserva) {
 async function getOngLocation() {
     const res = await fetch(`https://conexao-alimentar.onrender.com/admin/usuarios/usuario/localizacao`);
     if (!res.ok) throw new Error("Erro ao buscar localização da ONG");
+
     const data = await res.json();
+    console.log("Localização da ONG recebida:", data);
 
     if (!data.latitude || !data.longitude) {
         throw new Error("Localização da ONG não disponível");
