@@ -114,8 +114,23 @@ if (btnVerLocalizacao) {
         lng: dataDoacao.longitude
       };
 
-      localStorage.setItem("dadosDoacao", JSON.stringify(doacao));
-      window.location.href = `pages/geolocalizacao/geoloc.html?idReserva=${reservaId}`;
+localStorage.setItem("dadosDoacao", JSON.stringify({
+  id: doacao.id,
+  nomeAlimento: doacao.nomeAlimento,
+  doadorNome: doacao.doadorNome,
+  quantidade: doacao.quantidade,
+  unidadeMedida: doacao.unidadeMedida,
+  categoria: doacao.categoria,
+  dataValidade: doacao.dataValidade,
+  descricao: doacao.descricao,
+  urlImagem: doacao.urlImagem,
+  lat: doacao.lat,
+  lng: doacao.lng
+}));
+
+window.location.href = `/pages/geolocalizacao/geoloc.html?idDoacao=${doacao.id}`;
+
+
     } catch (error) {
       console.error("Erro ao buscar dados da doação:", error);
       showToast("Erro ao carregar localização da doação.", "error");
