@@ -96,7 +96,7 @@ async function carregarUsuariosAtivos() {
         <td class="px-4 py-3">${formatarTipo(usuario.tipoUsuario)}</td>
         <td class="px-4 py-3">${usuario.email || "-"}</td>
         <td class="px-4 py-3">
-          <button onclick="verPerfil(${usuario.id}, '${usuario.tipoUsuario}')" class="text-blue-600 hover:underline font-semibold">
+          <button onclick="verPerfil(${usuario.id}, '${usuario.tipoUsuario}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full text-sm">
             Ver Perfil
           </button>
         </td>
