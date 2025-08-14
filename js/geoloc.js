@@ -1,16 +1,15 @@
 document.addEventListener("DOMContentLoaded", async function () {
-  const params = new URLSearchParams(window.location.search);
+   const params = new URLSearchParams(window.location.search);
   const idReserva = params.get("idReserva");
-  const idDoacao = params.get("id");
+  const idDoacao = params.get("id") || params.get("idDoacao"); 
   const token = localStorage.getItem("token");
   const API_BASE = "https://conexao-alimentar.onrender.com";
 
   if (!idReserva && !idDoacao) {
-    console.error("Nenhum identificador informado (idReserva ou id).");
+    console.error("Nenhum identificador informado (idReserva ou idDoacao).");
     alert("Parâmetros inválidos para geolocalização.");
     return;
   }
-
   try {
     console.log("Iniciando geolocalização. idReserva:", idReserva, "idDoacao:", idDoacao);
 
