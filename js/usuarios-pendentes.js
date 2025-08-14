@@ -1,3 +1,34 @@
+'use strict';
+
+function toastSuccess(message) {
+  showToast(message, "bg-green-500");
+}
+
+function toastError(message) {
+  showToast(message, "bg-red-500");
+}
+
+function toastInfo(message) {
+  showToast(message, "bg-blue-500");
+}
+
+function showToast(message, bgColor) {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
+
+  const toast = document.createElement("div");
+  toast.className = `${bgColor} text-white px-4 py-2 rounded shadow-lg animate-slideInRight`;
+  toast.textContent = message;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add("animate-fadeOut");
+    setTimeout(() => toast.remove(), 500);
+  }, 3000);
+}
+
+
 const filtroTipo = document.getElementById("filtroTipo");
 const tabela = document.getElementById("tabelaUsuarios");
 const token = localStorage.getItem("token");
@@ -42,7 +73,7 @@ async function carregarUsuariosPendentes() {
     if (!resposta.ok) {
       console.error("Erro ao carregar usuários pendentes:", resposta.status);
       tabela.innerHTML = `<tr><td colspan="4" class="px-4 py-4 text-center text-red-500">Erro ao carregar dados.</td></tr>`;
-      showError("Erro ao carregar usuários pendentes.");
+      toastError("Erro ao carregar usuários pendentes.");
       return;
     }
 
@@ -51,7 +82,7 @@ async function carregarUsuariosPendentes() {
 
     if (usuarios.length === 0) {
       tabela.innerHTML = `<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Nenhum usuário pendente encontrado.</td></tr>`;
-      showInfo("Nenhum usuário pendente encontrado.");
+      toastInfo("Nenhum usuário pendente encontrado.");
       return;
     }
 
@@ -78,11 +109,11 @@ async function carregarUsuariosPendentes() {
       tabela.appendChild(linha);
     });
 
-    showSuccess("Usuários carregados com sucesso!");
+    toastSuccess("Usuários carregados com sucesso!");
   } catch (erro) {
     console.error("Erro:", erro);
     tabela.innerHTML = `<tr><td colspan="4" class="px-4 py-4 text-center text-red-500">Erro ao carregar dados.</td></tr>`;
-    showError("Erro ao se comunicar com o servidor.");
+    toastError("Erro ao se comunicar com o servidor.");
   }
 }
 
@@ -98,14 +129,14 @@ async function aprovarUsuario(id) {
     });
 
     if (resposta.ok) {
-      showSuccess("Usuário aprovado com sucesso!");
+      toastSuccess("Usuário aprovado com sucesso!");
       carregarUsuariosPendentes();
     } else {
-      showError("Erro ao aprovar usuário.");
+      toastError("Erro ao aprovar usuário.");
     }
   } catch (erro) {
     console.error("Erro:", erro);
-    showError("Erro ao se comunicar com o servidor.");
+    toastError("Erro ao se comunicar com o servidor.");
   }
 }
 
@@ -126,7 +157,7 @@ document.getElementById("btnConfirmarReprovar")?.addEventListener("click", async
   const justificativa = document.getElementById("inputJustificativa").value;
 
   if (!justificativa.trim()) {
-    showError("Por favor, informe a justificativa.");
+    toastError("Por favor, informe a justificativa.");
     return;
   }
 
@@ -141,15 +172,16 @@ document.getElementById("btnConfirmarReprovar")?.addEventListener("click", async
     });
 
     if (resposta.ok) {
-      showSuccess("Usuário reprovado com sucesso!", () => {
+      toastSuccess("Usuário reprovado com sucesso!");
+      setTimeout(() => {
         window.location.href = "/pages/administrador/usuarios-reprovados.html";
-      });
+      }, 1200);
     } else {
-      showError("Erro ao reprovar usuário.");
+      toastError("Erro ao reprovar usuário.");
     }
   } catch (erro) {
     console.error("Erro:", erro);
-    showError("Erro ao se comunicar com o servidor.");
+    toastError("Erro ao se comunicar com o servidor.");
   } finally {
     fecharModal();
   }
