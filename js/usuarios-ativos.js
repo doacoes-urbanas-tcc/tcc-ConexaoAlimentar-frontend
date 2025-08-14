@@ -1,6 +1,14 @@
 const filtroTipo = document.getElementById("filtroTipoAtivo");
 const tabela = document.getElementById("tabelaAtivos");
 
+const tiposMap = {
+  "comercios": "COMERCIO",
+  "ongs": "ONG",
+  "pessoas-fisicas": "PESSOA_FISICA",
+  "produtores-rurais": "PRODUTOR_RURAL",
+  "voluntarios": "VOLUNTARIO"
+};
+
 filtroTipo.addEventListener("change", carregarUsuariosAtivos);
 document.addEventListener("DOMContentLoaded", carregarUsuariosAtivos);
 
@@ -9,7 +17,7 @@ async function carregarUsuariosAtivos() {
   let endpoint = "https://conexao-alimentar.onrender.com/admin/usuarios/ativos";
 
   if (tipo !== "todos") {
-    endpoint += `/${tipo}`;
+    endpoint += `/${tiposMap[tipo]}`;
   }
 
   const token = localStorage.getItem("token");
@@ -22,7 +30,7 @@ async function carregarUsuariosAtivos() {
     });
 
     if (!resposta.ok) {
-      showError("Erro ao carregar usuários ativos");
+      toastError("Erro ao carregar usuários ativos");
       return;
     }
 
@@ -51,10 +59,10 @@ async function carregarUsuariosAtivos() {
       tabela.appendChild(linha);
     });
 
-    showSuccess("Usuários carregados com sucesso!");
+    toastSuccess("Usuários carregados com sucesso!");
   } catch (erro) {
     console.error("Erro:", erro);
-    showError("Erro ao buscar usuários.");
+    toastError("Erro ao buscar usuários.");
   }
 }
 
@@ -73,50 +81,35 @@ function verPerfil(id, tipo) {
   window.location.href = `/pages/administrador/perfil-usuario.html?id=${id}&tipo=${tipo}`;
 }
 
-function showSuccess(message, onOk = null) {
-  const modal = document.getElementById('modalSuccess');
-  const msgEl = document.getElementById('mensagem-sucesso');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
+'use strict';
 
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
-
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-green-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
+function toastSuccess(message) {
+  showToast(message, "bg-green-500");
 }
 
-function showError(message, onOk = null) {
-  const modal = document.getElementById('modalError');
-  const msgEl = document.getElementById('mensagem-erro');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
+function toastError(message) {
+  showToast(message, "bg-red-500");
+}
 
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
+function showToast(message, bgColor) {
+  const containerId = "toast-container";
+  let container = document.getElementById(containerId);
+
+  if (!container) {
+    container = document.createElement("div");
+    container.id = containerId;
+    container.className = "fixed top-4 right-4 z-50 space-y-2";
+    document.body.appendChild(container);
   }
 
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
+  const toast = document.createElement("div");
+  toast.className = `${bgColor} text-white px-4 py-2 rounded shadow-md transition-opacity duration-300 opacity-100`;
+  toast.textContent = message;
 
-  const okBtn = modal.querySelector('button.bg-red-500');
-  const closeBtn = modal.querySelector('button.absolute');
+  container.appendChild(toast);
 
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
 }
