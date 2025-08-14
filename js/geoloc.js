@@ -9,24 +9,47 @@ function validarCoords(lat, lng) {
 
 async function safeFetch(url, options = {}) {
   const resp = await fetch(url, options);
+
+  if (resp.status === 401 || resp.status === 403) {
+    alert("Acesso não autorizado. Faça login novamente.");
+    window.location.href = "/login.html";
+    throw new Error("Não autorizado");
+  }
+
   if (!resp.ok) throw new Error(`Erro HTTP: ${resp.status}`);
+
   return await resp.json();
 }
 
 async function getDoacaoById(idDoacao) {
-  return await safeFetch(`${API_BASE}/doacoes/${idDoacao}`);
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("Sua sessão expirou. Faça login novamente.");
+    window.location.href = "/login.html";
+    return;
+  }
+
+  return await safeFetch(`${API_BASE}/doacoes/${idDoacao}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
 }
 
 async function getOngLocation() {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("Token não encontrado");
+  }
+
   const data = await safeFetch(`${API_BASE}/admin/usuarios/usuario/localizacao`, {
-    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    headers: { Authorization: `Bearer ${token}` }
   });
   return validarCoords(data.latitude, data.longitude);
 }
 
-
 async function initMap(doadorCoords, ongCoords) {
-  const map = L.map("map").setView([doadorCoords.lat, doadorCoords.lng], 13);
+  const map = L.map("mapid").setView([doadorCoords.lat, doadorCoords.lng], 13);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "&copy; OpenStreetMap contributors"
@@ -47,27 +70,15 @@ async function initMap(doadorCoords, ongCoords) {
     );
     map.fitBounds(bounds);
 
-    const routingControl = L.Routing.control({
+    L.Routing.control({
       waypoints: [
         L.latLng(doadorCoords.lat, doadorCoords.lng),
         L.latLng(ongCoords.lat, ongCoords.lng)
       ],
-      routeWhileDragging: false,
       createMarker: () => null
     }).addTo(map);
-
-    routingControl.on("routesfound", function (e) {
-      const route = e.routes[0];
-      const distanciaKm = (route.summary.totalDistance / 1000).toFixed(2);
-      const tempoMin = Math.round(route.summary.totalTime / 60);
-
-      const infoBox = document.getElementById("routeInfo");
-      infoBox.textContent = `Distância: ${distanciaKm} km | Tempo estimado: ${tempoMin} min`;
-      infoBox.classList.remove("hidden");
-    });
   }
 }
-
 
 (async function () {
   const params = new URLSearchParams(window.location.search);
