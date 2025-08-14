@@ -1,17 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   const id = urlParams.get("id");
-  const origem = urlParams.get("origem") || "pendentes"; 
-  const pagina = urlParams.get("page") || 1; 
+  const origem = urlParams.get("origem") || "pendentes";
+  const pagina = urlParams.get("page") || 1;
   const tipo = urlParams.get("tipo")?.toUpperCase();
   const token = localStorage.getItem("token");
   const tipoUsuarioLogado = localStorage.getItem("tipoUsuario");
 
   const isAdmin = tipoUsuarioLogado === "ADMIN";
   let idUsuarioParaAcao = null;
-  let tipoAcao = ""; 
+  let tipoAcao = "";
+
   if (!id || !tipo) {
-    showError("Dados inválidos na URL");
+    showToast("Dados inválidos na URL", "error");
     return;
   }
 
@@ -23,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return res.json();
     })
     .then(dados => preencherPerfil(dados, tipo, isAdmin))
-    .catch(() => showError("Erro ao carregar dados do perfil."));
+    .catch(() => showToast("Erro ao carregar dados do perfil.", "error"));
 
   function preencherPerfil(dados, tipo, isAdmin) {
     const info = document.getElementById("infoPerfil");
@@ -101,8 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const verAvaliacoesDiv = document.getElementById("verAvaliacoes");
     verAvaliacoesDiv.classList.remove("hidden");
-    const btnAvaliacoes = document.getElementById("btnAvaliacoes");
-    btnAvaliacoes.onclick = () => {
+    document.getElementById("btnAvaliacoes").onclick = () => {
       window.location.href = `../avaliacao/avaliacoes-usuario.html?id=${id}`;
     };
 
@@ -152,16 +152,16 @@ document.addEventListener("DOMContentLoaded", () => {
   function atualizarStatus(acao) {
     fetch(`https://conexao-alimentar.onrender.com/admin/usuarios/${acao}/${id}`, {
       method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => {
         if (res.ok) {
-          showSuccess(`Usuário ${acao} com sucesso.`);
-          window.location.href = "usuarios-pendentes.html";
+          showToast(`Usuário ${acao} com sucesso.`, "success");
+          setTimeout(() => {
+            window.location.href = "usuarios-pendentes.html";
+          }, 1500);
         } else {
-          showError("Erro ao atualizar status.");
+          showToast("Erro ao atualizar status.", "error");
         }
       });
   }
@@ -171,15 +171,16 @@ document.addEventListener("DOMContentLoaded", () => {
     idUsuarioParaAcao = null;
     tipoAcao = "";
   });
+
   document.getElementById("btnConfirmarReprovar").addEventListener("click", () => {
     const justificativa = document.getElementById("inputJustificativa").value.trim();
     if (!justificativa) {
-      showError("Por favor, insira a justificativa.");
+      showToast("Por favor, insira a justificativa.", "error");
       return;
     }
 
     if (!tipoAcao || !idUsuarioParaAcao) {
-      showError("Ação inválida.");
+      showToast("Ação inválida.", "error");
       return;
     }
 
@@ -196,15 +197,17 @@ document.addEventListener("DOMContentLoaded", () => {
     })
       .then(async res => {
         if (res.ok) {
-          showSuccess(`Usuário ${tipoAcao} com sucesso.`);
-          window.location.href = tipoAcao === "reprovar" ? "usuarios-pendentes.html" : "usuarios-ativos.html";
+          showToast(`Usuário ${tipoAcao} com sucesso.`, "success");
+          setTimeout(() => {
+            window.location.href = tipoAcao === "reprovar" ? "usuarios-pendentes.html" : "usuarios-ativos.html";
+          }, 1500);
         } else {
           const msg = await res.text();
-          showError(`Erro ao atualizar status.\nCódigo: ${res.status}\n${msg}`);
+          showToast(`Erro ao atualizar status.\nCódigo: ${res.status}\n${msg}`, "error");
         }
       })
       .catch(() => {
-        showError("Erro ao se comunicar com o servidor.");
+        showToast("Erro ao se comunicar com o servidor.", "error");
       })
       .finally(() => {
         document.getElementById("modalJustificativa").classList.add("hidden");
@@ -213,51 +216,3 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   });
 });
-
-function showSuccess(message, onOk = null) {
-  const modal = document.getElementById('modalSuccess');
-  const msgEl = document.getElementById('modalSuccessMessage');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
-
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
-
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-green-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
-}
-
-function showError(message, onOk = null) {
-  const modal = document.getElementById('modalError');
-  const msgEl = document.getElementById('mensagem-erro');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
-
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
-
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-red-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
-}

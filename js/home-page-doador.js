@@ -2,11 +2,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
   const nomeUsuario = localStorage.getItem("nome") || "Doador";
 
-    if (!token) {
+  if (!token) {
     window.location.href = "/pages/cadastrologin/login.html";
     return;
-    }
-
+  }
 
   fetch("https://conexao-alimentar.onrender.com/doacoes/metricas", {
     headers: {
@@ -18,13 +17,17 @@ document.addEventListener("DOMContentLoaded", () => {
       return res.json();
     })
     .then(data => {
-      document.getElementById("nome").textContent = data.nome;
+      document.getElementById("nome").textContent = data.nome || nomeUsuario;
       document.getElementById("totalDoacoes").textContent = data.totalDoacoes;
       document.getElementById("ongsBeneficiadas").textContent = data.ongsBeneficiadas;
       document.getElementById("mediaAvaliacoes").textContent = `${(data.mediaAvaliacoes || 0).toFixed(1)} ★`;
 
-  
-      const ultimaDoacaoElements = ["dataUltimaDoacao", "itensUltimaDoacao", "destinoUltimaDoacao", "statusUltimaDoacao"];
+      const ultimaDoacaoElements = [
+        "dataUltimaDoacao",
+        "itensUltimaDoacao",
+        "destinoUltimaDoacao",
+        "statusUltimaDoacao"
+      ];
       ultimaDoacaoElements.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = "none";
@@ -32,55 +35,38 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .catch(error => {
       console.error(error);
-      showError("Erro ao carregar dados do dashboard.");
+      showToast("Erro ao carregar dados do dashboard.", "error");
     });
 });
 
-function showSuccess(message, onOk = null) {
-  const modal = document.getElementById('modalSuccess');
-  const msgEl = document.getElementById('mensagem-sucesso');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
+/**
+ * Função de toast (reutilizável)
+ * @param {string} message - Texto da mensagem
+ * @param {"success" | "error"} type - Tipo de toast
+ */
+function showToast(message, type = "success") {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
 
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
+  const toast = document.createElement("div");
+  toast.className = `max-w-xs w-full bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 p-4 flex items-center justify-between transition transform duration-300 ${
+    type === "success" ? "border-l-4 border-green-500" : "border-l-4 border-red-500"
+  }`;
 
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
+  toast.innerHTML = `
+    <div class="flex-1">
+      <p class="text-sm font-medium text-gray-900">${message}</p>
+    </div>
+    <button class="ml-4 text-gray-400 hover:text-gray-600 focus:outline-none">&times;</button>
+  `;
 
-  const okBtn = modal.querySelector('button.bg-green-500');
-  const closeBtn = modal.querySelector('button.absolute');
+  container.appendChild(toast);
 
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
+  const remove = () => {
+    toast.classList.add("opacity-0", "translate-x-5");
+    setTimeout(() => toast.remove(), 300);
+  };
+
+  toast.querySelector("button").addEventListener("click", remove);
+  setTimeout(remove, 3000);
 }
-
-function showError(message, onOk = null) {
-  const modal = document.getElementById('modalError');
-  const msgEl = document.getElementById('mensagem-erro');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
-
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
-
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-red-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
-}
-

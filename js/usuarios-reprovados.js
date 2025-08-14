@@ -37,8 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return res.json();
       })
       .then(usuarios => {
-        console.log("Usuários reprovados recebidos:", usuarios);
-        console.log("Primeiro usuário:", usuarios[0]);
         if (tipo) {
           usuarios = usuarios.filter(u => u.tipoUsuario === tipo);
         }
@@ -46,12 +44,17 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .catch(err => {
         console.error("Erro:", err);
-        showError("Erro ao buscar usuários reprovados");
+        showToast("Erro ao buscar usuários reprovados", "error");
       });
   }
 
   function preencherTabela(usuarios) {
     tabela.innerHTML = "";
+
+    if (usuarios.length === 0) {
+      tabela.innerHTML = `<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Nenhum usuário encontrado.</td></tr>`;
+      return;
+    }
 
     usuarios.forEach(usuario => {
       const tr = document.createElement("tr");
@@ -80,56 +83,18 @@ document.addEventListener("DOMContentLoaded", () => {
   carregarUsuarios("todos");
 });
 
+function showToast(message, type = "success") {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
 
-function showSuccess(message, onOk = null) {
-  const modal = document.getElementById('modalSuccess');
-  const msgEl = document.getElementById('mensagem-sucesso');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
+  const toast = document.createElement("div");
+  toast.className = `px-4 py-3 rounded shadow text-white ${type === "success" ? "bg-green-500" : "bg-red-500"} transition-opacity duration-500`;
+  toast.textContent = message;
 
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
+  container.appendChild(toast);
 
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-green-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
+  setTimeout(() => {
+    toast.classList.add("opacity-0");
+    setTimeout(() => toast.remove(), 500);
+  }, 3000);
 }
-
-function showError(message, onOk = null) {
-  const modal = document.getElementById('modalError');
-  const msgEl = document.getElementById('mensagem-erro');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
-
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
-
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-red-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
-}
-
-
-
-
-

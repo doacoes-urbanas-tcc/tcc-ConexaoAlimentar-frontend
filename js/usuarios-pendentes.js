@@ -42,6 +42,7 @@ async function carregarUsuariosPendentes() {
     if (!resposta.ok) {
       console.error("Erro ao carregar usuários pendentes:", resposta.status);
       tabela.innerHTML = `<tr><td colspan="4" class="px-4 py-4 text-center text-red-500">Erro ao carregar dados.</td></tr>`;
+      showError("Erro ao carregar usuários pendentes.");
       return;
     }
 
@@ -50,6 +51,7 @@ async function carregarUsuariosPendentes() {
 
     if (usuarios.length === 0) {
       tabela.innerHTML = `<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Nenhum usuário pendente encontrado.</td></tr>`;
+      showInfo("Nenhum usuário pendente encontrado.");
       return;
     }
 
@@ -76,12 +78,13 @@ async function carregarUsuariosPendentes() {
       tabela.appendChild(linha);
     });
 
+    showSuccess("Usuários carregados com sucesso!");
   } catch (erro) {
     console.error("Erro:", erro);
     tabela.innerHTML = `<tr><td colspan="4" class="px-4 py-4 text-center text-red-500">Erro ao carregar dados.</td></tr>`;
+    showError("Erro ao se comunicar com o servidor.");
   }
 }
-
 
 function verPerfil(id, tipo) {
   window.location.href = `/pages/administrador/perfil-usuario.html?id=${id}&tipo=${tipo}`;
@@ -95,13 +98,14 @@ async function aprovarUsuario(id) {
     });
 
     if (resposta.ok) {
+      showSuccess("Usuário aprovado com sucesso!");
       carregarUsuariosPendentes();
     } else {
-      showError("Erro ao aprovar usuário");
+      showError("Erro ao aprovar usuário.");
     }
   } catch (erro) {
     console.error("Erro:", erro);
-    showError("Erro ao aprovar usuário");
+    showError("Erro ao se comunicar com o servidor.");
   }
 }
 

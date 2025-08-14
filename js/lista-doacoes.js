@@ -9,13 +9,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   try {
     const response = await fetch("https://conexao-alimentar.onrender.com/doacoes", {
       method: "GET",
-      headers: {
-        "Authorization": "Bearer " + token
-      }
+      headers: { "Authorization": "Bearer " + token }
     });
 
     if (!response.ok) {
-      showError(`Erro ao carregar doações: ${response.status}`);
+      showToast(`Erro ao carregar doações: ${response.status}`, "error");
       return;
     }
 
@@ -65,16 +63,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   } catch (err) {
     console.error("Erro ao carregar doações:", err);
-    lista.innerHTML = "<p class='text-red-600'>Erro ao carregar doações.</p>";
+    showToast("Erro ao carregar doações.", "error");
   }
 });
 
 async function verificarAvaliacoesPendentes(token) {
   try {
     const response = await fetch("https://conexao-alimentar.onrender.com/reservas/avaliacoes-pendentes", {
-      headers: {
-        "Authorization": "Bearer " + token
-      }
+      headers: { "Authorization": "Bearer " + token }
     });
 
     if (!response.ok) return true;
@@ -83,15 +79,16 @@ async function verificarAvaliacoesPendentes(token) {
 
     if (reservasPendentes.length > 0) {
       const reserva = reservasPendentes[0];
-      showError("Você precisa concluir suas avaliações antes de continuar.", () => {
+      showToast("Você precisa concluir suas avaliações antes de continuar.", "error");
+      setTimeout(() => {
         window.location.href = `/pages/avaliacao/avaliacao.html?idReserva=${reserva.id}`;
-      });
+      }, 2000);
       return false;
     }
 
     return true;
   } catch (err) {
-    showError("Erro ao verificar avaliações pendentes");
+    showToast("Erro ao verificar avaliações pendentes", "error");
     return true;
   }
 }
@@ -104,44 +101,22 @@ function formatarDataHora(dataHora) {
   return new Date(dataHora).toLocaleString("pt-BR");
 }
 
-function showSuccess(message, onOk = null) {
-  const modal = document.getElementById('modalSuccess');
-  if (!modal) {
+function showToast(message, type = "success") {
+  const container = document.getElementById("toast-container");
+  if (!container) {
     alert(message);
-    if (typeof onOk === 'function') onOk();
     return;
   }
 
-  const msgEl = document.getElementById('mensagem-sucesso');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
+  const toast = document.createElement("div");
+  toast.className = `px-4 py-2 rounded shadow text-white ${
+    type === "success" ? "bg-green-500" : "bg-red-500"
+  } animate-fade-in-down`;
+  toast.textContent = message;
 
-  const okBtn = document.getElementById('fechar-modal-sucesso');
-  if (okBtn) {
-    okBtn.onclick = () => {
-      modal.classList.add('hidden');
-      if (typeof onOk === 'function') onOk();
-    };
-  }
-}
+  container.appendChild(toast);
 
-function showError(message, onOk = null) {
-  const modal = document.getElementById('modalError');
-  if (!modal) {
-    alert(message);
-    if (typeof onOk === 'function') onOk();
-    return;
-  }
-
-  const msgEl = document.getElementById('mensagem-erro');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
-
-  const okBtn = document.getElementById('fechar-modal-erro');
-  if (okBtn) {
-    okBtn.onclick = () => {
-      modal.classList.add('hidden');
-      if (typeof onOk === 'function') onOk();
-    };
-  }
+  setTimeout(() => {
+    toast.remove();
+  }, 4000);
 }

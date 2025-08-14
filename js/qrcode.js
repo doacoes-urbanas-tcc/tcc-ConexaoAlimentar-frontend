@@ -30,9 +30,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function redirecionarParaAvaliacao(reservaId) {
-    showSuccess("A doação foi retirada! Você será direcionado para avaliar o doador.", () => {
+    showToast("A doação foi retirada! Você será direcionado para avaliar o doador.", "success");
+    setTimeout(() => {
       window.location.href = `../avaliacao/avaliacao.html?idReserva=${reservaId}`;
-    });
+    }, 2500);
   }
 
   let intervaloStatus = null;
@@ -89,88 +90,61 @@ document.addEventListener("DOMContentLoaded", async () => {
     iniciarContagemRegressiva(data.segundosRestantes ?? 0, data.segundosTotais ?? 7200);
   } catch (err) {
     console.error(err);
+    showToast(err.message, "error");
     qrContainer.innerHTML = `<p class="text-red-600">${err.message}</p>`;
   }
 
   const btnVerLocalizacao = document.getElementById("btnVerLocalizacao");
-if (btnVerLocalizacao) {
-  btnVerLocalizacao.addEventListener("click", async () => {
-    try {
-      const dataDoacao = await safeFetch(`https://conexao-alimentar.onrender.com/doacoes/${idDoacao}`);
-      
-      const doacao = {
-        nomeAlimento: dataDoacao.nomeAlimento,
-        doadorNome: dataDoacao.doadorNome,
-        quantidade: dataDoacao.quantidade,
-        unidadeMedida: dataDoacao.unidadeMedida,
-        categoria: dataDoacao.categoria,
-        dataValidade: dataDoacao.dataValidade,
-        descricao: dataDoacao.descricao,
-        urlImagem: dataDoacao.urlImagem,
-        lat: dataDoacao.latitude,
-        lng: dataDoacao.longitude
-      };
+  if (btnVerLocalizacao) {
+    btnVerLocalizacao.addEventListener("click", async () => {
+      try {
+        const dataDoacao = await safeFetch(`https://conexao-alimentar.onrender.com/doacoes/${idDoacao}`);
+        
+        const doacao = {
+          nomeAlimento: dataDoacao.nomeAlimento,
+          doadorNome: dataDoacao.doadorNome,
+          quantidade: dataDoacao.quantidade,
+          unidadeMedida: dataDoacao.unidadeMedida,
+          categoria: dataDoacao.categoria,
+          dataValidade: dataDoacao.dataValidade,
+          descricao: dataDoacao.descricao,
+          urlImagem: dataDoacao.urlImagem,
+          lat: dataDoacao.latitude,
+          lng: dataDoacao.longitude
+        };
 
-      localStorage.setItem("dadosDoacao", JSON.stringify(doacao));
-      window.location.href = `/pages/geolocalizacao/geoloc.html`;
-    } catch (error) {
-      console.error("Erro ao buscar dados da doação:", error);
-    }
+        localStorage.setItem("dadosDoacao", JSON.stringify(doacao));
+        window.location.href = `/pages/geolocalizacao/geoloc.html`;
+      } catch (error) {
+        console.error("Erro ao buscar dados da doação:", error);
+        showToast("Erro ao carregar localização da doação.", "error");
+      }
+    });
+  }
+
+});
+
+function showToast(message, type = "success") {
+  const container = document.getElementById("toast-container");
+  if (!container) return console.error("Toast container não encontrado.");
+
+  const toast = document.createElement("div");
+  toast.className = `p-4 rounded-lg shadow-md text-white flex items-center justify-between transition-all duration-500 ease-in-out ${
+    type === "success" ? "bg-green-500" : "bg-red-500"
+  }`;
+  toast.innerHTML = `
+    <span>${message}</span>
+    <button class="ml-4 text-white hover:text-gray-200">&times;</button>
+  `;
+
+  const closeBtn = toast.querySelector("button");
+  closeBtn.addEventListener("click", () => {
+    toast.remove();
   });
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 3000);
 }
-
-  });
-  
-
-function showSuccess(message, onOk = null) {
-  const modal = document.getElementById('modalSuccess');
-  const msgEl = document.getElementById('mensagem-sucesso');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
-
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
-
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-green-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
-}
-
-function showError(message, onOk = null) {
-  const modal = document.getElementById('modalError');
-  const msgEl = document.getElementById('mensagem-erro');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
-
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
-
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-red-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
-}
-
-
-
-
-

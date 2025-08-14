@@ -1,5 +1,8 @@
+'use strict';
+
 const starContainer = document.getElementById("star-rating");
 const hiddenInput = document.getElementById("nota");
+let currentRating = 0;
 
 for (let i = 1; i <= 5; i++) {
   const star = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -40,7 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (!idReserva) {
     console.error("ID da reserva não informado na URL.");
-    showError("Reserva inválida. Retorne e tente novamente.");
+    showToast("Reserva inválida. Retorne e tente novamente.", "error");
     return;
   }
 
@@ -68,86 +71,56 @@ document.addEventListener("DOMContentLoaded", async () => {
         throw new Error(erro);
       }
 
-      showSuccess("Avaliação enviada com sucesso!", () => {
-      const tipoUsuario = localStorage.getItem("tipoUsuario")?.toLowerCase();
+      showToast("Avaliação enviada com sucesso!", "success");
 
-      switch (tipoUsuario) {
-        case "ong":
-        window.location.href = "/pages/ong/home-page-ong.html";
-        break;
-      case "comercio":
-        window.location.href = "/pages/doador/home-page-doador.html";
-        break;
-      case "voluntario":
-        window.location.href = "/pages/voluntario/home-page-voluntario.html";
-        break;
-      case "admin":
-        window.location.href = "/pages/administrador/dashboard-administrador.html";
-        break;
-      case "rural":
-        window.location.href = "/pages/doador/home-page-doador.html";
-        break;
-      case "pf":
-        window.location.href = "/pages/doador/home-page-doador.html";
-        break;
-
-      default:
-       window.location.href = "/pages/dashboard.html";
-    }
-    });
+      setTimeout(() => {
+        const tipoUsuario = localStorage.getItem("tipoUsuario")?.toLowerCase();
+        switch (tipoUsuario) {
+          case "ong":
+            window.location.href = "/pages/ong/home-page-ong.html";
+            break;
+          case "comercio":
+          case "rural":
+          case "pf":
+            window.location.href = "/pages/doador/home-page-doador.html";
+            break;
+          case "voluntario":
+            window.location.href = "/pages/voluntario/home-page-voluntario.html";
+            break;
+          case "admin":
+            window.location.href = "/pages/administrador/dashboard-administrador.html";
+            break;
+          default:
+            window.location.href = "/pages/dashboard.html";
+        }
+      }, 1500);
 
     } catch (err) {
       console.error("Erro ao enviar avaliação:", err);
-      showError("Erro ao enviar avaliação: " + err.message);
+      showToast("Erro ao enviar avaliação: " + err.message, "error");
     }
   });
 });
-function showSuccess(message, onOk = null) {
-  const modal = document.getElementById('modalSuccess');
-  const msgEl = document.getElementById('mensagem-sucesso');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
 
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
+/**
+ * @param {string} message - Mensagem do toast
+ * @param {"success"|"error"} type - Tipo de toast
+ */
+function showToast(message, type = "success") {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
 
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
+  const toast = document.createElement("div");
+  toast.className = `
+    px-4 py-3 rounded-lg shadow-md text-white transition-opacity duration-300
+    ${type === "success" ? "bg-green-500" : "bg-red-500"}
+  `;
+  toast.textContent = message;
 
-  const okBtn = modal.querySelector('button.bg-green-500');
-  const closeBtn = modal.querySelector('button.absolute');
+  container.appendChild(toast);
 
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
 }
-
-function showError(message, onOk = null) {
-  const modal = document.getElementById('modalError');
-  const msgEl = document.getElementById('mensagem-erro');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
-
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
-
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-red-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
-}
-
-

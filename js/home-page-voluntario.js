@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const usuarioId = localStorage.getItem("usuarioId");
 
   if (!token || !usuarioId) {
-    alert("Você precisa estar logado.");
+    showToast("Você precisa estar logado.", "error");
     window.location.href = "/pages/cadastrologin/login.html";
     return;
   }
@@ -52,59 +52,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   } catch (e) {
     console.error("Erro ao carregar dashboard:", e);
-    showError("Erro ao carregar dashboard do voluntário.");
+    showToast("Erro ao carregar dashboard do voluntário.", "error");
   }
 });
 
-function showSuccess(message, onOk = null) {
-  const modal = document.getElementById('modalSuccess');
-  const msgEl = document.getElementById('mensagem-sucesso');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
 
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
+function showToast(message, type = "success") {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
 
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
+  const toast = document.createElement("div");
+  toast.className = `max-w-xs w-full bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 p-4 flex items-center justify-between transition transform duration-300 ${
+    type === "success" ? "border-l-4 border-green-500" : "border-l-4 border-red-500"
+  }`;
 
-  const okBtn = modal.querySelector('button.bg-green-500');
-  const closeBtn = modal.querySelector('button.absolute');
+  toast.innerHTML = `
+    <div class="flex-1">
+      <p class="text-sm font-medium text-gray-900">${message}</p>
+    </div>
+    <button class="ml-4 text-gray-400 hover:text-gray-600 focus:outline-none">&times;</button>
+  `;
 
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
+  container.appendChild(toast);
+
+  const remove = () => {
+    toast.classList.add("opacity-0", "translate-x-5");
+    setTimeout(() => toast.remove(), 300);
+  };
+
+  toast.querySelector("button").addEventListener("click", remove);
+  setTimeout(remove, 3000);
 }
-
-function showError(message, onOk = null) {
-  const modal = document.getElementById('modalError');
-  const msgEl = document.getElementById('mensagem-erro');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
-
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
-
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-red-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
-}
-
-
-
-
-

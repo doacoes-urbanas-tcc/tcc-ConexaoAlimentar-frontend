@@ -3,37 +3,38 @@
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.querySelector('form');
 
+  if (!form) return;
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const voluntarioId = localStorage.getItem("usuarioId");
 
     if (!voluntarioId) {
-      alert("ID do voluntário não encontrado. Faça o login novamente.");
+      showToast("ID do voluntário não encontrado. Faça o login novamente.", "error");
       return;
     }
 
-    const placa = document.getElementById("placa").value;
-    const modelo = document.getElementById("modelo").value;
-    const cor = document.getElementById("cor").value;
-    const carga = document.getElementById("carga").value;
+    const placa = document.getElementById("placa").value.trim();
+    const modelo = document.getElementById("modelo").value.trim();
+    const cor = document.getElementById("cor").value.trim();
+    const carga = document.getElementById("carga").value.trim();
     const cnhFile = document.getElementById("cnh").files[0];
 
     if (!placa || !modelo || !cor || !carga || !cnhFile) {
-      showError("Preencha todos os campos e selecione uma imagem da CNH.");
+      showToast("Preencha todos os campos e selecione uma imagem da CNH.", "error");
       return;
     }
 
-    const dto = {
-      placa,
-      modelo,
-      cor,
-      capacidadeCarga: carga
-    };
+    const dto = { placa, modelo, cor, capacidadeCarga: carga };
 
     const formData = new FormData();
     formData.append("dados", new Blob([JSON.stringify(dto)], { type: "application/json" }));
     formData.append("cnh", cnhFile);
+
+    const botao = form.querySelector("button[type=submit]");
+    botao.disabled = true;
+    botao.textContent = "Enviando...";
 
     try {
       const response = await fetch(`https://conexao-alimentar.onrender.com/${voluntarioId}/veiculo`, {
@@ -43,66 +44,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!response.ok) {
         const resText = await response.text();
-        throw new Error("Erro ao cadastrar veículo: " + resText);
+        throw new Error(resText || "Erro desconhecido");
       }
 
-     showSuccess("Veículo cadastrado com sucesso!");
+      showToast("Veículo cadastrado com sucesso!", "success");
       form.reset();
+
     } catch (err) {
       console.error(err);
-      showError("Erro ao enviar dados do veículo. Tente novamente.");
+      showToast("Erro ao enviar dados do veículo. Tente novamente.", "error");
+    } finally {
+      botao.disabled = false;
+      botao.textContent = "Cadastrar";
     }
   });
 });
 
+/**
+ * Função para exibir toast
+ * @param {string} message - Mensagem do toast
+ * @param {'success'|'error'} type - Tipo do toast
+ */
+function showToast(message, type = "success") {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
 
-function showSuccess(message, onOk = null) {
-  const modal = document.getElementById('modalSuccess');
-  const msgEl = document.getElementById('mensagem-sucesso');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
+  const toast = document.createElement("div");
+  toast.className = `px-4 py-3 rounded shadow text-white ${
+    type === "success" ? "bg-green-500" : "bg-red-500"
+  } animate-slideIn`;
+  toast.textContent = message;
 
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
+  container.appendChild(toast);
 
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-green-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
+  setTimeout(() => {
+    toast.classList.add("opacity-0", "transition-opacity", "duration-500");
+    setTimeout(() => toast.remove(), 500);
+  }, 3000);
 }
-
-function showError(message, onOk = null) {
-  const modal = document.getElementById('modalError');
-  const msgEl = document.getElementById('mensagem-erro');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
-
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
-
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-red-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
-}
-
-
-

@@ -1,3 +1,5 @@
+'use strict';
+
 document.addEventListener("DOMContentLoaded", async () => {
   const lista = document.getElementById("lista-avaliacoes");
   const urlParams = new URLSearchParams(window.location.search);
@@ -5,7 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("token");
   const usuarioIdLogado = localStorage.getItem("usuarioId");
 
-   if (!avaliadoId) {
+  if (!avaliadoId) {
     if (!usuarioIdLogado) {
       lista.innerHTML = "<p class='text-gray-700'>ID do usuário não encontrado para carregar avaliações.</p>";
       return;
@@ -29,7 +31,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    lista.innerHTML = ""; 
+    lista.innerHTML = "";
 
     avaliacoes.forEach(avaliacao => {
       const item = document.createElement("div");
@@ -61,56 +63,39 @@ document.addEventListener("DOMContentLoaded", async () => {
       lista.appendChild(item);
     });
   } catch (err) {
-    showError(`Erro: ${err.message}`);
+    showToast(`Erro: ${err.message}`, 'error');
   }
 });
 
-function showSuccess(message, onOk = null) {
-  const modal = document.getElementById('modalSuccess');
-  const msgEl = document.getElementById('mensagem-sucesso');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
+function showToast(message, type = 'success', duration = 3000) {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
 
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
+  container.innerHTML = ''; 
 
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
+  const toast = document.createElement('div');
+  toast.className = `
+    flex items-center px-4 py-3 rounded-lg shadow-lg text-white
+    ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}
+    transform transition-all duration-300 opacity-0 translate-x-4
+  `;
+  toast.innerHTML = `
+    <span class="flex-1">${message}</span>
+    <button class="ml-3 text-white hover:text-gray-200 focus:outline-none">&times;</button>
+  `;
 
-  const okBtn = modal.querySelector('button.bg-green-500');
-  const closeBtn = modal.querySelector('button.absolute');
+  container.appendChild(toast);
 
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
+  requestAnimationFrame(() => {
+    toast.classList.remove('opacity-0', 'translate-x-4');
+  });
+
+  toast.querySelector('button').addEventListener('click', () => hideToast(toast));
+
+  setTimeout(() => hideToast(toast), duration);
 }
 
-function showError(message, onOk = null) {
-  const modal = document.getElementById('modalError');
-  const msgEl = document.getElementById('mensagem-erro');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
-
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
-
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-red-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
+function hideToast(toast) {
+  toast.classList.add('opacity-0', 'translate-x-4');
+  setTimeout(() => toast.remove(), 300);
 }
-
-

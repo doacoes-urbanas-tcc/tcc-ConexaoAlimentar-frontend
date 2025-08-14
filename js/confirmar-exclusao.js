@@ -1,3 +1,5 @@
+'use strict';
+
 document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
@@ -6,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("token");
 
   if (!id || !token) {
-   showError("Requisição inválida.");
+    showToast("Requisição inválida.", "error");
     window.location.href = "/pages/doacao/minhas-doacoes.html";
     return;
   }
@@ -41,64 +43,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       if (!deleteResp.ok) throw new Error("Erro ao excluir doação.");
 
-      showSuccess("Doação excluída com sucesso.");
-      window.location.href = "/pages/doacao/minhas-doacoes.html";
+      showToast("Doação excluída com sucesso.", "success");
+      setTimeout(() => {
+        window.location.href = "/pages/doacao/minhas-doacoes.html";
+      }, 2000);
     } catch (e) {
       console.error(e);
-      showError("Erro ao excluir doação.");
+      showToast("Erro ao excluir doação.", "error");
     }
   });
 });
 
+function showToast(message, type = "success") {
+  const toastContainer = document.getElementById("toast-container");
+  if (!toastContainer) return console.error("Toast container não encontrado.");
 
-function showSuccess(message, onOk = null) {
-  const modal = document.getElementById('modalSuccess');
-  const msgEl = document.getElementById('mensagem-sucesso');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
+  const toast = document.createElement("div");
+  toast.className = `max-w-sm w-full p-4 rounded shadow-lg text-white ${
+    type === "success" ? "bg-green-500" : "bg-red-500"
+  }`;
 
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
+  toast.textContent = message;
+  toastContainer.appendChild(toast);
 
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-green-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
+  setTimeout(() => {
+    toast.remove();
+  }, 3000);
 }
-
-function showError(message, onOk = null) {
-  const modal = document.getElementById('modalError');
-  const msgEl = document.getElementById('mensagem-erro');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
-
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
-
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-red-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
-}
-
-
-
-

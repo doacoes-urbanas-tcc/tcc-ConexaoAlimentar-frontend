@@ -22,7 +22,7 @@ async function carregarUsuariosAtivos() {
     });
 
     if (!resposta.ok) {
-      console.error("Erro ao carregar usuários ativos");
+      showError("Erro ao carregar usuários ativos");
       return;
     }
 
@@ -50,8 +50,11 @@ async function carregarUsuariosAtivos() {
 
       tabela.appendChild(linha);
     });
+
+    showSuccess("Usuários carregados com sucesso!");
   } catch (erro) {
     console.error("Erro:", erro);
+    showError("Erro ao buscar usuários.");
   }
 }
 
@@ -68,4 +71,52 @@ function formatarTipo(tipo) {
 
 function verPerfil(id, tipo) {
   window.location.href = `/pages/administrador/perfil-usuario.html?id=${id}&tipo=${tipo}`;
+}
+
+function showSuccess(message, onOk = null) {
+  const modal = document.getElementById('modalSuccess');
+  const msgEl = document.getElementById('mensagem-sucesso');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-green-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
+}
+
+function showError(message, onOk = null) {
+  const modal = document.getElementById('modalError');
+  const msgEl = document.getElementById('mensagem-erro');
+  msgEl.textContent = message;
+  modal.classList.remove('hidden');
+
+  function closeHandler() {
+    modal.classList.add('hidden');
+    if (onOk) onOk();
+    removeListeners();
+  }
+
+  function removeListeners() {
+    okBtn.removeEventListener('click', closeHandler);
+    closeBtn.removeEventListener('click', closeHandler);
+  }
+
+  const okBtn = modal.querySelector('button.bg-red-500');
+  const closeBtn = modal.querySelector('button.absolute');
+
+  okBtn.addEventListener('click', closeHandler);
+  closeBtn.addEventListener('click', closeHandler);
 }

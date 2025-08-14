@@ -1,16 +1,16 @@
 function logout() {
-      localStorage.removeItem("token");
-      window.location.href = "/pages/cadastrologin/login.html";
-    }
-    function Menu(e) {
-      const menu = document.getElementById("menu");
-      if (menu.classList.contains("hidden")) {
-        e.name = "close-outline";
-        menu.classList.remove("hidden");
-        menu.classList.add("flex");
-      } else {
-        e.name = "menu-outline";
-        menu.classList.remove("flex");
-        menu.classList.add("hidden");
-      }
-    }
+  localStorage.removeItem("token");
+  showToast("Você saiu da conta.", "success");
+  setTimeout(() => {
+    window.location.href = "/pages/cadastrologin/login.html";
+  }, 1200);
+}
+
+function Menu(e) {
+  const menu = document.getElementById("menu");
+  const isHidden = menu.classList.contains("hidden");
+
+  e.name = isHidden ? "close-outline" : "menu-outline";
+  menu.classList.toggle("hidden", !isHidden);
+  menu.classList.toggle("flex", isHidden);
+}

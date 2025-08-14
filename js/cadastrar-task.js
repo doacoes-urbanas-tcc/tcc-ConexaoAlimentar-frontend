@@ -64,17 +64,15 @@ document.addEventListener("DOMContentLoaded", () => {
         body: JSON.stringify(dto)
       });
 
-       if (response.ok) {
-       showSuccess("Task cadastrada com sucesso!", () => {
-       window.location.reload();
-       });
-       } else {
-       showError("Erro ao cadastrar task.");
+      if (response.ok) {
+        showToast("Task cadastrada com sucesso!", "success");
+        setTimeout(() => window.location.reload(), 1500);
+      } else {
+        showToast("Erro ao cadastrar task.", "error");
       }
-
     } catch (err) {
-      showError("Erro ao cadastrar task.");
       console.error(err);
+      showToast("Erro ao cadastrar task.", "error");
     }
   });
 });
@@ -84,53 +82,18 @@ function logout() {
   window.location.href = "/pages/cadastrologin/login.html";
 }
 
+function showToast(message, type = "success") {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
 
-function showSuccess(message, onOk = null) {
-  const modal = document.getElementById('modalSuccess');
-  const msgEl = document.getElementById('mensagem-sucesso');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
+  const toast = document.createElement("div");
+  toast.className = `p-4 rounded-lg shadow-md text-white ${type === "success" ? "bg-green-500" : "bg-red-500"} animate-fadeIn`;
+  toast.textContent = message;
 
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
+  container.appendChild(toast);
 
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-green-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
+  setTimeout(() => {
+    toast.classList.add("opacity-0", "transition-opacity", "duration-500");
+    setTimeout(() => toast.remove(), 500);
+  }, 3000);
 }
-
-function showError(message, onOk = null) {
-  const modal = document.getElementById('modalError');
-  const msgEl = document.getElementById('mensagem-erro');
-  msgEl.textContent = message;
-  modal.classList.remove('hidden');
-
-  function closeHandler() {
-    modal.classList.add('hidden');
-    if (onOk) onOk();
-    removeListeners();
-  }
-
-  function removeListeners() {
-    okBtn.removeEventListener('click', closeHandler);
-    closeBtn.removeEventListener('click', closeHandler);
-  }
-
-  const okBtn = modal.querySelector('button.bg-red-500');
-  const closeBtn = modal.querySelector('button.absolute');
-
-  okBtn.addEventListener('click', closeHandler);
-  closeBtn.addEventListener('click', closeHandler);
-}
-
-

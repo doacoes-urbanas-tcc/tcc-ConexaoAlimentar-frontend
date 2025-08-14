@@ -1,3 +1,5 @@
+'use strict';
+
 document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
   const idDoacao = params.get("id");
@@ -7,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   let doacao = null;
 
   if (!idDoacao || !token) {
-    showError("ID de doação inválido ou usuário não está logado.");
+    showToast("ID de doação inválido ou usuário não está logado.", "error");
     window.location.href = "/pages/doacao/lista-doacoes.html";
     return;
   }
@@ -46,15 +48,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       if (!response.ok) {
         const erro = await response.text();
-        showError("Erro ao reservar: " + erro);
+        showToast("Erro ao reservar: " + erro, "error");
         return;
       }
 
       localStorage.setItem("dadosDoacao", JSON.stringify(doacao));
       window.location.href = `/pages/reserva/qrcode.html?id=${idDoacao}`;
     } catch {
-      showError("Erro ao tentar reservar a doação.");
-      return;
+      showToast("Erro ao tentar reservar a doação.", "error");
     }
   });
 });
@@ -65,4 +66,21 @@ function formatarData(data) {
 
 function formatarDataHora(dataHora) {
   return new Date(dataHora).toLocaleString("pt-BR");
+}
+
+function showToast(message, type = "success") {
+  const toastContainer = document.getElementById("toast-container");
+  if (!toastContainer) {
+    console.error("Toast container não encontrado.");
+    return;
+  }
+
+  const toast = document.createElement("div");
+  toast.className = `max-w-sm w-full p-4 rounded shadow-lg text-white ${
+    type === "success" ? "bg-green-500" : "bg-red-500"
+  }`;
+  toast.textContent = message;
+  toastContainer.appendChild(toast);
+
+  setTimeout(() => toast.remove(), 3000);
 }
