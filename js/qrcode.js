@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
   const idDoacao = params.get("id");
   const token = localStorage.getItem("token");
+  const reservaId = dataDoacao.reservaId;
+
 
   const qrContainer = document.getElementById("qr-container");
   const tempoExpiracao = document.getElementById("tempo-expiracao");
@@ -116,6 +118,7 @@ if (btnVerLocalizacao) {
 
       localStorage.setItem("dadosDoacao", JSON.stringify(doacao));
       window.location.href = `pages/geolocalizacao/geoloc.html?idReserva=${reservaId}`;
+
     } catch (error) {
       console.error("Erro ao buscar dados da doação:", error);
       showToast("Erro ao carregar localização da doação.", "error");
