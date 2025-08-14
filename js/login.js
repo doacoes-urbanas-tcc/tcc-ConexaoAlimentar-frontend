@@ -1,5 +1,29 @@
 'use strict';
 
+function toastSuccess(message) {
+  showToast(message, "bg-green-500");
+}
+
+function toastError(message) {
+  showToast(message, "bg-red-500");
+}
+
+function showToast(message, bgColor) {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
+
+  const toast = document.createElement("div");
+  toast.className = `${bgColor} text-white px-4 py-2 rounded shadow-lg animate-slideInRight`;
+  toast.textContent = message;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add("animate-fadeOut");
+    setTimeout(() => toast.remove(), 500);
+  }, 3000);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("form-login");
 
@@ -15,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
+      await fetch("https://conexao-alimentar.onrender.com/health", { method: "GET" });
 
       const resposta = await fetch("https://conexao-alimentar.onrender.com/auth/login", {
         method: "POST",
