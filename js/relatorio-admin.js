@@ -29,15 +29,13 @@ window.baixar = function (tipo, formato) {
     })
     .then(async res => {
         if (!res.ok) {
-            if (res.status === 403) {
-                let mensagem = "Nenhum relatório encontrado para o período selecionado ou você não tem permissão.";
-                try {
-                    const data = await res.json();
-                    if (data?.message) mensagem = data.message;
-                } catch (e) {}
-                throw new Error(mensagem);
-            }
-            throw new Error(`Erro ${res.status}`);
+            let errorMsg = `Erro ${res.status}`;
+            try {
+                const data = await res.json();
+                if (data.message) errorMsg = data.message;
+            } catch (e) {}
+            
+            throw new Error(errorMsg);
         }
         return res.blob();
     })
@@ -52,30 +50,6 @@ window.baixar = function (tipo, formato) {
         toastSuccess("Relatório baixado com sucesso!");
     })
     .catch(err => {
-        toastError(err.message || "Erro inesperado.");
+        toastError(err.message || "Ocorreu um erro inesperado.");
     });
 };
-
-function toastSuccess(message) {
-    showToast(message, "bg-green-500");
-}
-
-function toastError(message) {
-    showToast(message, "bg-red-500");
-}
-
-function showToast(message, bgColor) {
-    const container = document.getElementById("toast-container");
-    if (!container) return;
-
-    const toast = document.createElement("div");
-    toast.className = `${bgColor} text-white px-4 py-2 rounded shadow-lg animate-slideInRight fixed top-4 right-4 z-50`;
-    toast.textContent = message;
-
-    container.appendChild(toast);
-
-    setTimeout(() => {
-        toast.classList.add("animate-fadeOut");
-        setTimeout(() => toast.remove(), 500);
-    }, 3000);
-}
