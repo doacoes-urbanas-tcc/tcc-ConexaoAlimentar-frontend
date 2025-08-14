@@ -7,6 +7,8 @@ let routeInfo = document.getElementById('routeInfo');
 
 let map, currentRoute, ongLocation, donationData = null;
 
+const toNum = v => v === null || v === undefined || v === '' ? NaN : Number(v);
+
 function displayDonationInfo() {
     const dadosString = localStorage.getItem("dadosDoacao");
     if (!dadosString) {
@@ -39,8 +41,11 @@ function displayDonationInfo() {
 }
 
 function addDonationMarker() {
-    if (!donationData || isNaN(donationData.lat) || isNaN(donationData.lng)) return;
-    L.marker([donationData.lat, donationData.lng], {
+    const dLat = toNum(donationData?.lat);
+    const dLng = toNum(donationData?.lng);
+    if (Number.isNaN(dLat) || Number.isNaN(dLng)) return;
+
+    L.marker([dLat, dLng], {
         icon: L.icon({
             iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
             shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -49,17 +54,22 @@ function addDonationMarker() {
             popupAnchor: [1, -34],
             shadowSize: [41, 41]
         })
-    }).addTo(map).bindPopup(`<b>${donationData.nomeAlimento}</b>`);
+    }).addTo(map).bindPopup(`<b>${donationData.nomeAlimento || 'Doação'}</b>`);
 }
 
 function calculateRoute() {
-    if (!donationData || !ongLocation || isNaN(donationData.lat) || isNaN(donationData.lng)) return;
+    const dLat = toNum(donationData?.lat);
+    const dLng = toNum(donationData?.lng);
+    const oLat = toNum(ongLocation?.lat);
+    const oLng = toNum(ongLocation?.lng);
+
+    if (Number.isNaN(dLat) || Number.isNaN(dLng) || Number.isNaN(oLat) || Number.isNaN(oLng)) return;
     if (currentRoute) map.removeControl(currentRoute);
 
     currentRoute = L.Routing.control({
         waypoints: [
-            L.latLng(ongLocation.lat, ongLocation.lng),
-            L.latLng(donationData.lat, donationData.lng)
+            L.latLng(oLat, oLng),        
+            L.latLng(dLat, dLng)         
         ],
         routeWhileDragging: false,
         addWaypoints: false,
@@ -67,9 +77,9 @@ function calculateRoute() {
         lineOptions: { styles: [{ color: '#dc2626', weight: 5, opacity: 0.8 }] },
         language: 'pt-BR'
     }).on('routesfound', function (e) {
-        let route = e.routes[0];
-        let distanciaKm = (route.summary.totalDistance / 1000).toFixed(2);
-        let tempoMin = Math.round(route.summary.totalTime / 60);
+        const route = e.routes[0];
+        const distanciaKm = (route.summary.totalDistance / 1000).toFixed(2);
+        const tempoMin = Math.round(route.summary.totalTime / 60);
 
         routeInfo.innerHTML = `
             <strong>Distância:</strong> ${distanciaKm} km<br>
@@ -90,9 +100,9 @@ function clearRoute() {
 
 async function getOngLocation(ongId) {
     try {
-        const res = await fetch(`https://conexao-alimentar.onrender.com/ong/${ongId}/localizacao`);
+        const res = await fetch(`/api/ong/${ongId}/localizacao`);
         if (!res.ok) throw new Error('Erro ao buscar localização da ONG');
-        return await res.json(); 
+        return await res.json();
     } catch (err) {
         console.error(err);
         h2.textContent = "Erro ao carregar localização da ONG";
@@ -101,25 +111,47 @@ async function getOngLocation(ongId) {
     }
 }
 
+function resolveOngId() {
+    if (donationData?.ongId && !Number.isNaN(Number(donationData.ongId))) {
+        return Number(donationData.ongId);
+    }
+    const stored = localStorage.getItem('usuarioId');
+    if (stored && !Number.isNaN(Number(stored))) {
+        return Number(stored);
+    }
+    return null;
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     if (!displayDonationInfo()) return;
 
-    if (!donationData.ongId) {
+    if (calculateBtn) calculateBtn.disabled = true;
+
+    const ongId = resolveOngId();
+    if (!ongId) {
         h2.textContent = "Erro: ID da ONG não encontrado";
         h2.classList.remove('loading');
         return;
     }
 
-    ongLocation = await getOngLocation(donationData.ongId);
+    ongLocation = await getOngLocation(ongId);
     if (!ongLocation) return;
 
-    h2.textContent = `ONG localizada: Lat ${ongLocation.lat}, Lng ${ongLocation.lng}`;
+    const oLat = toNum(ongLocation.lat);
+    const oLng = toNum(ongLocation.lng);
+    if (Number.isNaN(oLat) || Number.isNaN(oLng)) {
+        h2.textContent = "Erro: Localização da ONG inválida";
+        h2.classList.remove('loading');
+        return;
+    }
+
+    h2.textContent = `ONG localizada: Lat ${oLat.toFixed(6)}, Lng ${oLng.toFixed(6)}`;
     h2.classList.remove('loading');
 
-    map = L.map('mapid').setView([ongLocation.lat, ongLocation.lng], 13);
+    map = L.map('mapid').setView([oLat, oLng], 13);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-    L.marker([ongLocation.lat, ongLocation.lng], {
+    L.marker([oLat, oLng], {
         icon: L.icon({
             iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
             shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -132,10 +164,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     addDonationMarker();
 
-    if (donationData && !isNaN(donationData.lat) && !isNaN(donationData.lng)) {
-        calculateBtn.disabled = false;
+    const dLat = toNum(donationData?.lat);
+    const dLng = toNum(donationData?.lng);
+    if (!Number.isNaN(dLat) && !Number.isNaN(dLng)) {
+        const bounds = L.latLngBounds([oLat, oLng], [dLat, dLng]);
+        map.fitBounds(bounds, { padding: [50, 50] });
+        if (calculateBtn) calculateBtn.disabled = false;
     }
 
-    calculateBtn.addEventListener('click', calculateRoute);
-    clearBtn.addEventListener('click', clearRoute);
+    calculateBtn?.addEventListener('click', calculateRoute);
+    clearBtn?.addEventListener('click', clearRoute);
 });
