@@ -1,19 +1,15 @@
 document.addEventListener("DOMContentLoaded", async function () {
     const params = new URLSearchParams(window.location.search);
-    const doacaoId = params.get("id");
+    const idReserva = params.get("idReserva");
 
-    if (!doacaoId) {
-        console.error("ID da doação não informado");
+    if (!idReserva) {
+        console.error("ID da reserva não informado");
+        alert("ID da reserva não informado.");
         return;
     }
 
     try {
-        const doacao = await getDoacao(doacaoId);
-        const doadorCoords = {
-            lat: doacao.doadorLatitude,
-            lng: doacao.doadorLongitude
-        };
-
+        const doadorCoords = await getLocalizacaoDoador(idReserva);
         const ongCoords = await getOngLocation();
 
         initMap(doadorCoords, ongCoords);
@@ -23,16 +19,16 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 });
 
-async function getDoacao(doacaoId) {
-    const res = await fetch(`/api/doacoes/${doacaoId}`);
-    if (!res.ok) throw new Error("Erro ao buscar dados da doação");
+async function getLocalizacaoDoador(idReserva) {
+    const res = await fetch(`/api/reservas/${idReserva}/localizacao`);
+    if (!res.ok) throw new Error("Erro ao buscar localização do doador");
     const data = await res.json();
 
-    if (!data.doadorLatitude || !data.doadorLongitude) {
+    if (!data.latitude || !data.longitude) {
         throw new Error("Localização do doador não disponível");
     }
 
-    return data;
+    return { lat: data.latitude, lng: data.longitude };
 }
 
 async function getOngLocation() {
