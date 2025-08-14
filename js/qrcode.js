@@ -115,7 +115,7 @@ if (btnVerLocalizacao) {
       };
 
       localStorage.setItem("dadosDoacao", JSON.stringify(doacao));
-      window.location.href = `pages/geolocalizacao/geoloc.html?id=${idDoacao}`;
+      window.location.href = `/pages/geolocalizacao/geoloc.html?id=${idDoacao}`;
 
     } catch (error) {
       console.error("Erro ao buscar dados da doação:", error);
