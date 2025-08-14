@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", async function () {
   const params = new URLSearchParams(window.location.search);
   const idReserva = params.get("idReserva");
-  const idDoacao = params.get("id");
+  const idDoacao = params.get("id") || params.get("idDoacao"); // <-- aceita os dois formatos
   const token = localStorage.getItem("token");
   const API_BASE = "https://conexao-alimentar.onrender.com";
 
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.log("Buscando localização por reserva:", reservaId);
     const data = await safeFetch(`${API_BASE}/reservas/${reservaId}/localizacao`);
     validarCoords(data);
-    return { lat: data.latitude, lng: data.longitude };
+    return { lat: Number(data.latitude), lng: Number(data.longitude) };
   }
 
   async function getLocalizacaoPorDoacao(doacaoId) {
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         const parsed = JSON.parse(cache);
         if (Number(parsed?.id) === Number(doacaoId) && parsed?.lat && parsed?.lng) {
           console.log("Coordenadas vindas do localStorage.");
-          return { lat: parsed.lat, lng: parsed.lng };
+          return { lat: Number(parsed.lat), lng: Number(parsed.lng) };
         }
       } catch {}
     }
@@ -60,11 +60,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.log("Buscando doação na API:", doacaoId);
     const d = await safeFetch(`${API_BASE}/doacoes/${doacaoId}`);
     if (d?.latitude && d?.longitude) {
-      return { lat: d.latitude, lng: d.longitude };
+      return { lat: Number(d.latitude), lng: Number(d.longitude) };
     }
 
     if (d?.doador?.endereco?.latitude && d?.doador?.endereco?.longitude) {
-      return { lat: d.doador.endereco.latitude, lng: d.doador.endereco.longitude };
+      return { lat: Number(d.doador.endereco.latitude), lng: Number(d.doador.endereco.longitude) };
     }
 
     throw new Error("Localização do doador não disponível para esta doação.");
@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.log("Buscando localização da ONG (usuário logado)...");
     const data = await safeFetch(`${API_BASE}/admin/usuarios/usuario/localizacao`);
     validarCoords(data);
-    return { lat: data.latitude, lng: data.longitude };
+    return { lat: Number(data.latitude), lng: Number(data.longitude) };
   }
 
   function validarCoords(obj) {
