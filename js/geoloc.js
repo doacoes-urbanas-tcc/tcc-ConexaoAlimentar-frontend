@@ -1,114 +1,103 @@
-document.addEventListener("DOMContentLoaded", async function () {
-   const params = new URLSearchParams(window.location.search);
-  const idReserva = params.get("idReserva");
-  const idDoacao = params.get("id") || params.get("idDoacao"); 
-  const token = localStorage.getItem("token");
-  const API_BASE = "https://conexao-alimentar.onrender.com";
+const API_BASE = "https://conexao-alimentar.onrender.com";
 
-  if (!idReserva && !idDoacao) {
-    console.error("Nenhum identificador informado (idReserva ou idDoacao).");
-    alert("Parâmetros inválidos para geolocalização.");
-    return;
+function validarCoords(lat, lng) {
+  if (lat == null || lng == null || isNaN(lat) || isNaN(lng)) {
+    throw new Error("Parâmetros inválidos para geolocalização");
   }
-  try {
-    console.log("Iniciando geolocalização. idReserva:", idReserva, "idDoacao:", idDoacao);
-
-    const doadorCoords = idReserva
-      ? await getLocalizacaoPorReserva(idReserva)
-      : await getLocalizacaoPorDoacao(idDoacao);
-
-    const ongCoords = await getOngLocation();
-
-    initMap(doadorCoords, ongCoords);
-  } catch (error) {
-    console.error("Erro ao carregar mapa:", error);
-    alert(error.message || "Não foi possível carregar o mapa.");
-  }
-
-  async function safeFetch(url, opts = {}) {
-    opts.headers = opts.headers || {};
-    if (token) opts.headers["Authorization"] = `Bearer ${token}`;
-    const res = await fetch(url, opts);
-    const text = await res.text();
-    let body;
-    try { body = JSON.parse(text); } catch { body = text; }
-    if (!res.ok) throw new Error(body?.msg || body?.message || res.statusText || "Erro na requisição");
-    return body;
-  }
-
-  async function getLocalizacaoPorReserva(reservaId) {
-    console.log("Buscando localização por reserva:", reservaId);
-    const data = await safeFetch(`${API_BASE}/reservas/${reservaId}/localizacao`);
-    validarCoords(data);
-    return { lat: data.latitude, lng: data.longitude };
-  }
-
-  async function getLocalizacaoPorDoacao(doacaoId) {
-    console.log("Tentando usar localStorage.dadosDoacao...");
-    const cache = localStorage.getItem("dadosDoacao");
-    if (cache) {
-      try {
-        const parsed = JSON.parse(cache);
-        if (Number(parsed?.id) === Number(doacaoId) && parsed?.lat && parsed?.lng) {
-          console.log("Coordenadas vindas do localStorage.");
-          return { lat: parsed.lat, lng: parsed.lng };
-        }
-      } catch {}
-    }
-
-    console.log("Buscando doação na API:", doacaoId);
-    const d = await safeFetch(`${API_BASE}/doacoes/${doacaoId}`);
-
-    if (d?.latitude && d?.longitude) {
-      return { lat: d.latitude, lng: d.longitude };
-    }
-
-    if (d?.doadorLatitude && d?.doadorLongitude) {
-      return { lat: d.doadorLatitude, lng: d.doadorLongitude };
-    }
-
-    if (d?.doador?.endereco?.latitude && d?.doador?.endereco?.longitude) {
-      return { lat: d.doador.endereco.latitude, lng: d.doador.endereco.longitude };
-    }
-
-    throw new Error("Localização do doador não disponível para esta doação.");
-  }
-
-  async function getOngLocation() {
-    console.log("Buscando localização da ONG (usuário logado)...");
-    const data = await safeFetch(`${API_BASE}/admin/usuarios/usuario/localizacao`);
-    validarCoords(data);
-    return { lat: data.latitude, lng: data.longitude };
-  }
-
-  function validarCoords(obj) {
-    if (!obj?.latitude || !obj?.longitude) {
-      throw new Error("Localização não disponível.");
-    }
-  }
-
-  function initMap(doadorCoords, ongCoords) {
-    const map = L.map("map").setView([doadorCoords.lat, doadorCoords.lng], 12);
-
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    L.marker([doadorCoords.lat, doadorCoords.lng])
-        .addTo(map)
-        .bindPopup("Local do Doador")
-        .openPopup();
-
-    L.marker([ongCoords.lat, ongCoords.lng])
-        .addTo(map)
-        .bindPopup("Local da ONG");
-
-    const bounds = L.latLngBounds(
-        [doadorCoords.lat, doadorCoords.lng],
-        [ongCoords.lat, ongCoords.lng]
-    );
-    map.fitBounds(bounds);
+  return { lat: parseFloat(lat), lng: parseFloat(lng) };
 }
 
-});
+async function safeFetch(url, options = {}) {
+  const resp = await fetch(url, options);
+  if (!resp.ok) throw new Error(`Erro HTTP: ${resp.status}`);
+  return await resp.json();
+}
+
+async function getDoacaoById(idDoacao) {
+  return await safeFetch(`${API_BASE}/doacoes/${idDoacao}`);
+}
+
+async function getOngLocation() {
+  const data = await safeFetch(`${API_BASE}/admin/usuarios/usuario/localizacao`, {
+    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+  });
+  return validarCoords(data.latitude, data.longitude);
+}
+
+
+async function initMap(doadorCoords, ongCoords) {
+  const map = L.map("map").setView([doadorCoords.lat, doadorCoords.lng], 13);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "&copy; OpenStreetMap contributors"
+  }).addTo(map);
+
+  L.marker([doadorCoords.lat, doadorCoords.lng])
+    .addTo(map)
+    .bindPopup("Local do Doador");
+
+  if (ongCoords) {
+    L.marker([ongCoords.lat, ongCoords.lng])
+      .addTo(map)
+      .bindPopup("Local da ONG");
+
+    const bounds = L.latLngBounds(
+      [doadorCoords.lat, doadorCoords.lng],
+      [ongCoords.lat, ongCoords.lng]
+    );
+    map.fitBounds(bounds);
+
+    const routingControl = L.Routing.control({
+      waypoints: [
+        L.latLng(doadorCoords.lat, doadorCoords.lng),
+        L.latLng(ongCoords.lat, ongCoords.lng)
+      ],
+      routeWhileDragging: false,
+      createMarker: () => null
+    }).addTo(map);
+
+    routingControl.on("routesfound", function (e) {
+      const route = e.routes[0];
+      const distanciaKm = (route.summary.totalDistance / 1000).toFixed(2);
+      const tempoMin = Math.round(route.summary.totalTime / 60);
+
+      const infoBox = document.getElementById("routeInfo");
+      infoBox.textContent = `Distância: ${distanciaKm} km | Tempo estimado: ${tempoMin} min`;
+      infoBox.classList.remove("hidden");
+    });
+  }
+}
+
+
+(async function () {
+  const params = new URLSearchParams(window.location.search);
+  const idDoacao = params.get("idDoacao");
+  if (!idDoacao) {
+    alert("ID da doação não informado.");
+    return;
+  }
+
+  try {
+    const doacao = await getDoacaoById(idDoacao);
+    const doadorCoords = validarCoords(doacao.doadorLatitude, doacao.doadorLongitude);
+
+    let ongCoords = null;
+    try {
+      ongCoords = await getOngLocation();
+    } catch (e) {
+      console.warn("Localização da ONG indisponível:", e.message);
+    }
+
+    document.getElementById("nome-alimento").textContent = doacao.nomeAlimento;
+    document.getElementById("descricao").textContent = doacao.descricao || "";
+    document.getElementById("quantidade").textContent = `${doacao.quantidade} ${doacao.unidadeMedida}`;
+    document.getElementById("categoria").textContent = `Categoria: ${doacao.categoria}`;
+    document.getElementById("voltar").onclick = () => window.history.back();
+
+    await initMap(doadorCoords, ongCoords);
+
+  } catch (err) {
+    console.error("Erro ao carregar mapa:", err);
+    alert("Não foi possível carregar a geolocalização.");
+  }
+})();
