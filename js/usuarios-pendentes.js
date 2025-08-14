@@ -57,11 +57,11 @@ document.addEventListener("DOMContentLoaded", carregarUsuariosPendentes);
 
 async function carregarUsuariosPendentes() {
   const tipo = filtroTipo.value;
-  let endpoint = "https://conexao-alimentar.onrender.com/admin/usuarios/pendentes";
+ let endpoint = "https://conexao-alimentar.onrender.com/admin/usuarios/pendentes";
 
-  if (tipo !== "todos") {
-    endpoint += `/${tipo}`;
-  }
+ if (tipo !== "todos") {
+  endpoint += `/${tiposMap[tipo]}`; 
+ }
 
   console.log("Carregando pendentes de:", tipo, "Endpoint:", endpoint);
 
