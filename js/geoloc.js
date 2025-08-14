@@ -90,7 +90,7 @@ function clearRoute() {
 
 async function getOngLocation(ongId) {
     try {
-        const res = await fetch(`/api/ong/${ongId}/localizacao`);
+        const res = await fetch(`https://conexao-alimentar.onrender.com/ong/${ongId}/localizacao`);
         if (!res.ok) throw new Error('Erro ao buscar localização da ONG');
         return await res.json(); 
     } catch (err) {
