@@ -9,43 +9,12 @@ function validarCoords(lat, lng) {
 
 async function safeFetch(url, options = {}) {
   const resp = await fetch(url, options);
-
-  if (resp.status === 401 || resp.status === 403) {
-    alert("Acesso não autorizado. Faça login novamente.");
-    window.location.href = "/login.html";
-    throw new Error("Não autorizado");
-  }
-
   if (!resp.ok) throw new Error(`Erro HTTP: ${resp.status}`);
-
   return await resp.json();
 }
 
 async function getDoacaoById(idDoacao) {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    alert("Sua sessão expirou. Faça login novamente.");
-    window.location.href = "/login.html";
-    return;
-  }
-
-  return await safeFetch(`${API_BASE}/doacoes/${idDoacao}`, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  });
-}
-
-async function getOngLocation() {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    throw new Error("Token não encontrado");
-  }
-
-  const data = await safeFetch(`${API_BASE}/admin/usuarios/usuario/localizacao`, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-  return validarCoords(data.latitude, data.longitude);
+  return await safeFetch(`${API_BASE}/doacoes/${idDoacao}`);
 }
 
 async function initMap(doadorCoords, ongCoords) {
@@ -90,14 +59,9 @@ async function initMap(doadorCoords, ongCoords) {
 
   try {
     const doacao = await getDoacaoById(idDoacao);
-    const doadorCoords = validarCoords(doacao.doadorLatitude, doacao.doadorLongitude);
 
-    let ongCoords = null;
-    try {
-      ongCoords = await getOngLocation();
-    } catch (e) {
-      console.warn("Localização da ONG indisponível:", e.message);
-    }
+    const doadorCoords = validarCoords(doacao.doadorLatitude, doacao.doadorLongitude);
+    const ongCoords = validarCoords(doacao.ongLatitude, doacao.ongLongitude);
 
     document.getElementById("nome-alimento").textContent = doacao.nomeAlimento;
     document.getElementById("descricao").textContent = doacao.descricao || "";
