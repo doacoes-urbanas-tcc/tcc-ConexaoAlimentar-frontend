@@ -115,11 +115,13 @@ function hideToast(toast) {
 
   const limparFormulario = () => ['endereco','bairro','cidade','estado'].forEach(id => getEl(id).value = '');
   const preencherFormulario = e => {
-    getEl('endereco').value = e.logradouro;
-    getEl('bairro').value = e.bairro;
-    getEl('cidade').value = e.localidade;
-    getEl('estado').value = e.uf;
+  getEl('endereco').value = e.logradouro;
+  getEl('bairro').value = e.bairro;
+  getEl('cidade').value = e.localidade;
+  getEl('estado').value = e.uf;
+  buscarLatLngPorEndereco(); 
   };
+
   const cepValido = cep => cep.length === 8 && /^[0-9]+$/.test(cep);
   getEl('cep')?.addEventListener('focusout', async () => {
     limparFormulario();
@@ -133,14 +135,30 @@ function hideToast(toast) {
     }
   });
 
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(pos => {
-      latitude = pos.coords.latitude;
-      longitude = pos.coords.longitude;
-      getEl('latitude').value = latitude;
-      getEl('longitude').value = longitude;
-    });
+  async function buscarLatLngPorEndereco() {
+  const enderecoCompleto = `${getVal('endereco')} ${getVal('numero')}, ${getVal('bairro')}, ${getVal('cidade')}, ${getVal('estado')}, Brasil`;
+
+  if (!getVal('endereco') || !getVal('cidade') || !getVal('estado') || !getVal('numero')) return;
+
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(enderecoCompleto)}`;
+    const res = await fetch(url, { headers: { 'User-Agent': 'conexao-alimentar/1.0' } });
+    const data = await res.json();
+
+    if (data && data.length > 0) {
+      const { lat, lon } = data[0];
+      getEl('latitude').value = lat;
+      getEl('longitude').value = lon;
+    } else {
+      console.warn('Endereço não encontrado para geocodificação.');
+    }
+  } catch (err) {
+    console.error('Erro ao buscar coordenadas:', err);
   }
+}
+
+getEl('numero')?.addEventListener('focusout', buscarLatLngPorEndereco);
+
 
   const TIPOS_COM_TERMO = ['ong', 'comercio', 'rural', 'pf'];
   const selectTipo = getEl('tipoUsuario');
