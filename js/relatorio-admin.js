@@ -1,33 +1,5 @@
 'use strict';
 
-function toastError(message) {
-    showToast(message, "#f44336");
-}
-function toastSuccess(message) {
-    showToast(message, "#4CAF50");
-}
-function showToast(message, bgColor) {
-    const toast = document.createElement("div");
-    toast.textContent = message;
-    toast.style.position = "fixed";
-    toast.style.bottom = "20px";
-    toast.style.left = "50%";
-    toast.style.transform = "translateX(-50%)";
-    toast.style.backgroundColor = bgColor;
-    toast.style.color = "white";
-    toast.style.padding = "12px 20px";
-    toast.style.borderRadius = "8px";
-    toast.style.zIndex = "9999";
-    toast.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
-    toast.style.fontFamily = "Arial, sans-serif";
-    toast.style.fontSize = "14px";
-    document.body.appendChild(toast);
-
-    setTimeout(() => {
-        toast.remove();
-    }, 3000);
-}
-
 window.baixar = function (tipo, formato) {
     const token = localStorage.getItem("token");
 
@@ -57,13 +29,15 @@ window.baixar = function (tipo, formato) {
     })
     .then(async res => {
         if (!res.ok) {
-            let errorMsg = `Erro ${res.status}`;
-            try {
-                const data = await res.json();
-                if (data.message) errorMsg = data.message;
-            } catch (e) {}
-            
-            throw new Error(errorMsg);
+            if (res.status === 403) {
+                let mensagem = "Nenhum relatório encontrado para o período selecionado ou você não tem permissão.";
+                try {
+                    const data = await res.json();
+                    if (data?.message) mensagem = data.message;
+                } catch (e) {}
+                throw new Error(mensagem);
+            }
+            throw new Error(`Erro ${res.status}`);
         }
         return res.blob();
     })
@@ -78,6 +52,30 @@ window.baixar = function (tipo, formato) {
         toastSuccess("Relatório baixado com sucesso!");
     })
     .catch(err => {
-        toastError(err.message || "Ocorreu um erro inesperado.");
+        toastError(err.message || "Erro inesperado.");
     });
 };
+
+function toastSuccess(message) {
+    showToast(message, "bg-green-500");
+}
+
+function toastError(message) {
+    showToast(message, "bg-red-500");
+}
+
+function showToast(message, bgColor) {
+    const container = document.getElementById("toast-container");
+    if (!container) return;
+
+    const toast = document.createElement("div");
+    toast.className = `${bgColor} text-white px-4 py-2 rounded shadow-lg animate-slideInRight fixed top-4 right-4 z-50`;
+    toast.textContent = message;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add("animate-fadeOut");
+        setTimeout(() => toast.remove(), 500);
+    }, 3000);
+}
