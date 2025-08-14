@@ -94,33 +94,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     qrContainer.innerHTML = `<p class="text-red-600">${err.message}</p>`;
   }
 
-  const btnVerLocalizacao = document.getElementById("btnVerLocalizacao");
-  if (btnVerLocalizacao) {
-    btnVerLocalizacao.addEventListener("click", async () => {
-      try {
-        const dataDoacao = await safeFetch(`https://conexao-alimentar.onrender.com/doacoes/${idDoacao}`);
-        
-        const doacao = {
-          nomeAlimento: dataDoacao.nomeAlimento,
-          doadorNome: dataDoacao.doadorNome,
-          quantidade: dataDoacao.quantidade,
-          unidadeMedida: dataDoacao.unidadeMedida,
-          categoria: dataDoacao.categoria,
-          dataValidade: dataDoacao.dataValidade,
-          descricao: dataDoacao.descricao,
-          urlImagem: dataDoacao.urlImagem,
-          lat: dataDoacao.latitude,
-          lng: dataDoacao.longitude
-        };
+const btnVerLocalizacao = document.getElementById("btnVerLocalizacao");
+if (btnVerLocalizacao) {
+  btnVerLocalizacao.addEventListener("click", async () => {
+    try {
+      const dataDoacao = await safeFetch(`https://conexao-alimentar.onrender.com/doacoes/${idDoacao}`);
+      
+      const doacao = {
+        id: dataDoacao.id ?? dataDoacao.idDoacao, 
+        nomeAlimento: dataDoacao.nomeAlimento,
+        doadorNome: dataDoacao.doadorNome,
+        quantidade: dataDoacao.quantidade,
+        unidadeMedida: dataDoacao.unidadeMedida,
+        categoria: dataDoacao.categoria,
+        dataValidade: dataDoacao.dataValidade,
+        descricao: dataDoacao.descricao,
+        urlImagem: dataDoacao.urlImagem,
+        lat: dataDoacao.latitude,
+        lng: dataDoacao.longitude
+      };
 
-        localStorage.setItem("dadosDoacao", JSON.stringify(doacao));
-        window.location.href = `pages/geolocalizacao/geoloc.html?id=${doacao.id}`;
-      } catch (error) {
-        console.error("Erro ao buscar dados da doação:", error);
-        showToast("Erro ao carregar localização da doação.", "error");
-      }
-    });
-  }
+      localStorage.setItem("dadosDoacao", JSON.stringify(doacao));
+      window.location.href = `pages/geolocalizacao/geoloc.html?id=${doacao.id}`;
+    } catch (error) {
+      console.error("Erro ao buscar dados da doação:", error);
+      showToast("Erro ao carregar localização da doação.", "error");
+    }
+  });
+}
+
 
 });
 
