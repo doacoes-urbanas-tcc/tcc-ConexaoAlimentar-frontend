@@ -1,16 +1,16 @@
 const API_BASE = "https://conexao-alimentar.onrender.com";
 
-// Valida e converte coordenadas para número
+// Valida e converte coordenadas
 function validarCoords(lat, lng) {
   if (lat == null || lng == null || isNaN(lat) || isNaN(lng)) {
-    return null; // Não quebra se estiver ausente
+    return null;
   }
   return { lat: parseFloat(lat), lng: parseFloat(lng) };
 }
 
-// Faz requisições enviando o token JWT
+// Fetch com token JWT
 async function safeFetch(url, options = {}) {
-  const token = localStorage.getItem("token"); // Recupera token salvo no login
+  const token = localStorage.getItem("token");
 
   const headers = {
     "Content-Type": "application/json",
@@ -24,7 +24,7 @@ async function safeFetch(url, options = {}) {
   const resp = await fetch(url, {
     ...options,
     headers,
-    credentials: "include" // Caso o back-end use cookies também
+    credentials: "include"
   });
 
   if (!resp.ok) throw new Error(`Erro HTTP: ${resp.status}`);
@@ -36,7 +36,7 @@ async function getDoacaoById(idDoacao) {
   return await safeFetch(`${API_BASE}/doacoes/${idDoacao}`);
 }
 
-// Inicializa o mapa com os pontos
+// Inicializa mapa
 async function initMap(doadorCoords, ongCoords) {
   const centerCoords = doadorCoords || ongCoords;
   if (!centerCoords) {
@@ -49,35 +49,48 @@ async function initMap(doadorCoords, ongCoords) {
     attribution: "&copy; OpenStreetMap contributors"
   }).addTo(map);
 
-  // Marca local do doador
+  // Marca doador
   if (doadorCoords) {
     L.marker([doadorCoords.lat, doadorCoords.lng])
       .addTo(map)
       .bindPopup("Local do Doador");
   }
 
-  // Marca local da ONG
+  // Marca ONG
   if (ongCoords) {
     L.marker([ongCoords.lat, ongCoords.lng])
       .addTo(map)
       .bindPopup("Local da ONG");
+  }
 
-    // Desenha rota se houver os dois pontos
-    if (doadorCoords) {
-      const bounds = L.latLngBounds(
-        [doadorCoords.lat, doadorCoords.lng],
-        [ongCoords.lat, ongCoords.lng]
-      );
-      map.fitBounds(bounds);
+  // Desenha rota e calcula distância
+  if (doadorCoords && ongCoords) {
+    const bounds = L.latLngBounds(
+      [doadorCoords.lat, doadorCoords.lng],
+      [ongCoords.lat, ongCoords.lng]
+    );
+    map.fitBounds(bounds);
 
-      L.Routing.control({
-        waypoints: [
-          L.latLng(doadorCoords.lat, doadorCoords.lng),
-          L.latLng(ongCoords.lat, ongCoords.lng)
-        ],
-        createMarker: () => null
-      }).addTo(map);
-    }
+    const routingControl = L.Routing.control({
+      waypoints: [
+        L.latLng(doadorCoords.lat, doadorCoords.lng),
+        L.latLng(ongCoords.lat, ongCoords.lng)
+      ],
+      createMarker: () => null
+    }).addTo(map);
+
+    routingControl.on("routesfound", function (e) {
+      const route = e.routes[0];
+      const distanciaKm = (route.summary.totalDistance / 1000).toFixed(2);
+      const tempoMin = Math.round(route.summary.totalTime / 60);
+
+      const info = document.getElementById("routeInfo");
+      info.classList.remove("hidden");
+      info.innerHTML = `
+        <strong>Distância:</strong> ${distanciaKm} km<br>
+        <strong>Tempo estimado:</strong> ${tempoMin} min
+      `;
+    });
   }
 }
 
@@ -96,6 +109,8 @@ async function initMap(doadorCoords, ongCoords) {
     const doadorCoords = validarCoords(doacao.doadorLatitude, doacao.doadorLongitude);
     const ongCoords = validarCoords(doacao.ongLatitude, doacao.ongLongitude);
 
+    document.getElementById("doador").textContent = `Doador: ${doacao.nomeDoador || "Não informado"}`;
+    document.getElementById("endereco-doador").textContent = doacao.enderecoDoador || "";
     document.getElementById("nome-alimento").textContent = doacao.nomeAlimento;
     document.getElementById("descricao").textContent = doacao.descricao || "";
     document.getElementById("quantidade").textContent = `${doacao.quantidade} ${doacao.unidadeMedida}`;
