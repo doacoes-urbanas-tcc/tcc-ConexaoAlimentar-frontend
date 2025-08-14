@@ -52,45 +52,13 @@ function addDonationMarker() {
     }).addTo(map).bindPopup(`<b>${donationData.nomeAlimento}</b>`);
 }
 
-function success(pos) {
-    ongLocation = [pos.coords.latitude, pos.coords.longitude];
-    h2.textContent = `ONG localizada: Lat ${pos.coords.latitude.toFixed(6)}, Lng ${pos.coords.longitude.toFixed(6)}`;
-    h2.classList.remove('loading');
-
-    if (map) map.remove();
-
-    map = L.map('mapid').setView(ongLocation, 13);
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-
-    L.marker(ongLocation, {
-        icon: L.icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        })
-    }).addTo(map).bindPopup('🏢 Localização da ONG').openPopup();
-
-    addDonationMarker();
-
-    if (donationData && !isNaN(donationData.lat) && !isNaN(donationData.lng)) {
-        calculateBtn.disabled = false;
-    }
-}
-
-function error(err) {
-    h2.textContent = 'Erro ao obter localização: ' + err.message;
-}
-
 function calculateRoute() {
     if (!donationData || !ongLocation || isNaN(donationData.lat) || isNaN(donationData.lng)) return;
     if (currentRoute) map.removeControl(currentRoute);
 
     currentRoute = L.Routing.control({
         waypoints: [
-            L.latLng(ongLocation[0], ongLocation[1]),
+            L.latLng(ongLocation.lat, ongLocation.lng),
             L.latLng(donationData.lat, donationData.lng)
         ],
         routeWhileDragging: false,
@@ -120,15 +88,54 @@ function clearRoute() {
     routeInfo.classList.add('hidden');
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+async function getOngLocation(ongId) {
+    try {
+        const res = await fetch(`/api/ong/${ongId}/localizacao`);
+        if (!res.ok) throw new Error('Erro ao buscar localização da ONG');
+        return await res.json(); 
+    } catch (err) {
+        console.error(err);
+        h2.textContent = "Erro ao carregar localização da ONG";
+        h2.classList.remove('loading');
+        return null;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
     if (!displayDonationInfo()) return;
+
+    if (!donationData.ongId) {
+        h2.textContent = "Erro: ID da ONG não encontrado";
+        h2.classList.remove('loading');
+        return;
+    }
+
+    ongLocation = await getOngLocation(donationData.ongId);
+    if (!ongLocation) return;
+
+    h2.textContent = `ONG localizada: Lat ${ongLocation.lat}, Lng ${ongLocation.lng}`;
+    h2.classList.remove('loading');
+
+    map = L.map('mapid').setView([ongLocation.lat, ongLocation.lng], 13);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    L.marker([ongLocation.lat, ongLocation.lng], {
+        icon: L.icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        })
+    }).addTo(map).bindPopup('🏢 Localização da ONG').openPopup();
+
+    addDonationMarker();
+
+    if (donationData && !isNaN(donationData.lat) && !isNaN(donationData.lng)) {
+        calculateBtn.disabled = false;
+    }
 
     calculateBtn.addEventListener('click', calculateRoute);
     clearBtn.addEventListener('click', clearRoute);
-
-    if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(success, error, { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 });
-    } else {
-        h2.textContent = 'Geolocalização não disponível neste navegador';
-    }
 });
