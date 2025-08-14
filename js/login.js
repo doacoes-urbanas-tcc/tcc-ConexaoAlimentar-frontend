@@ -1,98 +1,69 @@
-"use strict";
+'use strict';
 
 document.addEventListener("DOMContentLoaded", () => {
-  const token = localStorage.getItem("token");
+  const form = document.getElementById("form-login");
 
-  if (!token) {
-    window.location.href = "/pages/cadastrologin/login.html";
-    return;
-  }
+  form?.addEventListener("submit", async function (e) {
+    e.preventDefault();
 
-  fetchTasks(token);
-});
+    const email = document.getElementById("email")?.value.trim();
+    const senha = document.getElementById("senha")?.value.trim();
 
-async function fetchTasks(token) {
-  const container = document.getElementById("lista-tasks");
-
-  try {
-    const res = await fetch("https://conexao-alimentar.onrender.com/tasks-ti/admin", {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-
-    if (!res.ok) {
-      showToast("Erro ao carregar as tasks.", "error");
+    if (!email || !senha) {
+      toastError("Por favor, preencha todos os campos.");
       return;
     }
 
-    const tasks = await res.json();
-    container.innerHTML = "";
+    try {
 
-    if (!tasks || tasks.length === 0) {
-      container.innerHTML = "<p class='text-gray-600'>Nenhuma task cadastrada.</p>";
-      return;
-    }
+      const resposta = await fetch("https://conexao-alimentar.onrender.com/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, senha }),
+      });
 
-    tasks.forEach(task => {
-      const card = document.createElement("div");
-      card.className =
-        "bg-white shadow-md rounded-lg flex flex-col md:flex-row items-start md:items-center justify-between p-6 gap-4";
-
-      card.innerHTML = `
-        <div class="flex-1">
-          <h2 class="text-xl font-semibold text-gray-800 mb-1">${task.titulo}</h2>
-          <p class="text-gray-700 text-sm mb-2">
-            ${task.descricao.length > 120 ? task.descricao.slice(0, 120) + "..." : task.descricao}
-          </p>
-          <div class="flex flex-wrap gap-2 mt-2">
-            ${(task.tags || [])
-              .map(tag => `<span class="bg-red-100 text-red-700 text-xs font-medium px-2 py-1 rounded-full">${tag}</span>`)
-              .join("")}
-          </div>
-        </div>
-        <button class="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded text-sm self-end md:self-auto ver-respostas-btn" 
-          data-id="${task.id}">
-          Ver Respostas
-        </button>
-      `;
-
-      container.appendChild(card);
-    });
-
-    container.addEventListener("click", (event) => {
-      const btn = event.target.closest(".ver-respostas-btn");
-      if (btn) {
-        verRespostas(btn.dataset.id);
+      if (resposta.status === 403) {
+        toastError("Acesso negado. Verifique seu e-mail e senha.");
+        return;
       }
-    });
 
-  } catch (error) {
-    console.error("Erro ao carregar tasks:", error);
-    showToast("Erro inesperado. Tente novamente mais tarde.", "error");
-  }
-}
+      if (!resposta.ok) {
+        toastError("Falha no login. Tente novamente.");
+        return;
+      }
 
-function verRespostas(taskId) {
-  window.location.href = `/pages/administrador/respostas-task.html?id=${taskId}`;
-}
+      const dados = await resposta.json();
 
-function logout() {
-  localStorage.removeItem("token");
-  window.location.href = "/pages/cadastrologin/login.html";
-}
+      localStorage.setItem("token", dados.token);
+      localStorage.setItem("usuarioId", dados.usuarioId);
+      localStorage.setItem("tipoUsuario", dados.tipoUsuario);
 
-function showToast(message, type = "success") {
-  const toastContainer = document.getElementById("toast-container");
-  if (!toastContainer) return;
+      toastSuccess("Login realizado com sucesso!");
 
-  const toast = document.createElement("div");
-  toast.className = `px-4 py-2 rounded shadow text-white ${
-    type === "success" ? "bg-green-600" : "bg-red-600"
-  }`;
-  toast.textContent = message;
+      setTimeout(() => {
+        switch (dados.tipoUsuario) {
+          case "ONG":
+            window.location.href = "/pages/ong/home-page-ong.html";
+            break;
+          case "COMERCIO":
+          case "PRODUTOR_RURAL":
+          case "PESSOA_FISICA":
+            window.location.href = "/pages/doador/home-page-doador.html";
+            break;
+          case "ADMIN":
+            window.location.href = "/pages/administrador/dashboard-administrador.html";
+            break;
+          case "VOLUNTARIO":
+            window.location.href = "/pages/voluntario/home-page-voluntario.html";
+            break;
+          default:
+            window.location.href = "/pages/cadastrologin/cadastro.html";
+        }
+      }, 1200);
 
-  toastContainer.appendChild(toast);
-
-  setTimeout(() => {
-    toast.remove();
-  }, 3000);
-}
+    } catch (err) {
+      console.error("Erro no login:", err);
+      toastError("Erro de conexão com o servidor. Tente novamente em alguns segundos.");
+    }
+  });
+});
