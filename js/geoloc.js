@@ -123,7 +123,7 @@ async function initMap(doadorCoords, ongCoords) {
     console.error("Erro ao carregar mapa:", err);
     if (err.message.includes("403")) {
       alert("Sua sessão expirou. Faça login novamente.");
-      window.location.href = "/login.html";
+      window.location.href = "/pages/cadastrologin/login.html";
     } else {
       alert("Não foi possível carregar a geolocalização.");
     }
